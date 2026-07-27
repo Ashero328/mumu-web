@@ -10,6 +10,7 @@ window.CARD_CONFIG = {
 
   // ---- 文字（直接改） ----
   title: "賀卡標題",
+  subtitle: "中文副標（留空＝隱藏）",
   greeting: "祝福內文，寫在這裡。",
   signoff: "With love, 木木文化",
   replyText: "TAP TO REPLY",

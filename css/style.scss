@@ -1,16 +1,16 @@
-// 根目錄佔位頁樣式源頭（鐵律：只改 .scss）
-// 編譯：npx sass style.scss style.css --no-source-map
+// 根目錄佔位頁樣式源頭（白金調性，鐵律：只改 .scss）
+// 編譯：npx sass css/style.scss css/style.css --no-source-map
 
-$bg: #10131a;
-$ink: #eee8dc;
-$accent: #d4b46a;
+$paper: #fdfcfa;
+$ink: #35302a;
+$gold-deep: #8a6d1f;
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: $bg;
+  background: $paper;
   color: $ink;
-  font-family: "Noto Serif TC", "微軟正黑體", "Microsoft JhengHei", serif;
+  font-family: "Noto Serif TC", Georgia, serif;
   min-height: 100dvh;
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@ body {
     font-size: 2.4rem;
     letter-spacing: .5em;
     text-indent: .5em;
-    color: $accent;
+    color: $gold-deep;
     font-weight: 500;
   }
 

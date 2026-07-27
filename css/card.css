@@ -1,0 +1,189 @@
+:root {
+  --card-paper: #fdfcfa;
+  --card-ink: #35302a;
+  --card-gold: #a8862e;
+  --card-gold-deep: #8a6d1f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--card-paper);
+  color: var(--card-ink);
+  font-family: "Noto Serif TC", Georgia, serif;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.card-stage {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.card-stage::after {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(168, 134, 46, 0.38);
+  pointer-events: none;
+}
+
+.card-scene {
+  position: relative;
+  z-index: 1;
+  padding: 40px 28px;
+  max-width: 34em;
+}
+
+.card-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2.6rem, 9vw, 4.4rem);
+  line-height: 1.12;
+  color: var(--card-gold);
+  text-wrap: balance;
+  margin-bottom: 0.35em;
+}
+
+.card-subtitle {
+  font-size: clamp(0.95rem, 3.2vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: 0.45em;
+  text-indent: 0.45em;
+  color: var(--card-ink);
+  margin-bottom: 2em;
+}
+.card-subtitle:empty {
+  display: none;
+}
+
+.card-greeting {
+  font-size: clamp(1rem, 3.6vw, 1.15rem);
+  font-weight: 400;
+  line-height: 2.15;
+  max-width: 26em;
+  margin: 0 auto 0.9em;
+  text-wrap: pretty;
+}
+
+.card-signoff {
+  font-family: "Cormorant Garamond", "Noto Serif TC", Georgia, serif;
+  font-size: clamp(0.95rem, 3.2vw, 1.05rem);
+  letter-spacing: 0.12em;
+  color: var(--card-gold-deep);
+  margin-bottom: 2.4em;
+}
+
+.card-reply {
+  display: inline-block;
+  padding: 0.62em 1.9em;
+  border: 1px solid rgba(168, 134, 46, 0.55);
+  border-radius: 999px;
+  color: var(--card-gold-deep);
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  transition: background 0.35s, color 0.35s, border-color 0.35s;
+}
+.card-reply:hover {
+  background: var(--card-gold-deep);
+  border-color: var(--card-gold-deep);
+  color: var(--card-paper);
+}
+
+.card-info {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 28px 80px;
+  text-align: center;
+}
+
+.card-note {
+  line-height: 2.2;
+  font-size: 0.95rem;
+  color: rgba(53, 48, 42, 0.78);
+  margin-bottom: 36px;
+  text-wrap: pretty;
+}
+.card-note:empty {
+  display: none;
+}
+
+.card-promo {
+  line-height: 2;
+  margin-bottom: 36px;
+}
+.card-promo:empty {
+  display: none;
+}
+
+.card-share {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.card-share a {
+  color: rgba(53, 48, 42, 0.72);
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  padding: 0.5em 1.3em;
+  border: 1px solid rgba(53, 48, 42, 0.22);
+  border-radius: 999px;
+  transition: border-color 0.35s, color 0.35s;
+}
+.card-share a:hover {
+  border-color: var(--card-gold-deep);
+  color: var(--card-gold-deep);
+}
+
+.card-expired-note {
+  text-align: center;
+  padding: 16px 20px 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: rgba(53, 48, 42, 0.55);
+}
+
+.layout-landscape .card-stage {
+  height: auto;
+  aspect-ratio: 16/9;
+  max-width: 1000px;
+  margin: 6vh auto 0;
+  border: 1px solid rgba(168, 134, 46, 0.28);
+  box-shadow: 0 30px 80px rgba(53, 48, 42, 0.14);
+}
+.layout-landscape .card-stage::after {
+  inset: 14px;
+}
+.layout-landscape .card-scene {
+  padding: 40px 64px;
+}
+.layout-landscape .card-info {
+  padding-top: 56px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

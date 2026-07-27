@@ -1,4 +1,3 @@
-@charset "UTF-8";
 * {
   margin: 0;
   padding: 0;
@@ -6,9 +5,9 @@
 }
 
 body {
-  background: #10131a;
-  color: #eee8dc;
-  font-family: "Noto Serif TC", "微軟正黑體", "Microsoft JhengHei", serif;
+  background: #fdfcfa;
+  color: #35302a;
+  font-family: "Noto Serif TC", Georgia, serif;
   min-height: 100dvh;
   display: flex;
   align-items: center;
@@ -22,12 +21,12 @@ body {
   font-size: 2.4rem;
   letter-spacing: 0.5em;
   text-indent: 0.5em;
-  color: #d4b46a;
+  color: #8a6d1f;
   font-weight: 500;
 }
 .holding-wrap p {
   margin-top: 14px;
   font-size: 0.85rem;
   letter-spacing: 0.35em;
-  color: rgba(238, 232, 220, 0.5);
+  color: rgba(53, 48, 42, 0.5);
 }
