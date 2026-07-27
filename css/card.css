@@ -178,6 +178,21 @@ body {
   padding-top: 56px;
 }
 
+.is-minimal .card-reply,
+.is-minimal .card-info {
+  display: none !important;
+}
+
+.layout-landscape.is-minimal body {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+}
+.layout-landscape.is-minimal .card-stage {
+  width: 100%;
+  margin: 0 auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -18,6 +18,9 @@ window.CARD_CONFIG = {
 
 
 
+  // ---- 版面 ----
+  minimal: false,            // true = 隱藏按鈕與資訊區，純動態畫面（交付客戶版用）
+
   // ---- 連結與日期 ----
   replyLink: "",             // 回覆按鈕連結（LINE 或 mailto:）；留空＝隱藏按鈕
   offlineDate: "",           // 檔期結束日 YYYY-MM-DD；留空＝永久展示

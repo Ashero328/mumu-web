@@ -1,0 +1,53 @@
+// ============================================
+// CH01 聖誕卡 專屬樣式源頭（白金・文青優雅）
+// 鐵律：只改 .scss；style.css 是編譯產物
+// 編譯（在本卡資料夾執行）：npx sass style.scss style.css --no-source-map
+// 之後真卡視覺進場時，背景與裝飾換成琇端的素材（assets/），此檔為版型示意
+// ============================================
+
+$gold: #a8862e;
+
+// 金環花圈：環抱標題的細線圓環，一顆金點如冬夜星子
+.wreath {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(78vw, 480px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -54%);
+  border: 1px solid rgba($gold, .30);
+  border-radius: 50%;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    border-radius: 50%;
+    background: $gold;
+  }
+}
+
+// 飄浮金點（雪）：位置各異，動態交給 GSAP
+.snowdot {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba($gold, .55);
+}
+
+.snowdot:nth-of-type(1) { top: 16%; left: 18%; }
+.snowdot:nth-of-type(2) { top: 24%; right: 16%; }
+.snowdot:nth-of-type(3) { top: 58%; left: 10%; width: 2px; height: 2px; }
+.snowdot:nth-of-type(4) { bottom: 22%; right: 12%; }
+.snowdot:nth-of-type(5) { bottom: 14%; left: 26%; width: 2px; height: 2px; }
+
+// 電腦版：花圈略縮，讓橫式構圖留出兩側呼吸
+.layout-landscape .wreath {
+  width: min(46vh, 400px);
+}

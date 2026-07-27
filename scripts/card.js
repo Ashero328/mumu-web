@@ -18,6 +18,9 @@
   applyLayout();
   window.addEventListener("resize", applyLayout);
 
+  // ---------- 純淨模式：交付客戶版，隱藏按鈕與資訊區 ----------
+  if (cfg.minimal) document.documentElement.classList.add("is-minimal");
+
   // ---------- 文字槽：config 的值填入 [data-slot] ----------
   document.querySelectorAll("[data-slot]").forEach(function (el) {
     var key = el.getAttribute("data-slot");

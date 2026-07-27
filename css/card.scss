@@ -198,6 +198,26 @@ body {
   .card-info { padding-top: 56px; }
 }
 
+// ---------- 純淨模式（config.minimal: true）：交付客戶版，只留動態畫面 ----------
+
+.is-minimal {
+  .card-reply,
+  .card-info { display: none !important; }
+}
+
+.layout-landscape.is-minimal {
+  body {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+  }
+
+  .card-stage {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
 // ---------- 減少動態 ----------
 
 @media (prefers-reduced-motion: reduce) {

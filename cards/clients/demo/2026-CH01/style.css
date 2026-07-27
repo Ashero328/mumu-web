@@ -1,0 +1,63 @@
+.wreath {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(78vw, 480px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -54%);
+  border: 1px solid rgba(168, 134, 46, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.wreath::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #a8862e;
+}
+
+.snowdot {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(168, 134, 46, 0.55);
+}
+
+.snowdot:nth-of-type(1) {
+  top: 16%;
+  left: 18%;
+}
+
+.snowdot:nth-of-type(2) {
+  top: 24%;
+  right: 16%;
+}
+
+.snowdot:nth-of-type(3) {
+  top: 58%;
+  left: 10%;
+  width: 2px;
+  height: 2px;
+}
+
+.snowdot:nth-of-type(4) {
+  bottom: 22%;
+  right: 12%;
+}
+
+.snowdot:nth-of-type(5) {
+  bottom: 14%;
+  left: 26%;
+  width: 2px;
+  height: 2px;
+}
+
+.layout-landscape .wreath {
+  width: min(46vh, 400px);
+}

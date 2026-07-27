@@ -1,0 +1,56 @@
+.year-ghost {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(5rem, 22vw, 8rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: rgba(53, 48, 42, 0.06);
+  pointer-events: none;
+  user-select: none;
+}
+
+.horizon {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(52vw, 320px);
+  height: 1px;
+  background: rgba(168, 134, 46, 0.45);
+  pointer-events: none;
+}
+
+.sunrise {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -27px 0 0 -9px;
+  border-radius: 50%;
+  background: #a8862e;
+  box-shadow: 0 0 22px rgba(168, 134, 46, 0.35);
+  pointer-events: none;
+}
+
+.card-scene {
+  padding-top: 22vh;
+}
+
+.layout-landscape .year-ghost {
+  top: 8%;
+  font-size: clamp(4.5rem, 12vw, 7rem);
+}
+.layout-landscape .horizon {
+  top: 30%;
+}
+.layout-landscape .sunrise {
+  top: 30%;
+}
+.layout-landscape .card-scene {
+  padding-top: 14vh;
+}
