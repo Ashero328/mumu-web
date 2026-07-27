@@ -19,7 +19,10 @@
   window.addEventListener("resize", applyLayout);
 
   // ---------- 純淨模式：交付客戶版，隱藏按鈕與資訊區 ----------
-  if (cfg.minimal) document.documentElement.classList.add("is-minimal");
+  // 兩種開法：config.js 寫 minimal:true，或網址加 ?min=1（同一張卡免複製第二份）
+  if (cfg.minimal || /[?&]min=1/.test(location.search)) {
+    document.documentElement.classList.add("is-minimal");
+  }
 
   // ---------- 文字槽：config 的值填入 [data-slot] ----------
   document.querySelectorAll("[data-slot]").forEach(function (el) {
@@ -27,12 +30,14 @@
     if (cfg[key]) el.textContent = cfg[key];
   });
 
-  // ---------- 檔期時效 ----------
+  // ---------- 檔期時效（每卡 config 自訂日期，這裡統一自動判斷） ----------
   var now = new Date();
   if (cfg.offlineDate && now > new Date(cfg.offlineDate + "T23:59:59")) {
     document.documentElement.classList.add("is-expired");
     var note = $(".card-expired-note");
     if (note) note.classList.remove("is-hidden");
+    // expireMode: "lock" = 到期整卡收起只留結束畫面；不寫 = 卡片照常顯示、只加註記
+    if (cfg.expireMode === "lock") document.documentElement.classList.add("is-locked");
   }
   if (cfg.promoOfflineDate && now > new Date(cfg.promoOfflineDate + "T23:59:59")) {
     var promo = $(".card-promo");

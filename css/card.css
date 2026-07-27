@@ -178,6 +178,20 @@ body {
   padding-top: 56px;
 }
 
+.is-locked .card-scene,
+.is-locked .card-deco,
+.is-locked .card-info {
+  display: none !important;
+}
+.is-locked .card-stage {
+  height: 46dvh;
+  min-height: 280px;
+}
+.is-locked .card-expired-note {
+  padding: 28px 20px;
+  font-size: 1rem;
+}
+
 .is-minimal .card-reply,
 .is-minimal .card-info {
   display: none !important;

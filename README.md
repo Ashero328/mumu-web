@@ -1,98 +1,86 @@
 # 木木文化網站（mumu-web）
 
-**現階段只做「給客戶看的賀卡頁」**；總覽頁封存在 `_future/`。
-此資料夾＝未來部署到 Cloudflare Pages 的網站根目錄。
+電子賀卡網站。GitHub Pages 預覽，正式上線走 Cloudflare＋自家網域。
 
-## 設計基調（定案）
-
-- **白金・文青優雅**：紙白 `#fdfcfa`／墨 `#35302a`／金 `#a8862e`（大字與線飾）／深金 `#8a6d1f`（小字，對比達標）
-- 字體：Cormorant Garamond（西文襯線）＋ Noto Serif TC（中文襯線），各卡 head 以 Google Fonts 載入
-- 版式：**手機 9:16 滿版／電腦 16:9 置中＋下滑資訊區**，斷點 900px
-- **動態一律 GSAP**（scripts/gsap.min.js），寫在各卡 `anim.js`；一律附 prefers-reduced-motion 保護
-
-## 結構
+## 結構（三資料夾，不再更複雜）
 
 ```
 mumu-web/
-├─ index.html                 ← 品牌佔位頁（不連向任何內部頁）
-├─ css/
-│   ├─ style.scss/.css        ← 佔位頁樣式
-│   └─ card.scss/.css         ← 賀卡引擎版式【鐵律：只改 .scss】
-├─ scripts/
-│   ├─ gsap.min.js
-│   └─ card.js                ← 引擎：版式切換、data-slot、時效、分享、動畫啟動
-├─ images/                    ← 全站共用圖（各卡素材放各卡 assets/）
-├─ cards/
-│   ├─ _template/             ← 新卡模板（複製用，不直接開啟）
-│   ├─ clients/               ← 客戶卡：cards/clients/<公司名或案號>/<年份-代號編號>/
-│   └─ showcase/              ← 展示卡：cards/showcase/<年份>/<代號編號>/
-│       └─ 2026/
-│           ├─ CH01/          ← 聖誕（金環花圈・飄雪金點）
-│           └─ NE01/          ← 新年（金日日昇・年份底紋）
-└─ _future/gallery/           ← 封存：節日分類總覽頁
+├─ index.html      ← 首頁（品牌佔位）；首頁墊圖、作品列表圖未來放這一層（與 index.html 同層）
+├─ cards/          ← 全部作品，一卡一資料夾（只放 index.html＋config.js）
+│   ├─ CH2026001/
+│   └─ NE2026001/
+├─ css/            ← 賀卡版式 card.scss、整體風格 style.scss、各卡風格 <卡號>.scss【鐵律：只改 .scss】
+├─ js/             ← 引擎 card.js、外掛 gsap.min.js、各卡動態 <卡號>.js
+└─ images/         ← 各卡媒體，一卡一資料夾（墊底圖、poster、影片、動畫零件）
 ```
 
-## 節日代號（英文前兩位大寫＋兩位編號）
+## 命名規則
 
-| 代號 | 節日 | 英文 |
-|------|------|------|
-| CH | 聖誕 | CHristmas |
-| NE | 新年（元旦） | NEw Year |
-| LU | 過年（農曆） | LUnar New Year |
-| MI | 中秋 | MId-Autumn |
-| DR | 端午 | DRagon Boat |
-| MO | 母親節 | MOther's Day |
-| FA | 父親節 | FAther's Day |
-| VA | 情人節 | VAlentine's |
-| HA | 萬聖節 | HAlloween |
-| BI | 生日 | BIrthday |
+**節日代號兩位大寫＋年份＋編號三位**：`CH2026001`＝2026 年第 1 張聖誕卡。
+卡片資料夾、css 檔、js 檔、images 資料夾全部同名，一眼對上。
 
-例：`showcase/2026/CH01`＝2026 年第 1 張聖誕展示卡；客戶卡 `clients/haoyu/2026-CH01`。
+| 代號 | 節日 | | 代號 | 節日 |
+|------|------|-|------|------|
+| CH | 聖誕 | | MO | 母親節 |
+| NE | 新年（元旦） | | FA | 父親節 |
+| LU | 過年（農曆） | | VA | 情人節 |
+| MI | 中秋 | | HA | 萬聖節 |
+| DR | 端午 | | BI | 生日 |
 
-## 每張卡的圖檔分區（assets/）
+## 圖檔放哪
 
-| 資料夾 | 用途 | 檔名與尺寸 |
-|--------|------|-----------|
-| `assets/bg/` | 墊底圖（賀卡背景） | `bg.png` 直式 1080×1920／`bg-wide.png` 橫式 1920×1080 |
-| `assets/list/` | 總站列表圖（作品集縮圖） | `list.jpg` 540×960（9:16） |
-| `assets/share/` | 分享預覽圖（OG） | `poster.jpg` 1200×630 |
-| `assets/parts/` | 動畫零件 | 製作方命名後告知，同名覆蓋 |
+- `images/<卡號>/`：`bg.png` 直式墊底 1080×1920、`bg-wide.png` 橫式墊底 1920×1080、`poster.jpg` 分享預覽 1200×630、影片與動畫零件
+- **首頁墊圖、作品列表圖**（`list-<卡號>.jpg` 540×960）：放根目錄，與 index.html 同層
 
-墊底圖接法已寫在 `_template/style.scss` 的註解裡（素材進場拿掉註解即生效）；
-列表圖是未來總覽頁的縮圖來源（`_future/gallery/cards.js` 的 poster 欄位固定指向 `assets/list/list.jpg`）。
+## config.js 功能開關（每卡自訂，引擎自動跑）
 
-## 新增一張賀卡（SOP）
+| 欄位 | 效果 |
+|------|------|
+| `offlineDate: "YYYY-MM-DD"` | 檔期結束日，到期自動處理 |
+| `expireMode: "lock"` | 到期整卡收起只留結束畫面；不寫＝照常顯示只加註記 |
+| `promoOfflineDate` | 曝光區塊自動下架日 |
+| `replyLink` 留空 | 隱藏回覆按鈕 |
+| `videoFile` 留空 | 隱藏下載影片鈕 |
 
-1. 複製 `cards/_template/` → `cards/clients/<公司或案號>/<年份-代號編號>/`（展示卡放 showcase）
-2. `config.js`：填文字（title/subtitle/greeting…）、節日、時效日
-3. `assets/`：放素材（規則見資料夾內說明）
-4. `style.scss`：本卡背景與裝飾 → 編譯出 style.css
-5. `anim.js`：寫 GSAP 動畫（記得 reduced-motion 保護）
-6. `index.html`：改 title 與 OG 三行
-7. 部署後把網址交給琇端
+**客戶純動態版**：同一張卡網址加 `?min=1`（隱藏按鈕與資訊區），不用複製第二份。
+
+## 新增一張卡（SOP）
+
+1. 複製 `cards/` 任一現有卡 → 改名為新卡號（例 `cards/LU2026001/`）
+2. `config.js`：改 id、文字、日期
+3. `css/`：複製一份現有卡的 scss → 改名 `<新卡號>.scss` → 改內容 → 編譯
+4. `js/`：複製 `<現有卡號>.js` → 改名 → 寫 GSAP 動畫
+5. `index.html`：改 title 與 OG 三行＋`<link>` 和 `<script>` 裡的卡號
+6. `images/<新卡號>/`：放素材
+7. 部署（下方三行）
 
 ## 琇端的自助範圍
 
-- `config.js` 的文字與日期（純文字修改）
-- `assets/` 內圖片**同名覆蓋**（尺寸相同）
-- 其他（動畫、版面、程式）→ 交給製作方
+- `cards/<卡號>/config.js` 的文字與日期
+- `images/<卡號>/` 圖片同名覆蓋（尺寸一致）
+- 其他交給製作方
 
-## SCSS 工作流【鐵律】
-
-樣式一律改 `.scss`，`.css` 是編譯產物。在 mumu-web 根目錄執行：
+## SCSS 編譯【鐵律：只改 .scss，.css 是產物】
 
 ```
 npx sass css/style.scss css/style.css --no-source-map
 npx sass css/card.scss css/card.css --no-source-map
-npx sass cards/showcase/2026/CH01/style.scss cards/showcase/2026/CH01/style.css --no-source-map
-npx sass cards/showcase/2026/NE01/style.scss cards/showcase/2026/NE01/style.css --no-source-map
+npx sass css/CH2026001.scss css/CH2026001.css --no-source-map
+npx sass css/NE2026001.scss css/NE2026001.css --no-source-map
 ```
 
-新卡照同樣模式編譯各卡 style.scss；開發時可加 `--watch`。
+## 部署
+
+```
+git add -A
+git commit -m "說明"
+git push
+```
+
+GitHub Pages 一兩分鐘自動更新：`https://ashero328.github.io/mumu-web/cards/<卡號>/`
 
 ## 上線備忘
 
-- Cloudflare Pages 以本資料夾為根目錄部署；GitHub 倉庫維持 Private
-- 網域生效後：各卡 `index.html` 的 `og:url`／`og:image` 補正式網域絕對網址
-- 影片量大後：檔案移 R2（綁 `media.網域`），config 的 `videoFile` 換連結
-- 未來啟用總覽頁：把 `_future/gallery/` 搬回 `cards/`，並改讀 showcase 清單
+- 網域生效後：各卡 og:url／og:image 補正式網域絕對網址
+- 影片量大後：檔案移 Cloudflare R2（綁 media.網域），config 換連結

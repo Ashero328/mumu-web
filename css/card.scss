@@ -198,6 +198,24 @@ body {
   .card-info { padding-top: 56px; }
 }
 
+// ---------- 檔期結束 lock 模式（config.expireMode: "lock"）：整卡收起只留結束畫面 ----------
+
+.is-locked {
+  .card-scene,
+  .card-deco,
+  .card-info { display: none !important; }
+
+  .card-stage {
+    height: 46dvh;
+    min-height: 280px;
+  }
+
+  .card-expired-note {
+    padding: 28px 20px;
+    font-size: 1rem;
+  }
+}
+
 // ---------- 純淨模式（config.minimal: true）：交付客戶版，只留動態畫面 ----------
 
 .is-minimal {

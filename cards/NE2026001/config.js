@@ -1,6 +1,6 @@
 // NE01 新年示範卡設定
 window.CARD_CONFIG = {
-  id: "2026-NE01",
+  id: "NE2026001",
   festival: "新年",
 
   title: "Happy New Year",
