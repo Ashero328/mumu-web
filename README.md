@@ -49,6 +49,18 @@ mumu-web/
 
 例：`showcase/2026/CH01`＝2026 年第 1 張聖誕展示卡；客戶卡 `clients/haoyu/2026-CH01`。
 
+## 每張卡的圖檔分區（assets/）
+
+| 資料夾 | 用途 | 檔名與尺寸 |
+|--------|------|-----------|
+| `assets/bg/` | 墊底圖（賀卡背景） | `bg.png` 直式 1080×1920／`bg-wide.png` 橫式 1920×1080 |
+| `assets/list/` | 總站列表圖（作品集縮圖） | `list.jpg` 540×960（9:16） |
+| `assets/share/` | 分享預覽圖（OG） | `poster.jpg` 1200×630 |
+| `assets/parts/` | 動畫零件 | 製作方命名後告知，同名覆蓋 |
+
+墊底圖接法已寫在 `_template/style.scss` 的註解裡（素材進場拿掉註解即生效）；
+列表圖是未來總覽頁的縮圖來源（`_future/gallery/cards.js` 的 poster 欄位固定指向 `assets/list/list.jpg`）。
+
 ## 新增一張賀卡（SOP）
 
 1. 複製 `cards/_template/` → `cards/clients/<公司或案號>/<年份-代號編號>/`（展示卡放 showcase）
