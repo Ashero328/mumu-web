@@ -1,0 +1,105 @@
+// ============================================
+// 賀卡總覽頁 樣式源頭
+// 鐵律：樣式一律改這個 .scss；gallery.css 是編譯產物，不要手改
+// 編譯：npx sass cards/gallery.scss cards/gallery.css --no-source-map
+// ============================================
+
+$bg: #10131a;
+$ink: #eee8dc;
+$accent: #d4b46a;
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: $bg;
+  color: $ink;
+  font-family: "Noto Serif TC", "微軟正黑體", "Microsoft JhengHei", serif;
+}
+
+.gallery-header {
+  text-align: center;
+  padding: 64px 20px 24px;
+
+  h1 {
+    font-size: 2rem;
+    letter-spacing: .2em;
+    color: $accent;
+  }
+
+  p {
+    margin-top: 10px;
+    color: rgba($ink, .6);
+    font-size: .9rem;
+    letter-spacing: .1em;
+  }
+}
+
+.festival-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px 20px;
+
+  h2 {
+    font-size: 1.2rem;
+    color: $accent;
+    letter-spacing: .15em;
+    border-left: 4px solid $accent;
+    padding-left: 12px;
+    margin-bottom: 18px;
+  }
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+.card-tile {
+  display: block;
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  background: linear-gradient(160deg, #1b2a45, #0d1526);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+  transition: transform .3s;
+
+  &:hover { transform: translateY(-4px); }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .tile-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 14px 12px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, .72));
+    color: $ink;
+    font-size: .95rem;
+    text-align: center;
+    letter-spacing: .06em;
+  }
+
+  .tile-year {
+    display: block;
+    font-size: .75rem;
+    color: rgba($ink, .6);
+    margin-top: 2px;
+  }
+}
+
+.gallery-footer {
+  text-align: center;
+  padding: 48px 20px 64px;
+  color: rgba($ink, .45);
+  font-size: .8rem;
+  letter-spacing: .1em;
+}

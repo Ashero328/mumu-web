@@ -1,0 +1,33 @@
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #10131a;
+  color: #eee8dc;
+  font-family: "Noto Serif TC", "微軟正黑體", "Microsoft JhengHei", serif;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.holding-wrap {
+  text-align: center;
+}
+.holding-wrap h1 {
+  font-size: 2.4rem;
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  color: #d4b46a;
+  font-weight: 500;
+}
+.holding-wrap p {
+  margin-top: 14px;
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  color: rgba(238, 232, 220, 0.5);
+}

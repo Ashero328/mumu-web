@@ -1,0 +1,37 @@
+// 根目錄佔位頁樣式源頭（鐵律：只改 .scss）
+// 編譯：npx sass style.scss style.css --no-source-map
+
+$bg: #10131a;
+$ink: #eee8dc;
+$accent: #d4b46a;
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: $bg;
+  color: $ink;
+  font-family: "Noto Serif TC", "微軟正黑體", "Microsoft JhengHei", serif;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.holding-wrap {
+  text-align: center;
+
+  h1 {
+    font-size: 2.4rem;
+    letter-spacing: .5em;
+    text-indent: .5em;
+    color: $accent;
+    font-weight: 500;
+  }
+
+  p {
+    margin-top: 14px;
+    font-size: .85rem;
+    letter-spacing: .35em;
+    color: rgba($ink, .5);
+  }
+}

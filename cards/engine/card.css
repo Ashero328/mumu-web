@@ -1,0 +1,142 @@
+@charset "UTF-8";
+:root {
+  --card-bg: #0d1526;
+  --card-ink: #f3ecdd;
+  --card-accent: #d4b46a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--card-bg);
+  color: var(--card-ink);
+  font-family: "Noto Serif TC", "微軟正黑體", "Microsoft JhengHei", serif;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.card-stage {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.card-scene {
+  position: relative;
+  z-index: 1;
+  padding: 24px;
+  max-width: 32em;
+}
+
+.card-title {
+  font-size: clamp(2.2rem, 8vw, 3.6rem);
+  color: var(--card-accent);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.6em;
+}
+
+.card-greeting {
+  font-size: clamp(1rem, 3.8vw, 1.2rem);
+  line-height: 2;
+  margin-bottom: 0.5em;
+}
+
+.card-signoff {
+  font-size: clamp(0.95rem, 3.4vw, 1.1rem);
+  color: var(--card-accent);
+  margin-bottom: 2.2em;
+}
+
+.card-reply {
+  display: inline-block;
+  padding: 0.55em 1.6em;
+  border: 1px solid var(--card-accent);
+  border-radius: 999px;
+  color: var(--card-accent);
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  transition: background 0.3s, color 0.3s;
+}
+.card-reply:hover {
+  background: var(--card-accent);
+  color: var(--card-bg);
+}
+
+.card-info {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 24px 72px;
+  text-align: center;
+}
+
+.card-note {
+  line-height: 2.1;
+  margin-bottom: 32px;
+  font-size: 0.95rem;
+  color: rgba(243, 236, 221, 0.85);
+}
+.card-note:empty {
+  display: none;
+}
+
+.card-promo {
+  line-height: 1.9;
+  margin-bottom: 32px;
+}
+.card-promo:empty {
+  display: none;
+}
+
+.card-share {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.card-share a {
+  color: var(--card-ink);
+  text-decoration: none;
+  font-size: 0.88rem;
+  padding: 0.5em 1.2em;
+  border: 1px solid rgba(243, 236, 221, 0.35);
+  border-radius: 999px;
+  transition: border-color 0.3s, color 0.3s;
+}
+.card-share a:hover {
+  border-color: var(--card-accent);
+  color: var(--card-accent);
+}
+
+.card-expired-note {
+  text-align: center;
+  padding: 14px 20px;
+  font-size: 0.85rem;
+  color: rgba(243, 236, 221, 0.65);
+  letter-spacing: 0.1em;
+}
+
+.layout-landscape .card-stage {
+  height: auto;
+  aspect-ratio: 16/9;
+  max-width: 1000px;
+  margin: 6vh auto 0;
+  border-radius: 10px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+.layout-landscape .card-info {
+  padding-top: 48px;
+}

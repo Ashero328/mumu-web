@@ -1,0 +1,95 @@
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #10131a;
+  color: #eee8dc;
+  font-family: "Noto Serif TC", "微軟正黑體", "Microsoft JhengHei", serif;
+}
+
+.gallery-header {
+  text-align: center;
+  padding: 64px 20px 24px;
+}
+.gallery-header h1 {
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  color: #d4b46a;
+}
+.gallery-header p {
+  margin-top: 10px;
+  color: rgba(238, 232, 220, 0.6);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+}
+
+.festival-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+.festival-section h2 {
+  font-size: 1.2rem;
+  color: #d4b46a;
+  letter-spacing: 0.15em;
+  border-left: 4px solid #d4b46a;
+  padding-left: 12px;
+  margin-bottom: 18px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+.card-tile {
+  display: block;
+  position: relative;
+  aspect-ratio: 9/16;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  background: linear-gradient(160deg, #1b2a45, #0d1526);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: transform 0.3s;
+}
+.card-tile:hover {
+  transform: translateY(-4px);
+}
+.card-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.card-tile .tile-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 12px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
+  color: #eee8dc;
+  font-size: 0.95rem;
+  text-align: center;
+  letter-spacing: 0.06em;
+}
+.card-tile .tile-year {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(238, 232, 220, 0.6);
+  margin-top: 2px;
+}
+
+.gallery-footer {
+  text-align: center;
+  padding: 48px 20px 64px;
+  color: rgba(238, 232, 220, 0.45);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+}
