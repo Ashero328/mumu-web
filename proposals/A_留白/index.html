@@ -25,6 +25,7 @@
       <a href="#services">營業項目</a>
       <a href="#works">設計作品</a>
       <a href="#promo">賀卡檔期</a>
+      <a href="#flow">訂購流程</a>
       <a href="#contact">與我聯絡</a>
     </nav>
     <a class="nav__cta" href="#contact">LINE 詢價</a>
@@ -48,15 +49,16 @@
       </div>
     </div>
     <figure class="hero__figure">
-      <img src="../assets/e-card/羊年-直式.jpg" alt="羊年電子賀卡・直式" width="600" height="800">
+      <img src="../assets/hero-studio.jpg" alt="設計師在工作桌上翻閱印刷樣本與色票" width="1000" height="1339">
       <span class="hero__seal" aria-hidden="true">木</span>
-      <figcaption>2027 丁未・羊年賀卡</figcaption>
+      <figcaption>紙張、色票、印樣，一件件確認</figcaption>
     </figure>
     <p class="hero__vertical" aria-hidden="true">紙 上 有 溫 度</p>
   </section>
 
   <!-- ── 品牌風格理念 ── -->
   <section class="about wrap" id="about">
+    <img class="about__tree" src="../assets/tree.webp" alt="" width="900" height="865" loading="lazy" decoding="async" aria-hidden="true">
     <p class="section-label">關於木木</p>
     <div class="about__grid">
       <h2 class="about__lead">在紙張與油墨的<br>字裡行間誕生</h2>
@@ -72,45 +74,44 @@
   <section class="services" id="services">
     <div class="wrap">
       <p class="section-label">營業項目</p>
+      <!-- 圓圈關係圖：中心圓向外六個項目圓，連線在圓形下方（圓有實色底會蓋住線端） -->
       <div class="mindmap" role="group" aria-label="營業項目關係圖">
-        <!-- 曲線端點＝各節點的圓點座標（節點以 dot 為定位基準，兩者永遠對齊） -->
-        <svg class="mindmap__lines" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M500,196 C424,150 262,96 140,74"></path>
-          <path d="M500,196 C576,150 738,96 860,74"></path>
-          <path d="M500,196 C392,200 250,206 108,210"></path>
-          <path d="M500,196 C608,200 750,206 892,210"></path>
-          <path d="M500,196 C474,258 400,312 302,338"></path>
-          <path d="M500,196 C526,258 600,312 698,338"></path>
+        <svg class="mindmap__lines" viewBox="0 0 1000 460" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="500" y1="215" x2="325" y2="81"></line>
+          <line x1="500" y1="215" x2="675" y2="81"></line>
+          <line x1="500" y1="215" x2="150" y2="215"></line>
+          <line x1="500" y1="215" x2="850" y2="215"></line>
+          <line x1="500" y1="215" x2="325" y2="349"></line>
+          <line x1="500" y1="215" x2="675" y2="349"></line>
         </svg>
 
         <p class="mindmap__hub"><span>木木文化</span><small>設計 ・ 印刷</small></p>
 
-        <!-- 節點：幾何線框標記＋2D 線稿示意圖（桌機滑過浮現、手機直接顯示） -->
-        <!-- 示意圖在 ../assets/illus/，要換成實拍或自繪的 2D 圖時覆蓋同名檔案即可 -->
+        <!-- icon 在 ../assets/icons/，要換圖覆蓋同名檔案即可（黑色線稿 PNG，顏色由 CSS 遮罩控制） -->
         <ul class="mindmap__nodes">
           <li class="mnode mnode--1" data-line="0">
-            <span class="mnode__mark mark--circle"></span><span class="mnode__name">名片設計</span><span class="mnode__note">從聽故事開始</span>
-            <img class="mnode__thumb" src="../assets/illus/card-design.svg" alt="名片設計示意" width="160" height="120" loading="lazy">
+            <span class="mnode__bubble"><img class="ic" src="../assets/icons/business-card-design.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+            <span class="mnode__name">名片設計</span><span class="mnode__note">從聽故事開始</span>
           </li>
           <li class="mnode mnode--2" data-line="1">
-            <span class="mnode__mark mark--tri"></span><span class="mnode__name">電子賀卡</span><span class="mnode__note">會動的節慶問候</span>
-            <img class="mnode__thumb" src="../assets/illus/ecard.svg" alt="電子賀卡示意" width="160" height="120" loading="lazy">
+            <span class="mnode__bubble"><img class="ic" src="../assets/icons/thank-you-card.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+            <span class="mnode__name">電子賀卡</span><span class="mnode__note">會動的節慶問候</span>
           </li>
           <li class="mnode mnode--3" data-line="2">
-            <span class="mnode__mark mark--square"></span><span class="mnode__name">名片印刷</span><span class="mnode__note">紙材親手挑</span>
-            <img class="mnode__thumb" src="../assets/illus/card-print.svg" alt="名片印刷示意" width="160" height="120" loading="lazy">
+            <span class="mnode__bubble"><img class="ic" src="../assets/icons/paper-rolls.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+            <span class="mnode__name">名片印刷</span><span class="mnode__note">紙材親手挑</span>
           </li>
           <li class="mnode mnode--4" data-line="3">
-            <span class="mnode__mark mark--diamond"></span><span class="mnode__name">吊牌店卡</span><span class="mnode__note">小物講究細節</span>
-            <img class="mnode__thumb" src="../assets/illus/tag.svg" alt="吊牌店卡示意" width="160" height="120" loading="lazy">
+            <span class="mnode__bubble"><img class="ic" src="../assets/icons/tag.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+            <span class="mnode__name">吊牌店卡</span><span class="mnode__note">小物講究細節</span>
           </li>
           <li class="mnode mnode--5" data-line="4">
-            <span class="mnode__mark mark--lines"></span><span class="mnode__name">信封信紙</span><span class="mnode__note">整套品牌語氣</span>
-            <img class="mnode__thumb" src="../assets/illus/envelope.svg" alt="信封信紙示意" width="160" height="120" loading="lazy">
+            <span class="mnode__bubble"><img class="ic" src="../assets/icons/message.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+            <span class="mnode__name">信封信紙</span><span class="mnode__note">整套品牌語氣</span>
           </li>
           <li class="mnode mnode--6" data-line="5">
-            <span class="mnode__mark mark--arc"></span><span class="mnode__name">各式印刷</span><span class="mnode__note">DM ・ 貼紙 ・ 包材</span>
-            <img class="mnode__thumb" src="../assets/illus/print.svg" alt="各式印刷示意" width="160" height="120" loading="lazy">
+            <span class="mnode__bubble"><img class="ic" src="../assets/icons/newspaper.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+            <span class="mnode__name">各式印刷</span><span class="mnode__note">DM ・ 貼紙 ・ 包材</span>
           </li>
         </ul>
       </div>
@@ -200,6 +201,41 @@
     </div>
   </section>
 
+  <!-- ── 訂購流程 ── -->
+  <section class="flow" id="flow">
+    <div class="wrap">
+      <div class="flow__head">
+        <p class="section-label">訂購流程</p>
+        <h2>四步，從想法到成品</h2>
+      </div>
+      <ol class="flow__list">
+        <li class="step">
+          <span class="step__bubble"><img class="ic" src="../assets/icons/phone-call.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+          <h3>聊需求</h3>
+          <p>LINE 或電話說說品牌與用途，先確認方向。</p>
+        </li>
+        <li class="step">
+          <span class="step__bubble"><img class="ic" src="../assets/icons/message.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+          <h3>報價確認</h3>
+          <p>依規格、紙材與數量出正式報價，確認後動工。</p>
+        </li>
+        <li class="step">
+          <span class="step__bubble"><img class="ic" src="../assets/icons/art.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+          <h3>設計審稿</h3>
+          <p>設計稿來回修改，逐字核對後簽稿。</p>
+        </li>
+        <li class="step">
+          <span class="step__bubble"><img class="ic" src="../assets/icons/paper-rolls.png" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+          <h3>印製交付</h3>
+          <p>付印、品檢，送到你手上。</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 波浪草皮：紙面過渡到聯絡區 -->
+  <div class="grass" aria-hidden="true"></div>
+
   <!-- ── 聯絡 ── -->
   <section class="contact" id="contact">
     <div class="wrap contact__inner">
@@ -209,7 +245,12 @@
         <a class="btn btn--solid" href="https://line.me/R/ti/p/@yme1248q">加 LINE 詢價</a>
         <a class="btn btn--ghost" href="tel:0919084796">撥打 0919-084796</a>
       </div>
-      <p class="contact__meta">LINE @yme1248q　・　meisitw@gmail.com　・　IG mumuyang.2026</p>
+      <ul class="contact__links">
+        <li><a href="https://line.me/R/ti/p/@yme1248q"><img class="ic" src="../assets/icons/line.png" alt="" width="512" height="512" loading="lazy" decoding="async"><span>LINE</span><em>@yme1248q</em></a></li>
+        <li><a href="tel:0919084796"><img class="ic" src="../assets/icons/phone.png" alt="" width="512" height="512" loading="lazy" decoding="async"><span>電話</span><em>0919-084796</em></a></li>
+        <li><a href="mailto:meisitw@gmail.com"><img class="ic" src="../assets/icons/gmail.png" alt="" width="512" height="512" loading="lazy" decoding="async"><span>Email</span><em>meisitw@gmail.com</em></a></li>
+        <li><a href="https://instagram.com/mumuyang.2026"><img class="ic" src="../assets/icons/instagram.png" alt="" width="512" height="512" loading="lazy" decoding="async"><span>Instagram</span><em>mumuyang.2026</em></a></li>
+      </ul>
     </div>
   </section>
 

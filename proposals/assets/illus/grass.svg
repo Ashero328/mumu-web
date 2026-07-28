@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+  <!-- 波浪草皮：三層丘陵，最前層與聯絡區底色相同，讓紙面自然過渡到深綠 -->
+  <path fill="#c3d3a8" d="M0 96c132-38 264-46 396-24s264 74 396 66 264-70 396-84c84-10 168-6 252 12v154H0z"></path>
+  <path fill="#93a86e" d="M0 138c150-34 300-30 450 8s300 66 450 40 300-58 540-30v64H0z"></path>
+  <path fill="#4a5a34" d="M0 178c168-26 336-14 504 12s336 26 504 4 288-30 432-12v38H0z"></path>
+  <!-- 草叢 -->
+  <g fill="none" stroke="#93a86e" stroke-width="3" stroke-linecap="round">
+    <path d="M96 176c-4-20-2-34 6-46M110 176c0-18 4-30 14-40M124 178c2-16 8-26 18-32"></path>
+    <path d="M1244 172c-4-18-2-30 6-42M1258 174c0-16 4-28 14-36"></path>
+  </g>
+  <g fill="none" stroke="#c3d3a8" stroke-width="3" stroke-linecap="round">
+    <path d="M640 186c-3-16-1-28 6-38M654 188c0-14 4-24 12-32"></path>
+  </g>
+</svg>
