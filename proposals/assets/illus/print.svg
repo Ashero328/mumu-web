@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-label="各式印刷">
+  <g fill="none" stroke="#00738c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 100V26l24-8v74z" fill="#d6ead4" fill-opacity=".4"></path>
+    <path d="M54 18l26 10v74l-26-10z" fill="#fff"></path>
+    <path d="M80 28l26-10v74l-26 10z" fill="#d6ead4" fill-opacity=".3"></path>
+    <path d="M106 18l24 8v74l-24-8z" fill="#fff"></path>
+    <path d="M64 44h8M64 58h8M114 44h8M114 58h8" stroke="#97a675"></path>
+  </g>
+</svg>

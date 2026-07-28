@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>木木文化工作室｜設計印刷（版型提案 A：中式文青・留白）</title>
+<meta name="description" content="木木文化工作室：名片設計印刷、電子賀卡、吊牌店卡、信封信紙。想幫您留住指尖感知的溫度。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">跳至主要內容</a>
+
+<!-- 版面範圍線：像冊頁的左右界線，提示內容範圍 -->
+<div class="frame" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="nav__inner wrap">
+    <a class="nav__brand" href="#top"><img src="../assets/logo.png" alt="木木文化 設計印刷" width="650" height="125"></a>
+    <nav class="nav__links" aria-label="主要導覽">
+      <a href="#about">關於木木</a>
+      <a href="#services">營業項目</a>
+      <a href="#works">設計作品</a>
+      <a href="#promo">賀卡檔期</a>
+      <a href="#contact">與我聯絡</a>
+    </nav>
+    <a class="nav__cta" href="#contact">LINE 詢價</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ── 主視覺 ── -->
+  <section class="hero wrap" id="top">
+    <div class="hero__type">
+      <p class="hero__kicker"><i>Mumu Culture</i>　設計 ・ 印刷</p>
+      <h1 class="hero__title">
+        <span>文字與線條</span>
+        <span class="indent">在紙張上留下深度</span>
+        <span class="accent">留住指尖感知的溫度</span>
+      </h1>
+      <div class="hero__actions">
+        <a class="btn btn--solid" href="#works">看設計作品</a>
+        <a class="btn btn--ghost" href="#promo">賀卡檔期</a>
+      </div>
+    </div>
+    <figure class="hero__figure">
+      <img src="../assets/e-card/羊年-直式.jpg" alt="羊年電子賀卡・直式" width="600" height="800">
+      <span class="hero__seal" aria-hidden="true">木</span>
+      <figcaption>2027 丁未・羊年賀卡</figcaption>
+    </figure>
+    <p class="hero__vertical" aria-hidden="true">紙 上 有 溫 度</p>
+  </section>
+
+  <!-- ── 品牌風格理念 ── -->
+  <section class="about wrap" id="about">
+    <p class="section-label">關於木木</p>
+    <div class="about__grid">
+      <h2 class="about__lead">在紙張與油墨的<br>字裡行間誕生</h2>
+      <div class="about__body">
+        <p class="about__quote">文字與線條，在紙張上留下了深度；<br>而木木，想幫您留住指尖感知的溫度。</p>
+        <p>不給自己設限的設計及印刷工作室。喜歡聽故事，也講究紙質的手感，把您的需求印製成最精緻的模樣。</p>
+        <p class="about__sign">每一個作品，都是一份陪伴。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 營業項目：放射關係圖 ── -->
+  <section class="services" id="services">
+    <div class="wrap">
+      <p class="section-label">營業項目</p>
+      <div class="mindmap" role="group" aria-label="營業項目關係圖">
+        <!-- 曲線端點＝各節點的圓點座標（節點以 dot 為定位基準，兩者永遠對齊） -->
+        <svg class="mindmap__lines" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M500,196 C424,150 262,96 140,74"></path>
+          <path d="M500,196 C576,150 738,96 860,74"></path>
+          <path d="M500,196 C392,200 250,206 108,210"></path>
+          <path d="M500,196 C608,200 750,206 892,210"></path>
+          <path d="M500,196 C474,258 400,312 302,338"></path>
+          <path d="M500,196 C526,258 600,312 698,338"></path>
+        </svg>
+
+        <p class="mindmap__hub"><span>木木文化</span><small>設計 ・ 印刷</small></p>
+
+        <!-- 節點：幾何線框標記＋2D 線稿示意圖（桌機滑過浮現、手機直接顯示） -->
+        <!-- 示意圖在 ../assets/illus/，要換成實拍或自繪的 2D 圖時覆蓋同名檔案即可 -->
+        <ul class="mindmap__nodes">
+          <li class="mnode mnode--1" data-line="0">
+            <span class="mnode__mark mark--circle"></span><span class="mnode__name">名片設計</span><span class="mnode__note">從聽故事開始</span>
+            <img class="mnode__thumb" src="../assets/illus/card-design.svg" alt="名片設計示意" width="160" height="120" loading="lazy">
+          </li>
+          <li class="mnode mnode--2" data-line="1">
+            <span class="mnode__mark mark--tri"></span><span class="mnode__name">電子賀卡</span><span class="mnode__note">會動的節慶問候</span>
+            <img class="mnode__thumb" src="../assets/illus/ecard.svg" alt="電子賀卡示意" width="160" height="120" loading="lazy">
+          </li>
+          <li class="mnode mnode--3" data-line="2">
+            <span class="mnode__mark mark--square"></span><span class="mnode__name">名片印刷</span><span class="mnode__note">紙材親手挑</span>
+            <img class="mnode__thumb" src="../assets/illus/card-print.svg" alt="名片印刷示意" width="160" height="120" loading="lazy">
+          </li>
+          <li class="mnode mnode--4" data-line="3">
+            <span class="mnode__mark mark--diamond"></span><span class="mnode__name">吊牌店卡</span><span class="mnode__note">小物講究細節</span>
+            <img class="mnode__thumb" src="../assets/illus/tag.svg" alt="吊牌店卡示意" width="160" height="120" loading="lazy">
+          </li>
+          <li class="mnode mnode--5" data-line="4">
+            <span class="mnode__mark mark--lines"></span><span class="mnode__name">信封信紙</span><span class="mnode__note">整套品牌語氣</span>
+            <img class="mnode__thumb" src="../assets/illus/envelope.svg" alt="信封信紙示意" width="160" height="120" loading="lazy">
+          </li>
+          <li class="mnode mnode--6" data-line="5">
+            <span class="mnode__mark mark--arc"></span><span class="mnode__name">各式印刷</span><span class="mnode__note">DM ・ 貼紙 ・ 包材</span>
+            <img class="mnode__thumb" src="../assets/illus/print.svg" alt="各式印刷示意" width="160" height="120" loading="lazy">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 設計作品：小而精美 ── -->
+  <section class="works wrap" id="works">
+    <div class="works__head">
+      <p class="section-label">設計作品</p>
+      <h2>紙上的實際成果</h2>
+      <a class="link-more" href="#contact">索取完整作品集</a>
+    </div>
+    <ul class="works__grid">
+      <li class="wk">
+        <img src="../assets/business-card/BusinessCard-img1.png" alt="名片作品：雙面印刷" width="1200" height="900" loading="lazy" decoding="async">
+        <p class="wk__name">雙面名片<span>合版細紋紙</span></p>
+      </li>
+      <li class="wk">
+        <img src="../assets/business-card/BusinessCard-img2.png" alt="名片作品：品牌名片" width="1200" height="900" loading="lazy" decoding="async">
+        <p class="wk__name">品牌名片<span>燙金</span></p>
+      </li>
+      <li class="wk">
+        <img src="../assets/business-card/BusinessCard-img3.png" alt="名片作品：個人工作室名片" width="1200" height="900" loading="lazy" decoding="async">
+        <p class="wk__name">工作室名片<span>厚磅美術紙</span></p>
+      </li>
+      <li class="wk">
+        <img src="../assets/business-card/BusinessCard-img4.png" alt="名片作品：情境擺放" width="1200" height="900" loading="lazy" decoding="async">
+        <p class="wk__name">名片情境<span>木質桌面</span></p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── 近期賀卡促銷動態：疊卡捲動 ── -->
+  <section class="promo" id="promo">
+    <div class="wrap">
+      <div class="promo__head">
+        <p class="section-label">最新消息</p>
+        <h2>年末年初賀卡檔期開放預約</h2>
+        <p class="promo__intro">動態電子賀卡，一條連結手機與電腦都好看。旺季建議提前四週預約。</p>
+      </div>
+
+      <div class="stack" id="stack">
+        <article class="stack__card">
+          <img src="../assets/e-card/羊年-直式.jpg" alt="羊年賀卡" width="600" height="800" loading="lazy" decoding="async">
+          <div class="stack__body">
+            <p class="stack__code" aria-hidden="true">ZO</p>
+            <h3>十二生肖・羊年</h3>
+            <p>宣紙質感搭配書法與燙金，2027 丁未年。</p>
+            <p class="stack__spec"><span>直式・橫式雙版</span><span>無音樂自動播放</span><span>可加品牌落款</span></p>
+            <p class="stack__meta">預約至 2026 / 12 / 20</p>
+          </div>
+        </article>
+        <article class="stack__card">
+          <img src="../assets/e-card/聖誕-直式.jpg" alt="聖誕賀卡" width="600" height="800" loading="lazy" decoding="async">
+          <div class="stack__body">
+            <p class="stack__code" aria-hidden="true">CH</p>
+            <h3>聖誕・年末問候</h3>
+            <p>適合向客戶說一年的謝謝。</p>
+            <p class="stack__spec"><span>直式・橫式雙版</span><span>一鍵分享 LINE</span><span>可加品牌落款</span></p>
+            <p class="stack__meta">預約至 2026 / 12 / 10</p>
+          </div>
+        </article>
+        <article class="stack__card">
+          <img src="../assets/e-card/西元-直式.jpg" alt="西元新年賀卡" width="600" height="800" loading="lazy" decoding="async">
+          <div class="stack__body">
+            <p class="stack__code" aria-hidden="true">NE</p>
+            <h3>西元新年</h3>
+            <p>給客戶的年度第一封信。</p>
+            <p class="stack__spec"><span>直式・橫式雙版</span><span>可加活動連結</span><span>檔期自動下架</span></p>
+            <p class="stack__meta">預約至 2026 / 12 / 25</p>
+          </div>
+        </article>
+        <article class="stack__card">
+          <img src="../assets/e-card/農曆-直式.jpg" alt="農曆新年賀卡" width="600" height="800" loading="lazy" decoding="async">
+          <div class="stack__body">
+            <p class="stack__code" aria-hidden="true">LU</p>
+            <h3>農曆新年</h3>
+            <p>紅金雙色，檔期結束後網址仍可回看。</p>
+            <p class="stack__spec"><span>直式・橫式雙版</span><span>可加品牌區塊</span><span>賀詞可客製</span></p>
+            <p class="stack__meta">預約至 2027 / 01 / 20</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="promo__ask">想做專屬的一張？<a class="link-more" href="#contact">聊聊客製賀卡</a></p>
+    </div>
+  </section>
+
+  <!-- ── 聯絡 ── -->
+  <section class="contact" id="contact">
+    <div class="wrap contact__inner">
+      <h2>想聊聊您的新想法嗎？</h2>
+      <p>歡迎私訊木木，讓我們一起開創全新的篇章。</p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="https://line.me/R/ti/p/@yme1248q">加 LINE 詢價</a>
+        <a class="btn btn--ghost" href="tel:0919084796">撥打 0919-084796</a>
+      </div>
+      <p class="contact__meta">LINE @yme1248q　・　meisitw@gmail.com　・　IG mumuyang.2026</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <p>木木文化工作室　414 台中市烏日區溪南路三段 55 巷 47 弄 8 號</p>
+    <p class="foot__note">版型提案 A・中式文青</p>
+  </div>
+</footer>
+
+<script src="../vendor/gsap.min.js"></script>
+<script src="../vendor/ScrollTrigger.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

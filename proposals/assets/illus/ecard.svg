@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-label="電子賀卡">
+  <g fill="none" stroke="#00738c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="52" y="14" width="56" height="92" rx="7" fill="#fff"></rect>
+    <rect x="60" y="26" width="40" height="62" fill="#d6ead4" fill-opacity=".5"></rect>
+    <path d="M68 44h24M68 56h24M68 68h14"></path>
+    <path d="M76 100h8" stroke-width="2"></path>
+    <g stroke="#97a675">
+      <path d="M28 34l6 6M34 34l-6 6"></path>
+      <path d="M126 76l6 6M132 76l-6 6"></path>
+      <path d="M30 82h8M34 78v8"></path>
+    </g>
+  </g>
+</svg>

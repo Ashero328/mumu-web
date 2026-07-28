@@ -1,0 +1,825 @@
+// ============================================
+// 木木文化 首頁版型提案 A：中式文青・留白
+// 鐵律：只改 .scss；style.css 是編譯產物
+// 編譯：npx sass 網站提案/A_留白/css/style.scss 網站提案/A_留白/css/style.css --no-source-map
+//
+// 色彩策略：Restrained（宣紙白為底、墨為字、深藍綠為強調，朱紅只用在印章）
+// 場景：客戶白天在辦公室或晚上滑手機找台中的印刷工作室，想把品牌做得有質感 → 明亮、安靜、有紙感
+// 版面：內容收在 1180px 冊頁範圍內，左右有細界線提示邊界；不再滿版向外擴
+// 中文行寬一律用 em（1em ≈ 一個中文字）；ch 是數字寬，用在中文會過窄
+// ============================================
+
+// ---------- Tokens ----------
+$paper:      #fcfcfa; // 宣紙白（比米白更冷，避免整頁泛黃）
+$cream:      #efeedb; // 品牌米白：區塊底色
+$ink:        #33291f; // 品牌深棕（logo「文化」）
+$ink-line:   rgba(51, 41, 31, .13);
+$teal:       #00738c; // 品牌深藍綠：強調
+$teal-deep:  #005a6e;
+$olive:      #97a675; // 橄欖綠：線飾
+$olive-ink:  #64703f; // 小字可用的深橄欖
+$mint:       #d6ead4;
+$seal:       #a63a2e; // 朱紅：只用於印章與極少量點綴
+
+:root {
+  --paper: #{$paper};
+  --cream: #{$cream};
+  --ink: #{$ink};
+  --ink-line: #{$ink-line};
+  --teal: #{$teal};
+  --olive: #{$olive};
+  --olive-ink: #{$olive-ink};
+  --mint: #{$mint};
+  --seal: #{$seal};
+
+  --wrap: 1180px;
+  --gut: clamp(20px, 4.5vw, 56px);
+  --ease: cubic-bezier(.16, 1, .3, 1);
+
+  --z-frame: 1;
+  --z-deco: 2;
+  --z-content: 3;
+  --z-nav: 10;
+  --z-skip: 20;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Noto Sans TC", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(.95rem, .35vw + .88rem, 1.02rem);
+  line-height: 1.9;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+h1, h2, h3 {
+  font-family: "Noto Serif TC", Georgia, serif;
+  font-weight: 500;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+p { text-wrap: pretty; }
+
+// height: auto 必要：HTML 的 height 屬性是 presentation hint，
+// 若 CSS 只設 width，該屬性仍會鎖死高度並壓過 aspect-ratio
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+ul { list-style: none; }
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  z-index: var(--z-skip);
+
+  &:focus { left: 12px; top: 12px; background: var(--ink); color: var(--paper); padding: .5em 1em; }
+}
+
+// ---------- 版面範圍 ----------
+.wrap {
+  width: min(var(--wrap), 100% - 2 * var(--gut));
+  margin-inline: auto;
+}
+
+// 冊頁界線：固定在版面兩側，提示內容範圍（寬螢幕才出現）
+.frame {
+  display: none;
+
+  @media (min-width: 1300px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: var(--z-frame);
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--ink-line);
+    }
+
+    &::before { left: calc(50% - var(--wrap) / 2 - 28px); }
+    &::after { left: calc(50% + var(--wrap) / 2 + 28px); }
+  }
+}
+
+// ---------- 共用元件 ----------
+.section-label {
+  font-family: "Noto Serif TC", serif;
+  font-size: .92rem;
+  color: var(--olive-ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: clamp(20px, 3vw, 36px);
+
+  &::before {
+    content: "";
+    width: 30px;
+    height: 1px;
+    background: var(--olive);
+    transform-origin: left;
+  }
+}
+
+.btn {
+  display: inline-block;
+  font-size: .88rem;
+  letter-spacing: .14em;
+  text-indent: .14em;
+  padding: .85em 1.8em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background .45s var(--ease), color .45s var(--ease), border-color .45s var(--ease);
+
+  &--solid {
+    background: var(--teal);
+    color: #fff;
+    &:hover { background: #{$teal-deep}; }
+  }
+
+  &--ghost {
+    border-color: rgba(0, 115, 140, .4);
+    color: var(--teal);
+    &:hover { border-color: var(--teal); background: rgba(0, 115, 140, .06); }
+  }
+}
+
+.link-more {
+  font-size: .88rem;
+  color: var(--teal);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 115, 140, .32);
+  padding-bottom: 2px;
+  transition: border-color .4s;
+  &:hover { border-color: var(--teal); }
+}
+
+// ---------- 導覽 ----------
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  background: rgba(252, 252, 250, .96);
+  border-bottom: 1px solid transparent;
+  transition: border-color .4s;
+
+  &.is-stuck { border-bottom-color: var(--ink-line); }
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(14px, 3vw, 48px);
+    padding: 13px 0;
+  }
+
+  &__brand img { height: 25px; width: auto; }
+
+  // 手機：連結降到第二排並可橫滑（保留動線，不用漢堡選單）
+  &__links {
+    display: flex;
+    order: 3;
+    width: 100%;
+    gap: clamp(14px, 2.2vw, 30px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+
+    &::-webkit-scrollbar { display: none; }
+
+    a {
+      white-space: nowrap;
+      font-size: .88rem;
+      text-decoration: none;
+      color: rgba(51, 41, 31, .72);
+      padding-bottom: 3px;
+      border-bottom: 1px solid transparent;
+      transition: color .35s, border-color .35s;
+
+      &:hover { color: var(--ink); }
+
+      &.is-active { color: var(--teal); border-bottom-color: var(--teal); }
+    }
+  }
+
+  &__cta {
+    margin-inline-start: auto;
+    font-size: .82rem;
+    letter-spacing: .08em;
+    text-decoration: none;
+    color: var(--teal);
+    border: 1px solid rgba(0, 115, 140, .38);
+    padding: .45em 1.1em;
+    white-space: nowrap;
+    transition: background .4s, color .4s;
+
+    &:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+  }
+
+  @media (min-width: 900px) {
+    &__inner { flex-wrap: nowrap; }
+
+    &__links {
+      order: 0;
+      width: auto;
+      overflow: visible;
+      margin-inline-start: auto;
+      padding-bottom: 0;
+    }
+
+    &__cta { margin-inline-start: 0; }
+  }
+}
+
+// ---------- 主視覺 ----------
+.hero {
+  position: relative;
+  display: grid;
+  gap: clamp(30px, 5vw, 52px);
+  padding: clamp(44px, 8vh, 96px) 0 clamp(52px, 10vh, 108px);
+
+  &__kicker {
+    font-size: .86rem;
+    color: var(--olive-ink);
+    letter-spacing: .06em;
+    margin-bottom: clamp(16px, 2.6vw, 26px);
+
+    i { font-family: "Cormorant Garamond", serif; font-size: 1.05rem; }
+  }
+
+  &__title {
+    font-size: clamp(1.95rem, 4.6vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.34;
+    letter-spacing: .01em;
+
+    span { display: block; }
+
+    .indent { padding-inline-start: clamp(0px, 5vw, 86px); }
+
+    .accent {
+      color: var(--teal);
+      padding-inline-start: clamp(0px, 2.4vw, 42px);
+      margin-top: .2em;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: clamp(28px, 4.4vw, 46px);
+  }
+
+  // 主視覺賀卡：細墨框＋朱紅印章
+  &__figure {
+    position: relative;
+    justify-self: start;
+    max-width: 330px;
+
+    img {
+      border: 1px solid var(--ink-line);
+      padding: 8px;
+      background: #fff;
+    }
+
+    figcaption {
+      font-size: .78rem;
+      color: var(--olive-ink);
+      letter-spacing: .06em;
+      margin-top: 12px;
+    }
+  }
+
+  &__seal {
+    position: absolute;
+    right: -14px;
+    bottom: 44px;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    background: var(--seal);
+    color: #fdf6f2;
+    font-family: "Noto Serif TC", serif;
+    font-size: 1.15rem;
+    transform: rotate(-4deg);
+  }
+
+  &__vertical {
+    display: none;
+    font-size: .76rem;
+    letter-spacing: .5em;
+    color: rgba(51, 41, 31, .42);
+    writing-mode: vertical-rl;
+  }
+
+  @media (min-width: 900px) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: clamp(30px, 5vw, 72px);
+
+    &__figure { justify-self: end; }
+    &__vertical { display: block; justify-self: end; align-self: center; }
+  }
+}
+
+// ---------- 品牌理念 ----------
+.about {
+  padding: clamp(50px, 9vh, 104px) 0;
+  border-top: 1px solid var(--ink-line);
+
+  &__grid {
+    display: grid;
+    gap: clamp(22px, 4vw, 64px);
+
+    @media (min-width: 900px) { grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); }
+  }
+
+  &__lead {
+    font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+    font-weight: 400;
+  }
+
+  &__body {
+    max-width: 32em;
+
+    p + p { margin-top: 1.05em; }
+  }
+
+  &__quote {
+    font-family: "Noto Serif TC", serif;
+    font-size: clamp(1rem, 1.4vw, 1.14rem);
+    line-height: 2.1;
+    padding-bottom: 1.1em;
+    border-bottom: 1px solid var(--ink-line);
+  }
+
+  &__sign {
+    font-family: "Noto Serif TC", serif;
+    font-size: 1.08rem;
+    color: var(--teal);
+  }
+}
+
+// ---------- 營業項目：放射關係圖 ----------
+.services {
+  padding: clamp(50px, 9vh, 104px) 0;
+  background: var(--cream);
+}
+
+.mindmap {
+  position: relative;
+
+  // 中心：幾何線框（不用印章，避免過度中式）
+  &__hub {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    width: max-content;
+    margin-inline: auto;
+    padding: 16px 24px;
+    border: 1px solid rgba(0, 115, 140, .45);
+    background: var(--cream);
+    z-index: var(--z-content);
+    position: relative;
+
+    // 四角短線：幾何定位感
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border: 1px solid rgba(0, 115, 140, .55);
+    }
+
+    &::before { top: -5px; left: -5px; border-right: none; border-bottom: none; }
+    &::after { bottom: -5px; right: -5px; border-left: none; border-top: none; }
+
+    span {
+      font-family: "Noto Sans TC", sans-serif;
+      font-weight: 500;
+      font-size: clamp(1.02rem, 1.6vw, 1.22rem);
+      letter-spacing: .2em;
+      text-indent: .2em;
+      color: var(--teal);
+    }
+
+    small {
+      font-size: .7rem;
+      letter-spacing: .3em;
+      text-indent: .3em;
+      color: rgba(51, 41, 31, .5);
+    }
+  }
+
+  &__lines {
+    display: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-deco);
+
+    path {
+      fill: none;
+      stroke: rgba(0, 115, 140, .42);
+      stroke-width: 1;
+      transition: stroke .4s;
+    }
+
+    path.is-lit { stroke: var(--teal); }
+  }
+
+  // 手機：改為垂直脈絡（中軸線＋節點）
+  &__nodes {
+    position: relative;
+    margin-top: 26px;
+    padding-top: 26px;
+    display: grid;
+    gap: 20px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 5px;
+      width: 1px;
+      height: 100%;
+      background: rgba(100, 112, 63, .4);
+    }
+  }
+}
+
+.mnode {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding-inline-start: 0;
+
+  // 手機：示意圖直接顯示在右側（沒有滑過這件事）
+  &__thumb {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    width: 76px;
+    aspect-ratio: 4 / 3;
+    align-self: center;
+    background: #fff;
+    border: 1px solid var(--ink-line);
+  }
+
+  // 幾何線框標記（借 B 案的語言：圓、方、三角、菱、線、弧）
+  &__mark {
+    grid-row: 1 / span 2;
+    width: 16px;
+    height: 16px;
+    margin-top: .5em;
+    transition: border-color .4s var(--ease), background .4s var(--ease);
+  }
+
+  &__name {
+    font-family: "Noto Sans TC", sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.02rem, 1.5vw, 1.16rem);
+    letter-spacing: .08em;
+    transition: color .4s;
+  }
+
+  &__note {
+    grid-column: 2;
+    font-size: .82rem;
+    color: rgba(51, 41, 31, .62);
+  }
+
+  &:hover &__name,
+  &:focus-within &__name { color: var(--teal); }
+}
+
+// 六種幾何標記（借 B 案的線框語言）
+.mark {
+  &--circle { border: 1px solid var(--teal); border-radius: 50%; }
+  &--square { border: 1px solid var(--teal); }
+  &--tri { background: rgba(0, 115, 140, .32); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+  &--diamond { border: 1px solid var(--teal); transform: rotate(45deg) scale(.82); }
+  &--lines { background: repeating-linear-gradient(to bottom, var(--teal) 0 1px, transparent 1px 5px); }
+  &--arc { border: 1px solid var(--teal); border-bottom: none; border-radius: 50% 50% 0 0; }
+}
+
+.mnode:hover {
+  .mark--circle,
+  .mark--square,
+  .mark--diamond { background: rgba(0, 115, 140, .14); }
+
+  .mark--tri { background: rgba(0, 115, 140, .58); }
+}
+
+// 桌機：節點依放射座標定位，與 SVG 曲線對齊
+// 定位基準是節點的圓點（translate 只位移 X），曲線端點即圓點座標
+@media (min-width: 900px) {
+  .mindmap {
+    aspect-ratio: 1000 / 420;
+    max-width: 1040px;
+    margin-inline: auto;
+
+    &__lines { display: block; }
+
+    &__hub {
+      position: absolute;
+      left: 50%;
+      top: 46.7%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+    }
+
+    &__nodes {
+      position: absolute;
+      inset: 0;
+      display: block;
+      margin: 0;
+      padding: 0;
+
+      &::before { display: none; }
+    }
+  }
+
+  .mnode {
+    position: absolute;
+    transform: translate(-50%, -5px);
+    width: max-content;
+    max-width: 190px;
+    grid-template-columns: auto;
+    justify-items: center;
+    text-align: center;
+    gap: 6px;
+
+    &__mark { grid-row: auto; margin-top: 0; }
+    &__note { grid-column: auto; }
+
+    // 桌機：示意圖滑過才浮現，尺寸放小、帶一點傾斜（B 案的傾斜錯位語言）
+    &__thumb {
+      position: absolute;
+      grid-column: auto;
+      grid-row: auto;
+      top: calc(100% + 10px);
+      left: 50%;
+      width: 132px;
+      opacity: 0;
+      transform: translate(-50%, 8px) rotate(-1.6deg);
+      pointer-events: none;
+      padding: 6px;
+      box-shadow: 0 12px 28px rgba(51, 41, 31, .12);
+      transition: opacity .4s var(--ease), transform .5s var(--ease);
+    }
+
+    // 上排兩個節點：示意圖往內側偏移，避免壓到下方的節點文字
+    &--1 &__thumb { margin-inline-start: 90px; }
+    &--2 &__thumb { margin-inline-start: -90px; }
+
+    // 底排兩個節點：示意圖往上開，避免超出關係圖範圍
+    &--5 &__thumb,
+    &--6 &__thumb {
+      top: auto;
+      bottom: calc(100% + 10px);
+      transform: translate(-50%, -8px) rotate(1.6deg);
+    }
+
+    &:hover &__thumb,
+    &:focus-within &__thumb {
+      opacity: 1;
+      transform: translate(-50%, 0) rotate(-1.6deg);
+    }
+
+    &--5:hover &__thumb,
+    &--6:hover &__thumb,
+    &--5:focus-within &__thumb,
+    &--6:focus-within &__thumb { transform: translate(-50%, 0) rotate(1.6deg); }
+
+    // left = x / 1000、top = y / 420（與 SVG 曲線端點同座標）
+    &--1 { left: 14%;  top: 17.6%; }
+    &--2 { left: 86%;  top: 17.6%; }
+    &--3 { left: 10.8%; top: 50%; }
+    &--4 { left: 89.2%; top: 50%; }
+    &--5 { left: 30.2%; top: 80.5%; }
+    &--6 { left: 69.8%; top: 80.5%; }
+  }
+}
+
+// ---------- 設計作品：小而精美 ----------
+.works {
+  padding: clamp(50px, 9vh, 104px) 0;
+
+  &__head {
+    display: grid;
+    gap: 8px;
+    margin-bottom: clamp(24px, 4vw, 44px);
+
+    h2 { font-size: clamp(1.4rem, 2.6vw, 2.05rem); font-weight: 400; }
+    .link-more { justify-self: start; margin-top: 4px; }
+
+    @media (min-width: 780px) {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+
+      .section-label { grid-column: 1 / -1; }
+      .link-more { justify-self: end; margin-top: 0; }
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+    gap: clamp(18px, 2.6vw, 32px);
+  }
+}
+
+.wk {
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 1px solid var(--ink-line);
+    transition: transform .6s var(--ease);
+  }
+
+  &:hover img { transform: translateY(-4px); }
+
+  &__name {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    font-size: .88rem;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--ink-line);
+
+    span { font-size: .78rem; color: var(--olive-ink); }
+  }
+}
+
+// ---------- 賀卡檔期：疊卡捲動 ----------
+.promo {
+  padding: clamp(50px, 9vh, 104px) 0 clamp(40px, 7vh, 84px);
+  border-top: 1px solid var(--ink-line);
+
+  &__head {
+    max-width: 32em;
+
+    h2 { font-size: clamp(1.4rem, 2.6vw, 2.05rem); font-weight: 400; }
+  }
+
+  &__intro { margin-top: 10px; color: rgba(51, 41, 31, .74); }
+
+  &__ask {
+    margin-top: clamp(28px, 4vw, 44px);
+    padding-top: clamp(18px, 2.6vw, 26px);
+    border-top: 1px solid var(--ink-line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 16px;
+    font-family: "Noto Serif TC", serif;
+  }
+}
+
+.stack {
+  margin-top: clamp(28px, 4.4vw, 52px);
+  display: grid;
+  gap: clamp(16px, 2.4vw, 24px);
+
+  &__card {
+    position: sticky;
+    top: 88px;
+    background: #fff;
+    border: 1px solid var(--ink-line);
+    padding: clamp(16px, 2vw, 22px);
+    display: grid;
+    gap: clamp(16px, 2.4vw, 30px);
+    align-items: center;
+
+    @media (min-width: 700px) { grid-template-columns: clamp(168px, 20vw, 246px) minmax(0, 1fr); }
+
+    &:nth-child(2) { top: 100px; }
+    &:nth-child(3) { top: 112px; }
+    &:nth-child(4) { top: 124px; }
+
+    img { border: 1px solid var(--ink-line); }
+  }
+
+  &__body h3 {
+    font-size: clamp(1.15rem, 1.9vw, 1.42rem);
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  &__body p { font-size: .9rem; color: rgba(51, 41, 31, .76); }
+
+  &__code {
+    font-family: "Cormorant Garamond", serif;
+    font-size: .9rem;
+    letter-spacing: .3em;
+    color: var(--seal);
+    margin-bottom: 6px;
+  }
+
+  &__spec {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin-top: 14px;
+    font-size: .82rem !important;
+    color: rgba(51, 41, 31, .6) !important;
+
+    span { display: inline-flex; align-items: baseline; gap: 6px; }
+
+    span::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border: 1px solid var(--olive-ink);
+      transform: translateY(-2px);
+    }
+  }
+
+  &__meta {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--ink-line);
+    font-size: .8rem !important;
+    color: var(--olive-ink) !important;
+    letter-spacing: .06em;
+  }
+}
+
+// ---------- 聯絡 ----------
+.contact {
+  padding: clamp(50px, 9vh, 104px) 0;
+  background: var(--ink);
+  color: #f6f3ec;
+
+  &__inner { max-width: none; }
+
+  h2 { font-size: clamp(1.45rem, 2.8vw, 2.2rem); font-weight: 400; color: #fff; }
+
+  p { margin-top: 10px; color: rgba(246, 243, 236, .82); max-width: 30em; }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: clamp(24px, 3.6vw, 38px) 0 clamp(20px, 3vw, 28px);
+
+    .btn--solid { background: var(--mint); color: #1d2a17; &:hover { background: #e4f2e2; } }
+    .btn--ghost { border-color: rgba(246, 243, 236, .38); color: #f6f3ec; &:hover { background: rgba(246, 243, 236, .1); border-color: #f6f3ec; } }
+  }
+
+  &__meta {
+    font-size: .84rem;
+    color: rgba(246, 243, 236, .66);
+    letter-spacing: .04em;
+    max-width: none;
+    padding-top: clamp(18px, 2.6vw, 24px);
+    border-top: 1px solid rgba(246, 243, 236, .16);
+  }
+}
+
+// ---------- Footer ----------
+.foot {
+  background: var(--ink);
+  color: rgba(246, 243, 236, .48);
+  font-size: .76rem;
+  padding-bottom: 34px;
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+    justify-content: space-between;
+  }
+}
+
+// ---------- 減少動態 ----------
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .stack__card { position: static; }
+
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

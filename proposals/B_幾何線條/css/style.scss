@@ -1,0 +1,731 @@
+// ============================================
+// 木木文化 首頁版型提案 B：幾何線條
+// 鐵律：只改 .scss；style.css 是編譯產物
+// 編譯：npx sass 網站提案/B_幾何線條/css/style.scss 網站提案/B_幾何線條/css/style.css --no-source-map
+//
+// 色彩策略：Committed（深藍綠大面積主導，米白作紙面，亮綠只做高光）
+// 場景：客戶想找「有想法、敢用設計說話」的工作室 → 對比強、線條清楚、幾何構成
+// ============================================
+
+// ---------- Tokens ----------
+$paper:     #fafaf7;
+$cream:     #efeedb;
+$teal:      #00738c;
+$teal-deep: #005064;
+$mist:      #81b0b2;
+$mint:      #d6ead4;
+$olive:     #97a675;
+$olive-ink: #5f6b3c;
+$leaf:      #6fae3c;
+$ink:       #1f2a2e;
+$on-dark:   #f4f2e7;
+
+:root {
+  --paper: #{$paper};
+  --cream: #{$cream};
+  --teal: #{$teal};
+  --teal-deep: #{$teal-deep};
+  --mist: #{$mist};
+  --mint: #{$mint};
+  --olive: #{$olive};
+  --olive-ink: #{$olive-ink};
+  --leaf: #{$leaf};
+  --ink: #{$ink};
+  --on-dark: #{$on-dark};
+
+  --gut: clamp(20px, 5vw, 76px);
+  --line: rgba(31, 42, 46, .14);
+
+  --z-grid: 0;
+  --z-geo: 1;
+  --z-content: 2;
+  --z-nav: 10;
+  --z-skip: 20;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Noto Sans TC", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(.95rem, .35vw + .88rem, 1.05rem);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+
+  overflow-x: clip; // 保險：頁面永遠不橫向捲動
+
+  // 全站細線網格：幾何底層
+  background-image:
+    repeating-linear-gradient(to right, rgba(0, 115, 140, .07) 0 1px, transparent 1px 84px),
+    repeating-linear-gradient(to bottom, rgba(0, 115, 140, .05) 0 1px, transparent 1px 84px);
+}
+
+// 中文行寬一律用 em（1em ≈ 一個中文字）；ch 是數字寬，用在中文會過窄
+
+h1, h2, h3 { font-weight: 500; line-height: 1.26; text-wrap: balance; }
+p { text-wrap: pretty; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  z-index: var(--z-skip);
+
+  &:focus { left: 12px; top: 12px; background: var(--ink); color: #fff; padding: .5em 1em; }
+}
+
+// ---------- 共用元件 ----------
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: .9rem;
+  color: var(--teal);
+
+  &::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid currentColor;
+  }
+
+  &--light {
+    color: var(--mint);
+  }
+}
+
+.sec-head {
+  display: grid;
+  gap: 12px;
+  margin-bottom: clamp(30px, 5vw, 64px);
+
+  .tag { justify-self: start; }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.35rem); }
+
+  &--light h2 { color: #fff; }
+  &--light p { color: rgba(244, 242, 231, .82); }
+
+  .link-more { justify-self: start; }
+
+  @media (min-width: 820px) {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+
+    .tag { grid-column: 1 / -1; }
+    .link-more { justify-self: end; }
+    p { grid-column: 1 / 2; max-width: 34em; }
+  }
+}
+
+.btn {
+  display: inline-block;
+  font-family: "Space Grotesk", "Noto Sans TC", sans-serif;
+  font-size: .9rem;
+  letter-spacing: .02em;
+  padding: .85em 1.9em;
+  text-decoration: none;
+  transition: background .45s cubic-bezier(.16, 1, .3, 1),
+              color .45s cubic-bezier(.16, 1, .3, 1),
+              border-color .45s cubic-bezier(.16, 1, .3, 1);
+
+  &--fill {
+    background: var(--leaf);
+    color: #142108;
+    &:hover { background: #7dc047; }
+  }
+
+  &--line {
+    border: 1.5px solid currentColor;
+    color: var(--teal);
+    &:hover { background: var(--teal); border-color: var(--teal); color: #fff; }
+  }
+}
+
+.link-more {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: .9rem;
+  color: var(--teal);
+  text-decoration: none;
+  border-bottom: 1.5px solid rgba(0, 115, 140, .4);
+  padding-bottom: 2px;
+  &:hover { border-color: var(--teal); }
+}
+
+// 假圖：格線＋比例標籤（正式素材進場時整段替換為 img）
+.ph {
+  position: relative;
+  background:
+    repeating-linear-gradient(to right, rgba(31, 42, 46, .07) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(to bottom, rgba(31, 42, 46, .05) 0 1px, transparent 1px 22px),
+    var(--mint);
+  display: grid;
+  place-items: center;
+
+  &::after {
+    content: attr(data-label);
+    font-family: "Space Grotesk", "Noto Sans TC", sans-serif;
+    font-size: .74rem;
+    letter-spacing: .1em;
+    color: rgba(31, 42, 46, .5);
+  }
+
+  &--tall { aspect-ratio: 3 / 4; }
+  &--wide { aspect-ratio: 4 / 3; }
+  &--square { aspect-ratio: 1; }
+  &--card { aspect-ratio: 16 / 9; }
+}
+
+// ---------- 導覽 ----------
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 4vw, 52px);
+  padding: 13px var(--gut);
+  background: rgba(250, 250, 247, .96);
+  border-bottom: 1.5px solid transparent;
+  transition: border-color .4s;
+
+  &.is-stuck { border-bottom-color: rgba(0, 115, 140, .25); }
+
+  &__brand img { height: 26px; width: auto; }
+
+  // 手機：連結降到第二排並可橫滑（保留動線，不用漢堡選單）
+  flex-wrap: wrap;
+
+  &__links {
+    display: flex;
+    order: 3;
+    width: 100%;
+    gap: clamp(14px, 2.2vw, 30px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+
+    &::-webkit-scrollbar { display: none; }
+
+    a {
+      white-space: nowrap;
+      font-size: .92rem;
+      text-decoration: none;
+      color: rgba(31, 42, 46, .72);
+      position: relative;
+      padding-bottom: 4px;
+      transition: color .35s;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1.5px;
+        background: var(--teal);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .45s cubic-bezier(.16, 1, .3, 1);
+      }
+
+      &:hover { color: var(--ink); }
+      &:hover::after,
+      &.is-active::after { transform: scaleX(1); }
+      &.is-active { color: var(--teal); }
+    }
+  }
+
+  &__cta {
+    margin-inline-start: auto;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: .84rem;
+    text-decoration: none;
+    color: #fff;
+    background: var(--teal);
+    padding: .5em 1.2em;
+    white-space: nowrap;
+    transition: background .4s;
+
+    &:hover { background: var(--teal-deep); }
+  }
+
+  @media (min-width: 880px) {
+    flex-wrap: nowrap;
+
+    &__links {
+      order: 0;
+      width: auto;
+      overflow: visible;
+      margin-inline-start: auto;
+      padding-bottom: 0;
+    }
+
+    &__cta { margin-inline-start: 0; }
+  }
+}
+
+// ---------- Hero（深藍綠主色塊＋幾何線條） ----------
+.hero {
+  position: relative;
+  overflow: clip;
+  background: var(--teal);
+  color: var(--on-dark);
+  padding: clamp(56px, 12vh, 132px) var(--gut) clamp(40px, 7vh, 72px);
+
+  &__geo {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-geo);
+    pointer-events: none;
+  }
+
+  .geo {
+    position: absolute;
+    display: block;
+
+    &--ring {
+      width: clamp(200px, 34vw, 460px);
+      aspect-ratio: 1;
+      border: 1.5px solid rgba(244, 242, 231, .3);
+      border-radius: 50%;
+      top: -14%;
+      right: -6%;
+    }
+
+    &--ring2 {
+      width: clamp(120px, 20vw, 270px);
+      aspect-ratio: 1;
+      border: 1.5px solid rgba(111, 174, 60, .55);
+      border-radius: 50%;
+      right: 16%;
+      bottom: -16%;
+    }
+
+    &--bar {
+      width: clamp(120px, 26vw, 340px);
+      height: 1.5px;
+      background: rgba(244, 242, 231, .35);
+      right: 4%;
+      top: 46%;
+    }
+
+    &--square {
+      width: clamp(60px, 9vw, 128px);
+      aspect-ratio: 1;
+      border: 1.5px solid rgba(214, 234, 212, .38);
+      right: 30%;
+      top: 16%;
+      transform: rotate(14deg);
+    }
+
+    &--dot {
+      width: 12px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--leaf);
+      right: 12%;
+      top: 40%;
+    }
+
+    &--diag {
+      width: 1.5px;
+      height: 62%;
+      background: linear-gradient(rgba(244, 242, 231, .35), transparent);
+      right: 44%;
+      top: 0;
+      transform: rotate(18deg);
+      transform-origin: top;
+    }
+  }
+
+  &__vertical {
+    display: none;
+    position: absolute;
+    z-index: var(--z-content);
+    left: calc(var(--gut) / 2.6);
+    top: clamp(56px, 12vh, 132px);
+    writing-mode: vertical-rl;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: .78rem;
+    letter-spacing: .38em;
+    color: rgba(244, 242, 231, .55);
+  }
+
+  &__type {
+    position: relative;
+    z-index: var(--z-content);
+    // 用長度限寬（不用 ch）：ch 依本身字級換算，會讓大標每三字就斷行
+    max-width: min(100%, 680px);
+  }
+
+  &__title {
+    font-size: clamp(2.1rem, 6vw, 4.4rem);
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -.01em;
+
+    em {
+      font-style: normal;
+      color: var(--mint);
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: .06em;
+        height: 2px;
+        background: var(--leaf);
+      }
+    }
+  }
+
+  &__sub {
+    margin-top: clamp(20px, 3vw, 30px);
+    max-width: min(100%, 30em);
+    color: rgba(244, 242, 231, .88);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: clamp(28px, 4vw, 44px);
+
+    .btn--line { color: var(--on-dark); &:hover { background: var(--on-dark); color: var(--teal-deep); border-color: var(--on-dark); } }
+  }
+
+  &__facts {
+    position: relative;
+    z-index: var(--z-content);
+    display: grid;
+    gap: 16px 30px;
+    margin-top: clamp(44px, 8vh, 90px);
+    padding-top: clamp(18px, 3vw, 26px);
+    border-top: 1.5px solid rgba(244, 242, 231, .25);
+
+    @media (min-width: 640px) { grid-template-columns: repeat(3, auto); justify-content: start; gap: 48px; }
+
+    dt { font-family: "Space Grotesk", sans-serif; font-size: .74rem; letter-spacing: .1em; color: rgba(244, 242, 231, .6); }
+    dd { font-size: .95rem; margin-top: 3px; color: #fff; }
+  }
+
+  @media (min-width: 900px) {
+    padding-inline-start: calc(var(--gut) + 34px);
+    &__vertical { display: block; }
+  }
+}
+
+// ---------- 品牌理念（對角切分） ----------
+.about {
+  display: grid;
+  gap: clamp(26px, 4vw, 56px);
+  padding: clamp(52px, 10vh, 120px) var(--gut);
+
+  @media (min-width: 900px) {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr);
+    align-items: center;
+  }
+
+  &__panel {
+    position: relative;
+    background: var(--cream);
+    padding: clamp(26px, 4vw, 56px);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 42px));
+
+    h2 { font-size: clamp(1.5rem, 3vw, 2.4rem); margin: 14px 0 18px; }
+  }
+
+  &__text { max-width: 30em; color: rgba(31, 42, 46, .84); }
+
+  &__quote {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1.5px solid rgba(0, 115, 140, .3);
+    font-size: 1.1rem;
+    color: var(--teal);
+  }
+
+  &__side { position: relative; }
+
+  &__cap {
+    font-family: "Space Grotesk", "Noto Sans TC", sans-serif;
+    font-size: .8rem;
+    letter-spacing: .08em;
+    color: var(--olive-ink);
+    margin-top: 12px;
+  }
+}
+
+// ---------- 營業項目（線框幾何，尺寸刻意不一） ----------
+.services {
+  padding: clamp(52px, 10vh, 120px) var(--gut);
+  background: var(--ink);
+  color: var(--on-dark);
+
+  .sec-head h2 { color: #fff; }
+}
+
+.svc {
+  list-style: none;
+  display: grid;
+  gap: 1.5px;
+  background: rgba(244, 242, 231, .16); // 以間隙構成線條格
+  border: 1.5px solid rgba(244, 242, 231, .16);
+
+  @media (min-width: 760px) { grid-template-columns: repeat(4, 1fr); }
+
+  &__item {
+    background: var(--ink);
+    padding: clamp(22px, 2.6vw, 34px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background .5s cubic-bezier(.16, 1, .3, 1);
+
+    h3 { font-size: 1.15rem; color: #fff; }
+    p { font-size: .88rem; color: rgba(244, 242, 231, .68); }
+
+    &:hover { background: #26343a; }
+
+    // 以「一格橫跨兩欄」與「一格縱跨兩列」製造不對稱，其餘維持單格填滿格線
+    @media (min-width: 760px) {
+      &--lg { grid-column: span 2; h3 { font-size: 1.45rem; } }
+      &--tall { grid-row: span 2; justify-content: flex-end; h3 { font-size: 1.35rem; } }
+    }
+
+    // 各式印刷：換底色當視覺落點
+    &--wide {
+      background: var(--teal-deep);
+      &:hover { background: #006277; }
+    }
+  }
+}
+
+.mark {
+  width: 40px;
+  height: 40px;
+  display: block;
+  margin-bottom: 6px;
+
+  &--circle { border: 1.5px solid var(--leaf); border-radius: 50%; }
+  &--square { border: 1.5px solid var(--mist); }
+  &--tri { background: rgba(214, 234, 212, .3); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+  &--diamond { border: 1.5px solid var(--mint); transform: rotate(45deg); width: 30px; height: 30px; margin: 5px 5px 11px; }
+  &--lines { background: repeating-linear-gradient(to bottom, var(--mist) 0 1.5px, transparent 1.5px 9px); }
+  &--arc { border: 1.5px solid var(--leaf); border-radius: 50% 50% 0 0; border-bottom: none; height: 22px; margin-top: 18px; }
+}
+
+// ---------- 作品（傾斜錯位） ----------
+.works {
+  padding: clamp(52px, 10vh, 120px) var(--gut) clamp(40px, 8vh, 96px);
+  overflow: clip;
+
+  &__stage {
+    display: grid;
+    gap: clamp(24px, 4vw, 44px);
+
+    @media (min-width: 780px) {
+      grid-template-columns: repeat(12, 1fr);
+      align-items: start;
+    }
+  }
+}
+
+.w {
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: .82rem;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1.5px solid var(--line);
+
+    span { color: var(--olive-ink); }
+  }
+
+  @media (min-width: 780px) {
+    &--1 { grid-column: 1 / span 6; transform: rotate(-1.2deg); }
+    &--2 { grid-column: 8 / span 4; margin-top: clamp(30px, 6vw, 84px); transform: rotate(1.6deg); }
+    &--3 { grid-column: 3 / span 3; margin-top: clamp(-20px, -2vw, 0px); transform: rotate(2deg); }
+    &--4 { grid-column: 7 / span 6; margin-top: clamp(-40px, -4vw, 0px); transform: rotate(-.8deg); }
+  }
+}
+
+// ---------- 賀卡檔期（疊卡捲動） ----------
+.promo {
+  padding: clamp(52px, 10vh, 120px) var(--gut) clamp(44px, 8vh, 96px);
+  background: var(--teal-deep);
+  color: var(--on-dark);
+
+  &__intro { margin-top: 4px; max-width: 32em; }
+
+  &__ask {
+    margin-top: clamp(36px, 6vw, 72px);
+    padding: clamp(24px, 3.4vw, 44px);
+    border: 1.5px solid rgba(244, 242, 231, .3);
+    max-width: 32em;
+
+    h3 { font-size: 1.3rem; color: #fff; }
+    p { margin: 10px 0 22px; color: rgba(244, 242, 231, .82); }
+  }
+}
+
+.stack {
+  display: grid;
+  gap: clamp(18px, 3vw, 26px);
+
+  &__card {
+    position: sticky;
+    top: 84px;
+    background: var(--paper);
+    color: var(--ink);
+    display: grid;
+    gap: 0;
+    border: 1.5px solid rgba(31, 42, 46, .12);
+
+    @media (min-width: 760px) { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); }
+
+    &:nth-child(2) { top: 96px; }
+    &:nth-child(3) { top: 108px; }
+    &:nth-child(4) { top: 120px; }
+  }
+
+  &__body {
+    padding: clamp(22px, 3vw, 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h3 { font-size: clamp(1.2rem, 2vw, 1.6rem); margin-bottom: 8px; }
+    p { font-size: .92rem; color: rgba(31, 42, 46, .76); }
+  }
+
+  &__no {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: .82rem;
+    letter-spacing: .22em;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+
+  &__meta {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1.5px solid rgba(0, 115, 140, .22);
+    font-size: .82rem !important;
+    color: var(--olive-ink) !important;
+    letter-spacing: .04em;
+  }
+}
+
+// ---------- 訂單流程 ----------
+.flow {
+  padding: clamp(52px, 10vh, 118px) var(--gut);
+
+  &__list {
+    list-style: none;
+    display: grid;
+    gap: clamp(20px, 3vw, 30px);
+
+    @media (min-width: 760px) { grid-template-columns: repeat(4, 1fr); }
+
+    li {
+      padding-top: 20px;
+      border-top: 1.5px solid rgba(0, 115, 140, .3);
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: -5.5px;
+        left: 0;
+        width: 10px;
+        height: 10px;
+        background: var(--paper);
+        border: 1.5px solid var(--teal);
+      }
+    }
+
+    h3 { font-size: 1.08rem; }
+    p { font-size: .89rem; color: rgba(31, 42, 46, .72); margin-top: 4px; }
+  }
+}
+
+// ---------- 聯絡 ----------
+.contact {
+  position: relative;
+  overflow: clip;
+  padding: clamp(52px, 10vh, 120px) var(--gut);
+  background: var(--cream);
+
+  &__geo {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-geo);
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      border: 1.5px solid rgba(0, 115, 140, .22);
+      border-radius: 50%;
+
+      &:first-child { width: clamp(180px, 30vw, 380px); aspect-ratio: 1; right: -8%; top: -30%; }
+      &:last-child { width: clamp(90px, 14vw, 180px); aspect-ratio: 1; right: 18%; bottom: -18%; border-color: rgba(111, 174, 60, .5); }
+    }
+  }
+
+  h2, p, &__actions, &__list { position: relative; z-index: var(--z-content); }
+
+  h2 { font-size: clamp(1.55rem, 3.2vw, 2.5rem); }
+  p { margin-top: 12px; max-width: 26em; color: rgba(31, 42, 46, .8); }
+
+  &__actions { display: flex; flex-wrap: wrap; gap: 12px; margin: clamp(26px, 4vw, 40px) 0; }
+
+  &__list {
+    display: grid;
+    gap: 18px 32px;
+    padding-top: clamp(22px, 3vw, 30px);
+    border-top: 1.5px solid rgba(0, 115, 140, .25);
+
+    @media (min-width: 700px) { grid-template-columns: repeat(4, auto); justify-content: start; }
+
+    dt { font-family: "Space Grotesk", sans-serif; font-size: .74rem; letter-spacing: .1em; color: var(--olive-ink); }
+    dd { font-size: .95rem; margin-top: 4px; }
+
+    .wide { @media (min-width: 700px) { grid-column: 1 / -1; } }
+  }
+}
+
+// ---------- Footer ----------
+.foot {
+  padding: 26px var(--gut) 40px;
+  background: var(--ink);
+  color: rgba(244, 242, 231, .5);
+  font-size: .78rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  justify-content: space-between;
+}
+
+// ---------- 減少動態 ----------
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .stack__card { position: static; }
+
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

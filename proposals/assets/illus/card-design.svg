@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-label="名片設計">
+  <g fill="none" stroke="#00738c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="16" y="30" width="86" height="54" fill="#d6ead4" fill-opacity=".45"></rect>
+    <rect x="44" y="46" width="86" height="54" fill="#fff"></rect>
+    <circle cx="60" cy="62" r="5"></circle>
+    <path d="M72 60h44M72 68h34M72 76h24"></path>
+    <path d="M44 46l86 54" stroke="#97a675" stroke-opacity=".5"></path>
+  </g>
+</svg>
