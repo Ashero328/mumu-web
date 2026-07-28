@@ -1,6 +1,13 @@
 # 木木文化 總站首頁 版型提案
 
-打開方式：直接雙擊各資料夾的 `index.html`。手機、電腦都拉一次視窗寬度看變化。
+**線上檢視**（給琇端的連結）：
+
+- A 案 https://ashero328.github.io/mumu-web/proposals/A_留白/
+- B 案 https://ashero328.github.io/mumu-web/proposals/B_幾何線條/
+
+本機檢視：直接雙擊各資料夾的 `index.html`。手機、電腦都拉一次視窗寬度看變化。
+
+> 正式網站上線前，把 `proposals\` 刪掉或移出——這是內部提案，不該留在對外網站上。
 
 ## A_留白（主案・已依回饋改版）
 
@@ -31,8 +38,8 @@
 - 色票：綠色-2 系（`#00738C` 深藍綠、`#97A675` 橄欖綠、`#D6EAD4`、`#EFEEDB` 米白）＋朱紅 `#A63A2E` 只用於印章
 - **SCSS**：只改 `.scss`，`.css` 是編譯產物
   ```
-  npx sass 網站提案/A_留白/css/style.scss 網站提案/A_留白/css/style.css --no-source-map
-  npx sass 網站提案/B_幾何線條/css/style.scss 網站提案/B_幾何線條/css/style.css --no-source-map
+  npx sass proposals/A_留白/css/style.scss 網站提案/A_留白/css/style.css --no-source-map
+  npx sass proposals/B_幾何線條/css/style.scss 網站提案/B_幾何線條/css/style.css --no-source-map
   ```
 - 動態一律 GSAP＋ScrollTrigger（`vendor/`），全部包在 `prefers-reduced-motion` 判斷內；關閉動態時內容照樣完整可讀
 - 字體與圖片載入後會位移，已在載入完成時重算 ScrollTrigger 觸發點
