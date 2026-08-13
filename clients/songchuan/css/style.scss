@@ -1,0 +1,1045 @@
+// ============================================
+// 松川珈琲焙煎所（clients/ 的第一包，也是開新客戶的起點）
+// 鐵律：只改 .scss；style.css 是編譯產物
+// 編譯：npx sass --update clients/songchuan/css:clients/songchuan/css --no-source-map
+//
+// 調性刻意跟總站（木木・宣紙白＋綠・留白）拉開：
+// 這是深焙咖啡，走暗底、暖光、粗體字，看起來要像另一家公司做的網站。
+// 換客戶時大部分只要動 Tokens 那一段。
+// ============================================
+
+// ---------- Tokens ----------
+$bg:      #17120f; // 深焙底色
+$bg-2:    #1e1815; // 次層區塊
+$bg-3:    #261e19; // 卡片／浮起
+$ink:     #f2e9dd; // 米白主文
+$muted:   #b9a695; // 次要文字
+$accent:  #e0913f; // 焙煎橙
+$accent-2:#8a6a4a; // 低調的褐
+
+:root {
+  --bg: #{$bg};
+  --bg-2: #{$bg-2};
+  --bg-3: #{$bg-3};
+  --ink: #{$ink};
+  --muted: #{$muted};
+  --accent: #{$accent};
+  --accent-2: #{$accent-2};
+  --line: rgba(242, 233, 221, .13);
+  --line-strong: rgba(242, 233, 221, .26);
+
+  --wrap: 1180px;          // 這個站比總站窄：內容密度高，不走大留白
+  --gut: clamp(20px, 5vw, 56px);
+  --pad: clamp(64px, 8vw, 132px);   // 區塊上下留白
+  --ease: cubic-bezier(.16, 1, .3, 1);
+
+  --nav-h: 68px;
+
+  // 等寬小標的統一字級。**全站字級下限 12px**（含定值與 clamp 的下界）——
+  // 這一層是規格標籤（產地、焙煎度、營業時間…），很容易一路縮下去，
+  // 集中成一個變數就不會有人各寫各的 .62rem／.66rem／.72rem
+  --fs-micro: .75rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans TC", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(.95rem, .3vw + .9rem, 1.02rem);
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  -webkit-tap-highlight-color: rgba(224, 145, 63, .18);
+  position: relative;
+}
+
+// 全站顆粒：純色的暗底在大螢幕上會顯得死板，加一層極淡的雜訊當作紙感。
+// 用 SVG 的 fractalNoise 直接當底紋，不引外部圖檔（這一包要能整包複製走）
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+// 內容要壓在顆粒之上
+.nav,
+main,
+.foot {
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Fraunces", "Noto Serif TC", Georgia, serif;
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -.005em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+ul,
+ol,
+dl {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+// 鍵盤焦點框：暗底上用焙煎橙，一眼看得到
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  z-index: 99;
+
+  &:focus {
+    left: 12px;
+    top: 12px;
+    background: var(--accent);
+    color: #1a1209;
+    padding: .5em 1em;
+  }
+}
+
+// 導覽是 sticky 的，捲到錨點時段落上緣會被它蓋住
+#top,
+#main,
+#about,
+#beans,
+#gallery,
+#visit {
+  scroll-margin-top: calc(var(--nav-h) + 12px);
+}
+
+// ---------- 版面骨架 ----------
+.wrap {
+  width: min(var(--wrap), 100% - 2 * var(--gut));
+  margin-inline: auto;
+}
+
+// 段落編號＋名稱。編號用等寬字，跟豆單的規格語彙同一套
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: .8rem;
+  letter-spacing: .22em;
+  text-indent: .22em;
+  color: var(--muted);
+  margin-bottom: clamp(14px, 1.6vw, 22px);
+
+  span {
+    color: var(--accent);
+  }
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+    max-width: 120px;
+  }
+}
+
+.btn {
+  display: inline-block;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: .84rem;
+  letter-spacing: .12em;
+  text-indent: .12em;
+  padding: .95em 1.9em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background .4s var(--ease), color .4s var(--ease),
+    border-color .4s var(--ease), transform .4s var(--ease);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &--solid {
+    background: var(--accent);
+    color: #1a1209;
+
+    &:hover {
+      background: #f0a24d;
+    }
+  }
+
+  &--ghost {
+    border-color: var(--line-strong);
+    color: var(--ink);
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  }
+}
+
+// ---------- 導覽 ----------
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  // 半透明＋模糊：底下的內容捲過去時看得見一點，但字仍然讀得清楚
+  background: rgba(23, 18, 15, .88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .4s, background .4s;
+
+  &.is-stuck {
+    border-bottom-color: var(--line);
+    background: rgba(23, 18, 15, .96);
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 44px);
+    min-height: var(--nav-h);
+  }
+
+  &__toggle {
+    display: none;
+    order: 2;
+    width: 44px;   // 觸控目標最小 44×44
+    height: 44px;
+    place-content: center;
+    gap: 5px;
+    padding: 0;
+
+    span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--ink);
+      transition: transform .35s var(--ease), opacity .25s var(--ease);
+    }
+  }
+
+  &.is-open &__toggle span {
+    &:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+
+    &:nth-child(2) {
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: clamp(18px, 2.2vw, 34px);
+    margin-inline-start: auto;
+
+    a {
+      font-size: .92rem;
+      text-decoration: none;
+      color: rgba(242, 233, 221, .74);
+      padding-bottom: 3px;
+      border-bottom: 1px solid transparent;
+      transition: color .35s, border-color .35s;
+      white-space: nowrap;
+
+      &:hover {
+        color: var(--ink);
+      }
+
+      &.is-active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+    }
+  }
+
+  &__cta {
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: .8rem;
+    letter-spacing: .1em;
+    text-decoration: none;
+    color: var(--accent);
+    border: 1px solid rgba(224, 145, 63, .45);
+    padding: .5em 1.15em;
+    white-space: nowrap;
+    transition: background .4s var(--ease), color .4s var(--ease),
+      border-color .4s var(--ease);
+
+    &:hover {
+      background: var(--accent);
+      color: #1a1209;
+      border-color: var(--accent);
+    }
+  }
+
+  // ⚠️ 巢狀 @media 一律放規則最後：Sass 會把後面的宣告收成第二條同名規則排在
+  //    媒體查詢之後，權重相同、位置在後 → 媒體查詢裡寫的會整條被蓋掉
+  @media (max-width: 859px) {
+    // logo 讓位、CTA 與開關固定不縮，連結整列掉到第二行。
+    // 不能靠 flex-shrink：flex-wrap 是「先換行才縮」，開關會被擠出去
+    &__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      column-gap: 12px;
+      padding-block: 10px;
+    }
+
+    &__toggle {
+      display: grid;
+    }
+
+    // ⚠️ grid 的自動排列是照 order 走，不是照 DOM 順序。
+    //    .nav__links 要橫跨整列，order 一定要**大於**開關的 2；
+    //    漏了的話它會搶走第一列之後的位置，把 CTA 與開關整個擠到選單下方
+    //    （選單收起來時看不出來 —— links 是 display:none，不佔格子）。
+    //    只在手機設 order：桌機是 flex，重排會變成「品牌 → CTA → 連結」，順序就反了
+    &__cta {
+      order: 1;
+    }
+
+    &__links {
+      order: 3;
+      grid-column: 1 / -1;
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      margin-inline-start: 0;
+      padding-bottom: 8px;
+
+      a {
+        padding: 13px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      a.is-active {
+        border-bottom-color: var(--line);
+        box-shadow: inset 3px 0 0 var(--accent);
+        padding-left: 12px;
+      }
+
+      a:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  &.is-open &__links {
+    @media (max-width: 859px) {
+      display: flex;
+    }
+  }
+}
+
+// 品牌鎖定圖：標記（SVG）＋中英文字。
+// 文字用網頁字體排、不做進 SVG —— SVG 裡的字會被系統字體影響
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  min-width: 0;
+  justify-self: start;
+  max-width: 100%;
+
+  &__mark {
+    width: clamp(30px, 2.4vw, 38px);
+    height: auto;
+    flex: none;
+  }
+
+  &__text {
+    display: grid;
+    min-width: 0;
+
+    strong {
+      font-family: "Fraunces", "Noto Serif TC", serif;
+      font-weight: 600;
+      font-size: clamp(1rem, 1.1vw, 1.18rem);
+      letter-spacing: .04em;
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
+    small {
+      font-family: "DM Mono", ui-monospace, monospace;
+      font-size: var(--fs-micro);
+      letter-spacing: .14em;
+      color: var(--muted);
+      line-height: 1.5;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+// ---------- 主視覺 ----------
+.hero {
+  position: relative;
+  padding: clamp(56px, 9vw, 130px) 0 clamp(48px, 6vw, 96px);
+  overflow: hidden;
+
+  // 鍋爐透出來的暖光。放在主視覺右上，往左下散開
+  &__glow {
+    position: absolute;
+    top: -28%;
+    right: -18%;
+    width: min(900px, 90vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(224, 145, 63, .30) 0%,
+        rgba(224, 145, 63, .12) 38%,
+        rgba(224, 145, 63, 0) 70%);
+    pointer-events: none;
+  }
+
+  &__inner {
+    position: relative;
+  }
+
+  &__title {
+    font-size: clamp(2.9rem, 9vw, 6.4rem);
+    font-weight: 900;
+    line-height: .98;
+    letter-spacing: -.02em;
+    margin: clamp(18px, 2vw, 28px) 0 clamp(22px, 2.6vw, 36px);
+
+    span {
+      display: block;
+    }
+
+    // 第二行推出去：三行等長會像一塊磚，錯開才有節奏
+    .is-accent {
+      color: var(--accent);
+      padding-inline-start: clamp(0px, 8vw, 150px);
+    }
+  }
+
+  &__lead {
+    max-width: 30em;
+    color: rgba(242, 233, 221, .82);
+    font-size: clamp(1rem, 1.05vw, 1.1rem);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: clamp(28px, 3.4vw, 44px);
+  }
+
+  // 規格條：等寬字的三欄資訊，把「這是一間有規矩的焙煎所」講出來
+  &__spec {
+    display: grid;
+    gap: 18px;
+    margin-top: clamp(40px, 5vw, 76px);
+    padding-top: clamp(20px, 2.2vw, 30px);
+    border-top: 1px solid var(--line);
+
+    dt {
+      font-family: "DM Mono", ui-monospace, monospace;
+      font-size: var(--fs-micro);
+      letter-spacing: .2em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    dd {
+      font-size: 1.02rem;
+    }
+
+    @media (min-width: 600px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(20px, 3vw, 48px);
+    }
+  }
+}
+
+.eyebrow {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: .78rem;
+  letter-spacing: .24em;
+  text-indent: .24em;
+  color: var(--accent);
+}
+
+// ---------- 關於焙煎 ----------
+.about {
+  padding: var(--pad) 0;
+  background: var(--bg-2);
+  border-block: 1px solid var(--line);
+
+  &__grid {
+    display: grid;
+    gap: clamp(28px, 4vw, 72px);
+
+    @media (min-width: 900px) {
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  &__head h2 {
+    font-size: clamp(1.7rem, 3.1vw, 2.7rem);
+  }
+
+  &__body {
+    max-width: 34em;
+
+    p + p {
+      margin-top: 1.15em;
+    }
+  }
+
+  &__sign {
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: .82rem;
+    letter-spacing: .1em;
+    color: var(--accent);
+    padding-top: 1.2em;
+  }
+}
+
+// ---------- 本季單品 ----------
+.beans {
+  padding: var(--pad) 0;
+
+  &__head {
+    display: grid;
+    gap: 16px;
+    margin-bottom: clamp(28px, 3.4vw, 52px);
+
+    h2 {
+      font-size: clamp(1.7rem, 3.1vw, 2.7rem);
+    }
+
+    @media (min-width: 860px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 20em);
+      align-items: end;
+    }
+  }
+
+  &__note {
+    color: var(--muted);
+    font-size: .92rem;
+
+    @media (min-width: 860px) {
+      text-align: right;
+    }
+  }
+
+  &__list {
+    border-top: 1px solid var(--line);
+  }
+}
+
+// 一支豆子一列。桌機是五欄的規格表，手機疊成卡片
+.bean {
+  position: relative;
+  display: grid;
+  gap: 6px 20px;
+  padding: clamp(22px, 2.4vw, 30px) 0;
+  border-bottom: 1px solid var(--line);
+  transition: background .45s var(--ease);
+
+  &:hover {
+    background: linear-gradient(90deg, rgba(224, 145, 63, .07), transparent 65%);
+  }
+
+  &__no {
+    font-family: "Fraunces", serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--accent);
+    opacity: .5;
+  }
+
+  &__id h3 {
+    font-size: clamp(1.12rem, 1.5vw, 1.4rem);
+    font-weight: 600;
+  }
+
+  &__origin {
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: var(--fs-micro);
+    letter-spacing: .1em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  &__notes {
+    color: rgba(242, 233, 221, .8);
+    font-size: .95rem;
+  }
+
+  &__roast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__roast-label {
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: var(--fs-micro);
+    letter-spacing: .08em;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 5.5em;
+  }
+
+  &__price {
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: .8rem;
+    color: var(--muted);
+    white-space: nowrap;
+
+    b {
+      font-family: "Fraunces", serif;
+      font-weight: 600;
+      font-size: 1.3rem;
+      color: var(--ink);
+    }
+  }
+
+  // 售完：整列退到背景，但仍然看得到（是資訊，不是要藏起來）
+  &.is-sold {
+    opacity: .48;
+
+    .bean__id h3 {
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    &:hover {
+      background: none;
+    }
+  }
+
+  @media (min-width: 860px) {
+    grid-template-columns: auto minmax(0, 1.15fr) minmax(0, .85fr) auto auto;
+    align-items: center;
+    gap: clamp(16px, 2vw, 34px);
+  }
+}
+
+// 焙煎度標尺：五格，依 data-roast 點亮前 N 格。
+// 這是全站的資訊語彙，主視覺的規格條與這裡講的是同一件事
+.meter {
+  display: flex;
+  gap: 4px;
+
+  i {
+    display: block;
+    width: 16px;
+    height: 8px;
+    background: var(--line-strong);
+    transition: background .5s var(--ease);
+  }
+}
+
+@for $i from 1 through 5 {
+  .bean[data-roast="#{$i}"] .meter i:nth-child(-n + #{$i}) {
+    background: var(--accent);
+  }
+}
+
+.tag-sold {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: .1em;
+  border: 1px solid var(--line-strong);
+  padding: .3em .7em;
+  white-space: nowrap;
+}
+
+// ---------- 店裡的樣子 ----------
+.gallery {
+  padding: var(--pad) 0;
+  background: var(--bg-2);
+  border-block: 1px solid var(--line);
+  // 保險：Owl 會替 .owl-stage 算出比容器寬的行內寬度，
+  // 初始化前後那一瞬間有機會把頁面撐寬。裁在這一層，不要裁在 body ——
+  // body 的 overflow 會上拋給 viewport、body 自己變回 visible，擋不住
+  overflow-x: clip;
+
+  &__lead {
+    font-size: clamp(1.7rem, 3.1vw, 2.7rem);
+    margin-bottom: clamp(26px, 3vw, 44px);
+  }
+}
+
+.shot {
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--bg-3);
+  }
+
+  figcaption {
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: var(--fs-micro);
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+}
+
+// ---------- 來店資訊 ----------
+.visit {
+  padding: var(--pad) 0;
+
+  &__grid {
+    display: grid;
+    gap: clamp(30px, 4vw, 72px);
+
+    @media (min-width: 900px) {
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  &__head h2 {
+    font-size: clamp(1.7rem, 3.1vw, 2.7rem);
+  }
+
+  &__intro {
+    margin-top: 14px;
+    max-width: 26em;
+    color: rgba(242, 233, 221, .8);
+  }
+}
+
+.info {
+  &__row {
+    display: grid;
+    gap: 2px 24px;
+    padding: clamp(14px, 1.5vw, 20px) 0;
+    border-bottom: 1px solid var(--line);
+
+    &:first-child {
+      border-top: 1px solid var(--line);
+    }
+
+    @media (min-width: 560px) {
+      grid-template-columns: 5.5em minmax(0, 1fr);
+      align-items: baseline;
+    }
+  }
+
+  dt {
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: var(--fs-micro);
+    letter-spacing: .2em;
+    color: var(--muted);
+  }
+
+  dd a {
+    text-decoration: none;
+    border-bottom: 1px solid rgba(224, 145, 63, .45);
+    padding-bottom: 2px;
+    transition: color .35s, border-color .35s;
+
+    &:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+  }
+
+  &__sub {
+    color: var(--muted);
+    font-size: .88rem;
+  }
+}
+
+// ---------- 頁尾：客戶自己的 logo ----------
+.foot {
+  padding: clamp(44px, 5vw, 76px) 0 clamp(30px, 3vw, 46px);
+  background: #120e0c;
+  border-top: 1px solid var(--line);
+
+  &__inner {
+    display: grid;
+    gap: clamp(26px, 3vw, 40px);
+
+    @media (min-width: 860px) {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      column-gap: clamp(40px, 6vw, 100px);
+    }
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__mark {
+    width: clamp(48px, 4.4vw, 62px);
+    height: auto;
+    flex: none;
+  }
+
+  &__name {
+    display: grid;
+    gap: 3px;
+
+    strong {
+      font-family: "Fraunces", "Noto Serif TC", serif;
+      font-weight: 600;
+      font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+      letter-spacing: .03em;
+      line-height: 1.3;
+    }
+
+    small {
+      font-family: "DM Mono", ui-monospace, monospace;
+      font-size: var(--fs-micro);
+      letter-spacing: .14em;
+      color: var(--muted);
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+
+    a {
+      font-size: .9rem;
+      text-decoration: none;
+      color: rgba(242, 233, 221, .82);
+      border-bottom: 1px solid transparent;
+      transition: color .35s, border-color .35s;
+
+      &:hover {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+    }
+  }
+
+  &__legal {
+    font-size: .78rem;
+    line-height: 1.9;
+    color: rgba(242, 233, 221, .62);
+
+    p + p {
+      margin-top: 4px;
+    }
+
+    @media (min-width: 860px) {
+      grid-column: 2;
+    }
+  }
+
+  // ⚠️ 接真客戶時，連同 index.html 裡那行一起刪掉
+  &__demo {
+    color: rgba(224, 145, 63, .8);
+  }
+}
+
+// ---------- Owl Carousel 外觀 ----------
+// 套件只給結構，視覺一律自己定義
+.owl-carousel {
+  .owl-stage {
+    display: flex;
+  }
+
+  .owl-item {
+    display: flex;
+  }
+
+  .owl-item > * {
+    width: 100%;
+  }
+
+  &.owl-drag .owl-item {
+    cursor: grab;
+  }
+
+  &.owl-grab {
+    cursor: grabbing;
+  }
+
+  .owl-dots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 9px;
+    margin-top: clamp(22px, 2.4vw, 40px);
+  }
+
+  // 選擇器要帶上 button：Owl 自己的 CSS 有
+  // .owl-carousel button.owl-dot { background: none }，權重比只寫 class 高
+  button.owl-dot {
+    position: relative;
+    width: 26px;
+    height: 6px;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: var(--line-strong);
+    transition: width .4s var(--ease), background .4s var(--ease);
+
+    &:hover {
+      background: rgba(224, 145, 63, .6);
+    }
+
+    &.active {
+      width: 62px;
+      background: var(--accent);
+    }
+
+    // 視覺上是細條，觸控目標要夠大
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -13px -5px;
+    }
+
+    span {
+      display: none;
+    }
+  }
+}
+
+// 輪播收在內容欄裡，左緣跟段落標題貼齊同一條線。
+//
+// 原本做成 100vw 出血＋Owl 的 stagePadding，讓照片從畫面邊緣延伸出去，
+// 但那樣第一張的左緣會比大標左緣少 26px（出血的內距與 stagePadding 相加，
+// 跟 .wrap 的置中偏移對不上）。這個站整體就是一張規格表的網格，
+// 差那 26px 會直接讀成沒對齊 —— 出血的現場感換不到這個代價。
+// 要改回出血的話，padding-inline 必須是「.wrap 的偏移量 − stagePadding」，
+// 而 stagePadding 在 main.js 裡，兩邊會綁死，改一邊就要改另一邊。
+.owl-shots {
+  width: 100%;
+}
+
+// ---------- 減少動態 ----------
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+// ============================================
+// 手機版（<860px）總則
+// ============================================
+@media (max-width: 859px) {
+  // 手機字級下限 14px：這些元件在桌機是 11～12px，手持距離讀不動
+  .brand__text small,
+  .bean__origin,
+  .bean__roast-label,
+  .bean__price,
+  .shot figcaption,
+  .foot__name small,
+  .foot__legal,
+  .tag-sold,
+  .info dt {
+    font-size: 14px;
+  }
+
+  .eyebrow,
+  .section-label {
+    font-size: 13px;
+  }
+
+  // 導覽的英文副標在窄螢幕會被截成「SONGCHUAN ROAS…」。
+  // 截一半的字讀起來像壞掉，直接不顯示反而看得出是刻意的；
+  // 品牌全名在頁尾還有一次，資訊沒有漏掉
+  @media (max-width: 479px) {
+    .brand__text small {
+      display: none;
+    }
+  }
+
+  // 豆單改成卡片：編號與名稱同一列，其餘依序往下
+  .bean {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 10px 14px;
+
+    &__no {
+      grid-row: 1;
+      font-size: 1.25rem;
+      padding-top: .15em;
+    }
+
+    &__id,
+    &__notes,
+    &__roast,
+    &__price {
+      grid-column: 2;
+    }
+
+    &__roast {
+      margin-top: 2px;
+    }
+
+    &__roast-label {
+      min-width: 0;
+    }
+  }
+
+}
