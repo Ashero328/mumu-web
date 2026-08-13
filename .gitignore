@@ -1,3 +1,6 @@
 Thumbs.db
 .DS_Store
 *.psd
+
+# SCSS 一律用 --no-source-map 編譯；這行是漏加參數時的保險
+*.css.map

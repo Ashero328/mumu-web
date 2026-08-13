@@ -3,18 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ══════════════════════════════════════════════════════════════
+     ✏️ 可以改：這張卡的標題（瀏覽器分頁上顯示的字）
+     ══════════════════════════════════════════════════════════════ -->
 <title>Happy New Year｜木木文化</title>
-<!-- OG 分享預覽：上線後 og:url / og:image 換成正式網域的絕對網址 -->
+
+<!-- ══════════════════════════════════════════════════════════════
+     ✏️ 可以改：檔期設定
+
+     card-offline    這張卡的最後展示日，格式 2026-12-31
+                     過了這天，整張卡自動收起，改成一頁「檔期已結束」的公告
+                     留空 = 永遠不下架
+
+     promo-offline   下面「客戶曝光區」的下架日，格式同上
+                     過了這天，只有曝光區消失，賀卡本身照常
+                     留空 = 不自動下架
+     ══════════════════════════════════════════════════════════════ -->
+<meta name="card-offline" content="">
+<meta name="promo-offline" content="">
+
+<!-- OG 分享預覽：LINE／FB 的爬蟲只讀原始碼、不執行網頁，所以這裡一定要絕對網址，
+     相對路徑它找不到基準，抓不到預覽圖。正式網域生效後把這裡的網域換掉即可 -->
+<meta property="og:type" content="website">
 <meta property="og:title" content="Happy New Year｜木木文化">
 <meta property="og:description" content="願新的一年，日子過得慢一點，好事來得多一點。">
-<meta property="og:image" content="images/poster.jpg">
+<meta property="og:url" content="https://ashero328.github.io/mumu-web/cards/NE2026001/">
+<meta property="og:image" content="https://ashero328.github.io/mumu-web/cards/NE2026001/images/poster.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Noto+Serif+TC:wght@400;500&display=swap">
-<link rel="stylesheet" href="../../shared/css/card.css">
+<link rel="stylesheet" href="css/card.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
 <main class="card-stage">
   <div class="card-deco" aria-hidden="true">
     <span class="year-ghost">2026</span>
@@ -22,26 +48,63 @@
     <span class="sunrise"></span>
   </div>
   <div class="card-scene">
-    <h1 class="card-title" data-slot="title"></h1>
-    <p class="card-subtitle" data-slot="subtitle"></p>
-    <p class="card-greeting" data-slot="greeting"></p>
-    <p class="card-signoff" data-slot="signoff"></p>
-    <a class="card-reply" data-slot-link="reply" data-slot="replyText" href="#"></a>
+    <!-- ✏️ 可以改：大標題（英文，斜體金色那行） -->
+    <h1 class="card-title">Happy New Year</h1>
+
+    <!-- ✏️ 可以改：副標（中文，字距很開那行）。不需要就把這整行刪掉 -->
+    <p class="card-subtitle">新年快樂</p>
+
+    <!-- ✏️ 可以改：祝福語 -->
+    <p class="card-greeting">願新的一年，日子過得慢一點，好事來得多一點。</p>
+
+    <!-- ✏️ 可以改：落款 -->
+    <p class="card-signoff">With love, 木木文化</p>
+
+    <!-- ✏️ 可以改：按鈕文字與連結。不需要這顆按鈕就把這整行刪掉
+         href 填收卡人可以回覆的地方（LINE、表單網址…） -->
+    <a class="card-reply" href="#">回覆祝福</a>
   </div>
 </main>
-<p class="card-expired-note is-hidden">此為過往檔期賀卡，感謝觀賞</p>
+
 <section class="card-info">
-  <p class="card-note" data-slot="infoText"></p>
-  <div class="card-promo"><!-- 曝光版品牌區塊放這裡；基本版保持空白即自動隱藏 --></div>
+  <!-- ✏️ 可以改：卡片下方的說明文字 -->
+  <p class="card-note">謝謝你陪我們走過這一年。木木文化祝您新歲平安，諸事勝意。</p>
+
+  <!-- ✏️ 客戶曝光區：一張 banner ＋ 一個連結。
+       沒有賣曝光的卡，把 <aside> 整段刪掉即可（留著空的也會自動隱藏）
+       banner 圖放進這張卡的 images/ 資料夾 -->
+  <aside class="card-promo">
+    <!--
+    <a href="https://客戶的網址" target="_blank" rel="noopener">
+      <img src="images/promo-banner.jpg" alt="○○公司 新春優惠" width="1200" height="300">
+    </a>
+    -->
+  </aside>
+
   <nav class="card-share">
     <a data-share="line" target="_blank" rel="noopener">分享到 LINE</a>
     <a data-share="copy" href="#">複製連結</a>
-    <a data-share="download" download>下載影片</a>
+    <!-- 有影片檔才留這行，href 填影片位置；沒有就刪掉 -->
+    <!-- <a data-share="download" href="images/card.mp4" download>下載影片</a> -->
   </nav>
 </section>
-<script src="../../shared/js/gsap.min.js"></script>
-<script src="js/config.js"></script>
-<script src="js/anim.js"></script>
-<script src="../../shared/js/card.js"></script>
+
+<!-- 檔期結束後才會出現的公告頁（平常整段隱藏，不用管它） -->
+<section class="expired" aria-live="polite">
+  <div class="expired__inner">
+    <span class="expired__seal" aria-hidden="true">木</span>
+    <h1 class="expired__title">這張賀卡的檔期<br>已經結束了</h1>
+    <p class="expired__text">謝謝您特地前來。<br>木木文化每逢節慶都會做新的電子賀卡，歡迎再來看看。</p>
+    <div class="expired__actions">
+      <a class="expired__btn expired__btn--solid" href="../../">看看最新的賀卡</a>
+      <a class="expired__btn" href="https://line.me/R/ti/p/@yme1248q">聊聊客製賀卡</a>
+    </div>
+  </div>
+  <p class="expired__vertical" aria-hidden="true">紙 上 有 溫 度</p>
+</section>
+
+<script src="scripts/gsap/gsap.min.js"></script>
+<script src="scripts/anim.js"></script>
+<script src="scripts/card.js"></script>
 </body>
 </html>

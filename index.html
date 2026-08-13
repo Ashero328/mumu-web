@@ -3,11 +3,496 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>木木文化 MuMu Culture</title>
-<meta http-equiv="refresh" content="0; url=home/">
+<title>木木文化工作室｜設計印刷</title>
+<meta name="description" content="木木文化工作室：名片設計印刷、電子賀卡、吊牌店卡、信封信紙。想幫您留住指尖感知的溫度。">
+<!-- 手機瀏覽器的網址列跟著宣紙白，捲到頁首時上緣不會出現一條系統色的硬邊 -->
+<meta name="theme-color" content="#fcfcfa">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="scripts/owl-carousel/owl-carousel.min.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<!-- 根目錄轉址：總站在 home/，Pages 根網址進來自動導過去 -->
-<p><a href="home/">木木文化</a></p>
+
+<a class="skip" href="#main">跳至主要內容</a>
+
+<!-- 版面範圍線：像冊頁的左右界線，提示內容範圍 -->
+<div class="frame" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="nav__inner wrap">
+    <a class="nav__brand" href="#top"><img src="images/logo.png" alt="木木文化 設計印刷" width="650" height="125"></a>
+
+    <!-- 手機版選單開關：桌機隱藏。aria-expanded 由 main.js 同步，讀螢幕才知道展開與否 -->
+    <button class="nav__toggle" type="button" id="navToggle"
+            aria-expanded="false" aria-controls="navLinks" aria-label="開啟選單">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav__links" id="navLinks" aria-label="主要導覽">
+      <a href="#about">關於木木</a>
+      <a href="#services">營業項目</a>
+      <a href="#works">設計作品</a>
+      <a href="#promo">賀卡檔期</a>
+      <a href="#flow">訂購流程</a>
+      <a href="#contact">與我聯絡</a>
+    </nav>
+    <a class="nav__cta" href="#contact">LINE 詢價</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ── 主視覺：內容收在中間欄 ── -->
+  <section class="hero sec wrap" id="top">
+    <div class="sec__body hero__body">
+      <div class="hero__type">
+        <p class="hero__kicker"><i>Mumu Culture</i>　設計 ・ 印刷</p>
+        <h1 class="hero__title">
+          <span>文字與線條</span>
+          <span class="indent">在紙張上留下深度</span>
+          <span class="accent">留住指尖感知的溫度</span>
+        </h1>
+        <div class="hero__actions">
+          <a class="btn btn--solid" href="#works">看設計作品</a>
+          <a class="btn btn--ghost" href="#promo">賀卡檔期</a>
+        </div>
+      </div>
+      <figure class="hero__figure">
+        <span class="hero__stage">
+          <span class="hero__frame">
+            <!-- muted + playsinline 是行動裝置允許自動播放的前提，拿掉其中一個 iOS 就不播。
+                 刻意沒有 loop：播完自然停在最後一幀，捲出視野再回來時由 main.js 重播 -->
+            <video class="hero__video" id="heroVideo" src="images/hero-woman.mp4" poster="images/hero-woman-poster.jpg"
+                   autoplay muted playsinline preload="auto" aria-label="設計師工作情境影片"></video>
+          </span>
+          <span class="hero__seal" aria-hidden="true">木</span>
+        </span>
+        <figcaption>紙張、色票、印樣，一件件確認</figcaption>
+      </figure>
+      <p class="hero__vertical" aria-hidden="true">紙 上 有 溫 度</p>
+    </div>
+  </section>
+
+  <!-- ── 品牌風格理念 ── -->
+  <section class="about sec wrap" id="about">
+    <img class="about__ring" src="images/tree_ring.png" alt="" width="510" height="500" loading="lazy" aria-hidden="true">
+    <img class="about__tree" src="images/tree.webp" alt="" width="900" height="865" loading="lazy" decoding="async" aria-hidden="true">
+    <div class="sec__body about__grid">
+      <div class="about__intro">
+        <p class="section-label">關於木木</p>
+        <h2 class="about__lead">在紙張與油墨的<br>字裡行間誕生</h2>
+      </div>
+      <div class="about__body">
+        <p class="about__quote">文字與線條，在紙張上留下了深度；<br>而木木，想幫您留住指尖感知的溫度。</p>
+        <p>不給自己設限的設計及印刷工作室。喜歡聽故事，也講究紙質的手感，把您的需求印製成最精緻的模樣。</p>
+        <p class="about__sign">每一個作品，都是一份陪伴。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 營業項目：年輪軌道，統一薄荷底，說明滑過才浮現 ── -->
+  <section class="services" id="services">
+    <!-- 右側留白處的直排引句：平衡構圖，也把「紙的觸感」這個品牌主張說出來 -->
+    <p class="services__vertical" aria-hidden="true">紙材的觸感，傳遞最真實的品牌溫度。</p>
+
+    <div class="sec wrap">
+      <p class="section-label">營業項目</p>
+      <div class="sec__body">
+        <h2 class="services__lead">六項服務，從一張紙開始</h2>
+
+        <!-- 年輪軌道：六項服務平均分佈在內外兩環，繞著中心緩緩旋轉 -->
+        <div class="rings" id="rings" role="group" aria-label="營業項目">
+          <svg class="rings__lines" viewBox="0 0 720 720" aria-hidden="true">
+            <!-- r 要跟 style.scss 的 --top 換算出來的半徑一致，泡泡才會落在線上 -->
+            <circle cx="360" cy="360" r="187"></circle>
+            <circle cx="360" cy="360" r="302"></circle>
+          </svg>
+
+          <p class="rings__hub"><span>木木<br>文化</span><small>設計 ・ 印刷</small></p>
+
+          <!-- 雙軌錯落：六項一格 60 度，奇數格掛外軌、偶數格掛內軌，繞一圈就是高低交錯。
+               兩軌反向、速度不同，才有雙環律動感。--a 從 12 點鐘方向順時針算 -->
+          <div class="orbit orbit--outer" data-speed="108" data-dir="-1">
+            <div class="orbit__item" style="--a: 0deg">
+              <div class="orbit__face"><a class="orbit__inner" href="#works" aria-label="名片設計">
+                <span class="orbit__bubble"><img class="ic" src="images/icons/art.png" alt="" width="512" height="512" loading="lazy"><span class="orbit__name">名片設計</span></span>
+                <span class="orbit__note">從聽故事開始</span>
+              </a></div>
+            </div>
+            <div class="orbit__item" style="--a: 120deg">
+              <div class="orbit__face"><a class="orbit__inner" href="#promo" aria-label="電子賀卡">
+                <span class="orbit__bubble"><img class="ic" src="images/icons/thank-you-card.png" alt="" width="512" height="512" loading="lazy"><span class="orbit__name">電子賀卡</span></span>
+                <span class="orbit__note">會動的節慶問候</span>
+              </a></div>
+            </div>
+            <div class="orbit__item" style="--a: 240deg">
+              <div class="orbit__face"><a class="orbit__inner" href="#contact" aria-label="信封信紙">
+                <span class="orbit__bubble"><img class="ic" src="images/icons/message.png" alt="" width="512" height="512" loading="lazy"><span class="orbit__name">信封信紙</span></span>
+                <span class="orbit__note">整套品牌語氣</span>
+              </a></div>
+            </div>
+          </div>
+
+          <div class="orbit orbit--inner" data-speed="84" data-dir="1">
+            <div class="orbit__item" style="--a: 60deg">
+              <div class="orbit__face"><a class="orbit__inner" href="#works" aria-label="名片印刷">
+                <span class="orbit__bubble"><img class="ic" src="images/icons/business-card-design.png" alt="" width="512" height="512" loading="lazy"><span class="orbit__name">名片印刷</span></span>
+                <span class="orbit__note">紙材親手挑</span>
+              </a></div>
+            </div>
+            <div class="orbit__item" style="--a: 180deg">
+              <div class="orbit__face"><a class="orbit__inner" href="#contact" aria-label="吊牌店卡">
+                <span class="orbit__bubble"><img class="ic" src="images/icons/tag.png" alt="" width="512" height="512" loading="lazy"><span class="orbit__name">吊牌店卡</span></span>
+                <span class="orbit__note">小物講究細節</span>
+              </a></div>
+            </div>
+            <div class="orbit__item" style="--a: 300deg">
+              <div class="orbit__face"><a class="orbit__inner" href="#contact" aria-label="各式印刷">
+                <span class="orbit__bubble"><img class="ic" src="images/icons/newspaper.png" alt="" width="512" height="512" loading="lazy"><span class="orbit__name">各式印刷</span></span>
+                <span class="orbit__note">DM ・ 貼紙 ・ 包材</span>
+              </a></div>
+            </div>
+          </div>
+
+          <!-- 窄螢幕：環形改為條列 -->
+          <ul class="rings__list">
+            <li><a href="#works"><span class="orbit__bubble"><img class="ic" src="images/icons/art.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">名片設計</span><span class="orbit__note">從聽故事開始</span></a></li>
+            <li><a href="#promo"><span class="orbit__bubble"><img class="ic" src="images/icons/thank-you-card.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">電子賀卡</span><span class="orbit__note">會動的節慶問候</span></a></li>
+            <li><a href="#works"><span class="orbit__bubble"><img class="ic" src="images/icons/business-card-design.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">名片印刷</span><span class="orbit__note">紙材親手挑</span></a></li>
+            <li><a href="#contact"><span class="orbit__bubble"><img class="ic" src="images/icons/tag.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">吊牌店卡</span><span class="orbit__note">小物講究細節</span></a></li>
+            <li><a href="#contact"><span class="orbit__bubble"><img class="ic" src="images/icons/message.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">信封信紙</span><span class="orbit__note">整套品牌語氣</span></a></li>
+            <li><a href="#contact"><span class="orbit__bubble"><img class="ic" src="images/icons/newspaper.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">各式印刷</span><span class="orbit__note">DM ・ 貼紙 ・ 包材</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右下角典藏標記：雜誌版面的收尾細節 -->
+    <p class="services__mark" aria-hidden="true">— MUMU CULTURE / SERVICE DESIGN</p>
+  </section>
+
+  <!-- ── 設計作品：多圖輪播 ── -->
+  <section class="works sec wrap" id="works">
+    <p class="section-label">名片設計作品</p>
+    <div class="sec__body">
+      <div class="works__head">
+        <h2>品牌形象的精裝初見</h2>
+        <div class="tabs" role="tablist" aria-label="作品分類">
+          <button class="tabs__btn is-on" type="button" role="tab" aria-selected="true">範本</button>
+          <button class="tabs__btn" type="button" role="tab" aria-selected="false">客製</button>
+        </div>
+      </div>
+
+      <div class="owl-carousel owl-works" id="worksCarousel">
+        <div class="wk">
+            <img src="images/business-card/BusinessCard-img1.png" alt="名片作品：雙面名片" width="1200" height="900" loading="lazy" decoding="async">
+          </div>
+        <div class="wk">
+            <img src="images/business-card/BusinessCard-img2.png" alt="名片作品：品牌名片" width="1200" height="900" loading="lazy" decoding="async">
+          </div>
+        <div class="wk">
+            <img src="images/business-card/BusinessCard-img3.png" alt="名片作品：工作室名片" width="1200" height="900" loading="lazy" decoding="async">
+          </div>
+        <div class="wk">
+            <img src="images/business-card/BusinessCard-img4.png" alt="名片作品：名片情境" width="1200" height="900" loading="lazy" decoding="async">
+          </div>
+        <div class="wk">
+            <img src="images/business-card/BusinessCard-img2.png" alt="名片作品：圓角名片" width="1200" height="900" loading="lazy" decoding="async">
+          </div>
+        <div class="wk">
+            <img src="images/business-card/BusinessCard-img1.png" alt="名片作品：橫式名片" width="1200" height="900" loading="lazy" decoding="async">
+          </div>
+        <div class="wk">
+            <img src="images/business-card/BusinessCard-img4.png" alt="名片作品：特殊尺寸" width="1200" height="900" loading="lazy" decoding="async">
+          </div>
+        <div class="wk">
+            <img src="images/business-card/BusinessCard-img3.png" alt="名片作品：質感名片" width="1200" height="900" loading="lazy" decoding="async">
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 賀卡檔期：微 3D 展開，點選進入 ── -->
+  <section class="promo sec wrap" id="promo">
+    <p class="section-label">最新消息</p>
+    <div class="sec__body">
+      <div class="promo__head">
+        <div class="promo__lead">
+          <h2>年末年初賀卡檔期開放預約</h2>
+          <p class="promo__intro">動態電子賀卡，一條連結手機與電腦都好看，每款都含直式與橫式雙版本。點選任一款進入實際瀏覽，旺季建議提前四週預約。</p>
+        </div>
+        <div class="tabs" role="tablist" aria-label="賀卡分類">
+          <button class="tabs__btn is-on" type="button" role="tab" aria-selected="true">範本</button>
+          <button class="tabs__btn" type="button" role="tab" aria-selected="false">客製</button>
+        </div>
+      </div>
+
+      <!-- 賀卡架：直式與橫式並列，桌機微 3D 側傾，滑過站直放大 -->
+      <div class="owl-carousel owl-deck" id="deck">
+        <div class="deck__page">
+          <div class="deck__row deck__row--v">
+            <div class="deck__item deck__item--v">
+              <a href="#promo" aria-label="瀏覽 十二生肖・羊年 賀卡">
+                <span class="deck__media"><img src="images/e-card/羊年-直式.jpg" alt="十二生肖・羊年" width="600" height="800" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>十二生肖・羊年</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+            <div class="deck__item deck__item--v">
+              <a href="#promo" aria-label="瀏覽 西元新年 賀卡">
+                <span class="deck__media"><img src="images/e-card/西元-直式.jpg" alt="西元新年" width="600" height="801" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>西元新年</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+            <div class="deck__item deck__item--v">
+              <a href="#promo" aria-label="瀏覽 聖誕・年末問候 賀卡">
+                <span class="deck__media"><img src="images/e-card/聖誕-直式.jpg" alt="聖誕・年末問候" width="600" height="803" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>聖誕・年末問候</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div class="deck__row deck__row--h">
+            <div class="deck__item deck__item--h">
+              <a href="#promo" aria-label="瀏覽 十二生肖・羊年・橫式版 賀卡">
+                <span class="deck__media"><img src="images/e-card/羊年-橫式.jpg" alt="十二生肖・羊年・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>十二生肖・羊年・橫式版</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+            <div class="deck__item deck__item--h">
+              <a href="#promo" aria-label="瀏覽 聖誕・橫式版 賀卡">
+                <span class="deck__media"><img src="images/e-card/聖誕-橫式.jpg" alt="聖誕・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>聖誕・橫式版</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+            <div class="deck__item deck__item--h">
+              <a href="#promo" aria-label="瀏覽 農曆年・橫式版 賀卡">
+                <span class="deck__media"><img src="images/e-card/農曆-橫式.jpg" alt="農曆年・橫式版" width="801" height="600" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>農曆年・橫式版</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="deck__page">
+          <div class="deck__row deck__row--v">
+            <div class="deck__item deck__item--v">
+              <a href="#promo" aria-label="瀏覽 十二生肖・羊年 賀卡">
+                <span class="deck__media"><img src="images/e-card/羊年-直式.jpg" alt="十二生肖・羊年" width="600" height="800" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>十二生肖・羊年</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+            <div class="deck__item deck__item--v">
+              <a href="#promo" aria-label="瀏覽 西元新年 賀卡">
+                <span class="deck__media"><img src="images/e-card/西元-直式.jpg" alt="西元新年" width="600" height="801" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>西元新年</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+            <div class="deck__item deck__item--v">
+              <a href="#promo" aria-label="瀏覽 聖誕・年末問候 賀卡">
+                <span class="deck__media"><img src="images/e-card/聖誕-直式.jpg" alt="聖誕・年末問候" width="600" height="803" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>聖誕・年末問候</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div class="deck__row deck__row--h">
+            <div class="deck__item deck__item--h">
+              <a href="#promo" aria-label="瀏覽 十二生肖・羊年・橫式版 賀卡">
+                <span class="deck__media"><img src="images/e-card/羊年-橫式.jpg" alt="十二生肖・羊年・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>十二生肖・羊年・橫式版</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+            <div class="deck__item deck__item--h">
+              <a href="#promo" aria-label="瀏覽 聖誕・橫式版 賀卡">
+                <span class="deck__media"><img src="images/e-card/聖誕-橫式.jpg" alt="聖誕・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>聖誕・橫式版</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+            <div class="deck__item deck__item--h">
+              <a href="#promo" aria-label="瀏覽 農曆年・橫式版 賀卡">
+                <span class="deck__media"><img src="images/e-card/農曆-橫式.jpg" alt="農曆年・橫式版" width="801" height="600" loading="lazy" decoding="async"></span>
+                <span class="deck__info">
+                  <strong>農曆年・橫式版</strong>
+                  <span class="deck__enter">進入瀏覽</span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="promo__ask">每款都含直式與橫式雙版本，賀詞與品牌落款可客製。<a class="link-more" href="#contact">聊聊客製賀卡</a></p>
+    </div>
+  </section>
+
+  <!-- ── 訂購流程 ── -->
+  <section class="flow sec wrap" id="flow">
+    <p class="section-label">訂購流程</p>
+    <div class="sec__body">
+      <h2 class="flow__lead">四步，從想法到成品</h2>
+      <ol class="flow__list">
+        <li class="step">
+          <span class="step__bubble"><img class="ic" src="images/flow/phone-call-line.png" alt="" width="77" height="67" loading="lazy"></span>
+          <h3>聊需求</h3>
+          <p>LINE 或電話說說品牌與用途，先確認方向。</p>
+        </li>
+        <li class="flow__arrow" aria-hidden="true"><img src="images/arrow1.png" alt="" width="149" height="78" loading="lazy"></li>
+        <li class="step">
+          <span class="step__bubble"><img class="ic" src="images/flow/quotation.png" alt="" width="82" height="98" loading="lazy"></span>
+          <h3>報價確認</h3>
+          <p>依規格、紙材與數量出正式報價，確認後動工。</p>
+        </li>
+        <li class="flow__arrow" aria-hidden="true"><img src="images/arrow2.png" alt="" width="182" height="61" loading="lazy"></li>
+        <li class="step">
+          <span class="step__bubble"><img class="ic" src="images/flow/review.png" alt="" width="106" height="90" loading="lazy"></span>
+          <h3>設計審稿</h3>
+          <p>設計稿來回修改，逐字核對後簽稿。</p>
+        </li>
+        <li class="flow__arrow" aria-hidden="true"><img src="images/arrow3.png" alt="" width="165" height="47" loading="lazy"></li>
+        <li class="step">
+          <span class="step__bubble"><img class="ic" src="images/flow/delivery-man.png" alt="" width="118" height="118" loading="lazy"></span>
+          <h3>印製交付</h3>
+          <p>付印、品檢，送到你手上。</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── 聯絡 ── -->
+  <section class="contact" id="contact">
+    <!-- 山坡：單張 foot_bg_all.png（2540×580），錨在頁尾底部並撐滿整個頁尾，
+         所以永遠貼齊頁面最底。背景圖直接掛在這個容器上，不再分三層 -->
+    <div class="grass" id="grass" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="contact__top">
+        <h2>想聊聊您的新想法嗎？</h2>
+        <p>歡迎私訊木木，讓我們一起開創全新的篇章。</p>
+        <div class="contact__actions">
+          <a class="btn btn--solid" href="https://line.me/R/ti/p/@yme1248q">加 LINE 詢價</a>
+          <a class="btn btn--ghost" href="tel:0919084796">電話聯絡</a>
+        </div>
+      </div>
+
+      <!-- 左：社群入口（不外露帳號，直接連過去）／右：權利宣告 -->
+      <div class="contact__foot">
+        <ul class="social">
+          <li><a href="https://line.me/R/ti/p/@yme1248q" target="_blank" rel="noopener" aria-label="LINE 官方帳號"><img class="ic" src="images/icons/line.png" alt="" width="512" height="512" loading="lazy"><span>LINE</span></a></li>
+          <li><a href="tel:0919084796" aria-label="撥打電話"><img class="ic" src="images/icons/phone.png" alt="" width="512" height="512" loading="lazy"><span>電話</span></a></li>
+          <li><a href="mailto:meisitw@gmail.com" aria-label="寄送 Email"><img class="ic" src="images/icons/gmail.png" alt="" width="512" height="512" loading="lazy"><span>Email</span></a></li>
+          <li><a href="https://instagram.com/mumuyang.2026" target="_blank" rel="noopener" aria-label="Instagram"><img class="ic" src="images/icons/instagram.png" alt="" width="512" height="512" loading="lazy"><span>Instagram</span></a></li>
+        </ul>
+
+        <!-- 每個 <span> 是一個「不會被拆開」的語意單位：放得下就同一行，
+             放不下就整段換到下一行，不會斷在「三段／55 巷」這種讀不通的地方 -->
+        <div class="rights">
+          <p>
+            <span>木木文化工作室</span>
+            <span>414 台中市烏日區溪南路三段 55 巷 47 弄 8 號</span>
+          </p>
+          <p>本站作品圖片與文字版權均屬木木文化工作室所有，未經同意請勿轉載或作為商業使用。</p>
+          <p class="rights__copy">
+            <span>© 2026 木木文化工作室 Mumu Culture</span>
+            <span>統一編號 60890306</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="scripts/jquery/jquery.min.js"></script>
+<script src="scripts/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+<script src="scripts/owl-carousel/owl-carousel.min.js"></script>
+<script src="scripts/gsap/gsap.min.js"></script>
+<script src="scripts/gsap/ScrollTrigger.min.js"></script>
+<script src="scripts/main.js"></script>
+
+<!-- Owl Carousel 初始化：作品為單排多張、賀卡為整批換頁 -->
+<script>
+jQuery(function ($) {
+  $(".owl-works").owlCarousel({
+    items: 5,
+    margin: 34,
+    dots: true,
+    nav: false,
+    mouseDrag: true,
+    touchDrag: true,
+    slideBy: "page",
+    responsive: {
+      0:    { items: 1, margin: 14 },
+      560:  { items: 2, margin: 16 },
+      860:  { items: 3, margin: 20 },
+      1200: { items: 4, margin: 22 },
+      1560: { items: 5, margin: 34 }
+    }
+  });
+
+  // 賀卡：桌機與手機都用 Owl，只是餵不同的參數。
+  // 桌機一個 item ＝ 一整頁（直式一排＋橫式一排，照設計稿的分組）；
+  // 手機的 DOM 已由 main.js 的 deckFlatten 打平成六張卡直接掛在 .owl-deck 底下，
+  // 一個 item ＝ 一張卡，所以會蓋上 .is-flat 這個記號。
+  // 跨過斷點時重新載入頁面才會切換模式，這是刻意的取捨：
+  // Owl 沒有乾淨的 destroy/re-init 路徑，硬切容易留下殘留的 inline 樣式。
+  var $deck = $(".owl-deck");
+
+  $deck.owlCarousel($deck.hasClass("is-flat") ? {
+    // 手機：一張一張。autoHeight 關掉 —— 直式與橫式高度差很多，
+    // 開著的話每滑一張整塊就上下抽動一次；固定成最高的那張才穩
+    items: 1,
+    margin: 14,
+    dots: true,
+    nav: false,
+    mouseDrag: true,
+    touchDrag: true,
+    autoHeight: false,
+    responsive: {
+      0:   { items: 1, margin: 14 },
+      560: { items: 2, margin: 16 }
+    }
+  } : {
+    items: 1,
+    margin: 0,
+    dots: true,
+    nav: false,
+    mouseDrag: true,
+    touchDrag: true,
+    autoHeight: true
+  });
+});
+</script>
 </body>
 </html>

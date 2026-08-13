@@ -1,0 +1,2015 @@
+// ============================================
+// 木木文化 總站首頁：中式文青・留白
+// 鐵律：只改 .scss；style.css 是編譯產物
+// 編譯：npx sass css/style.scss css/style.css --no-source-map
+//
+// 版面：wrap 上限 1920；內容收在「左側標籤欄 + 中間內容欄」，標籤貼左、內容靠中
+// 配色：以琇端偏好的綠為主軸，六項服務各有色階（預設就分得出，不依賴 hover）
+// 中文行寬一律用 em（1em ≈ 一個中文字）；ch 是數字寬，用在中文會過窄
+// ============================================
+
+// ---------- Tokens ----------
+$paper: #fcfcfa; // 宣紙白
+$cream: #efeedb; // 品牌米白：區塊底色
+$ink: #33291f; // 品牌深棕（logo「文化」）
+$ink-line: rgba($ink, .13);
+$green: #6f8544; // 主綠
+$green-deep: #4a5a34; // 深綠
+$olive: #97a675; // 橄欖綠
+$olive-ink: #64703f; // 深橄欖（小字）
+$mint: #d6ead4; // 淺薄荷
+$mint-soft: #e8f2e6;
+$seal: #a63a2e; // 朱紅：只用於印章
+
+:root {
+  --paper: #{$paper};
+  --cream: #{$cream};
+  --ink: #{$ink};
+  --ink-line: #{$ink-line};
+  --green: #{$green};
+  --green-deep: #{$green-deep};
+  --olive: #{$olive};
+  --olive-ink: #{$olive-ink};
+  --mint: #{$mint};
+  --mint-soft: #{$mint-soft};
+  --seal: #{$seal};
+
+  --wrap: 1920px; // 版面上限（設計稿頁寬）
+  --inner: 1440px; // 主內容欄：頁寬 1920 左右各留 240
+  --wide: 1640px; // 作品／賀卡輪播：刻意比內容欄寬（左右各留 140）
+  --gut: clamp(20px, 4.5vw, 72px);
+  // 區塊留白改用 vw：設計稿是固定寬度的畫面，vh 會隨視窗高度飄動而對不上
+  --pad-l: clamp(46px, 4.7vw, 96px); // 一般段落上下留白
+  --label-gap: clamp(18px, .95vw, 24px);
+  --ease: cubic-bezier(.16, 1, .3, 1);
+
+  --z-frame: 1;
+  --z-deco: 2;
+  --z-content: 3;
+  --z-nav: 10;
+  --z-skip: 20;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Noto Sans TC", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(.95rem, .35vw + .88rem, 1.02rem);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  // 觸控時瀏覽器預設會蓋一層系統藍的方框，把年輪的圓泡泡與賀卡都框成方的。
+  // 換成極淡的品牌綠：形狀還是瀏覽器決定，但顏色不再跟版面打架
+  -webkit-tap-highlight-color: rgba($green, .12);
+}
+
+// 鍵盤焦點框：全站統一一種。
+// 原本只有年輪的圓圈自己寫了一組，其他元件靠瀏覽器預設，
+// 在宣紙白底上是很淡的藍框，跟這個版面完全搭不上
+:focus-visible {
+  outline: 2px solid var(--green-deep);
+  outline-offset: 3px;
+}
+
+// 頁尾是深色底，深綠框在上面幾乎看不見，改用薄荷色
+.contact :focus-visible {
+  outline-color: var(--mint);
+}
+
+// 全站字級下限 12px（含各元件的定值與 clamp 下界），比這小在桌機上就吃力了
+
+h1,
+h2,
+h3 {
+  font-family: "Noto Serif TC", Georgia, serif;
+  font-weight: 500;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+// 內文加一點字距：中文在文青版面裡疏一點比較好讀。
+// 自己定了 letter-spacing 的元件（導覽、按鈕、導引標籤…）權重較高，不受影響
+p {
+  text-wrap: pretty;
+  letter-spacing: .04em;
+}
+
+// height: auto 必要：HTML 的 height 屬性會鎖死高度並壓過 aspect-ratio
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  z-index: var(--z-skip);
+
+  &:focus {
+    left: 12px;
+    top: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: .5em 1em;
+  }
+}
+
+// ---------- 版面骨架 ----------
+.wrap {
+  width: min(var(--wrap), 100% - 2 * var(--gut));
+  margin-inline: auto;
+}
+
+// 導覽是 sticky 的，捲到錨點時目標段落的上緣會剛好被它蓋住（手機更明顯，導引小字整條看不到）。
+// 讓出導覽高度＋一點呼吸：導覽列高＝上下 14 ＋ logo 30～40
+#top,
+#main,
+#about,
+#services,
+#works,
+#promo,
+#flow,
+#contact {
+  scroll-margin-top: clamp(70px, 6vw, 92px);
+}
+
+// 單欄置中：小導引在大標正上方，不放在旁邊
+.sec {
+
+  >.section-label,
+  >.sec__body {
+    width: min(100%, var(--inner));
+    margin-inline: auto;
+  }
+}
+
+.sec__body {
+  min-width: 0;
+}
+
+// 冊頁界線：固定在版面兩側
+.frame {
+  display: none;
+
+  @media (min-width: 1300px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: var(--z-frame);
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--ink-line);
+    }
+
+    // 設計稿的界線就落在版面兩緣，與各段落分隔線的端點對齊
+    &::before {
+      left: calc(50% - var(--wrap) / 2);
+    }
+
+    &::after {
+      left: calc(50% + var(--wrap) / 2);
+    }
+  }
+}
+
+// ---------- 共用元件 ----------
+// 導引小字：字級只比內文小 1.11 倍，光靠大小分不出階層。
+// 內文 16.3 到 12px 下限之間只夠放一階，所以這一階改用「字距」而不是「字級」來區分——
+// 拉開的字距一眼就讀成標籤，不會被誤認成小號內文
+.section-label {
+  font-family: "Noto Serif TC", serif;
+  font-size: .92rem;
+  letter-spacing: .18em;
+  text-indent: .18em;
+  color: var(--olive-ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--label-gap);
+
+  &::before {
+    content: "";
+    width: 30px;
+    height: 1px;
+    background: var(--olive);
+    flex: none;
+  }
+}
+
+.btn {
+  display: inline-block;
+  font-size: .88rem;
+  letter-spacing: .14em;
+  text-indent: .14em;
+  padding: .85em 1.8em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background .45s var(--ease), color .45s var(--ease),
+    border-color .45s var(--ease), transform .45s var(--ease), box-shadow .45s var(--ease);
+
+  // 滑過微微浮起 2px＋一層極淡長陰影。幅度刻意很小，維持克制的調性
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba($ink, .07);
+  }
+
+  &--solid {
+    background: var(--green);
+    color: #fff;
+
+    &:hover {
+      background: #{$green-deep};
+    }
+  }
+
+  &--ghost {
+    border-color: rgba($green, .4);
+    color: var(--green);
+
+    &:hover {
+      border-color: var(--green);
+      background: rgba($green, .08);
+    }
+  }
+}
+
+.link-more {
+  font-size: .88rem;
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px solid rgba($green, .32);
+  padding-bottom: 2px;
+  white-space: nowrap;
+  transition: border-color .4s;
+
+  &:hover {
+    border-color: var(--green);
+  }
+}
+
+// icon：黑色線稿用 <img>，深底時以 filter 反白（mask 在部分環境不繪製）
+.ic {
+  width: 54%;
+  height: auto;
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
+}
+
+//--------------owl-carousel ----------
+// Owl Carousel 外觀（套件只提供結構，視覺配合設計稿定義）
+.owl-carousel {
+  .owl-stage {
+    display: flex;
+  }
+
+  .owl-item {
+    display: flex;
+  }
+
+  .owl-item>* {
+    width: 100%;
+  }
+
+  &.owl-drag .owl-item {
+    cursor: grab;
+  }
+
+  &.owl-grab {
+    cursor: grabbing;
+  }
+
+  .owl-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: clamp(20px, 2.2vw, 45px);
+  }
+
+  // 選擇器要帶上 button：Owl 自己的 CSS 有 .owl-carousel button.owl-dot { background: none }，
+  // 權重比 .owl-carousel .owl-dot 高，只寫 class 會讓未選到的圓點整顆不上色
+  // 未瀏覽＝邊線空心短條，瀏覽中＝實心長條。用「填色的有無」對比，不只用長度
+  button.owl-dot {
+    width: 30px;
+    height: 8px;
+    border-radius: 0;
+    background: none;
+    border: 1px solid rgba($green, .5);
+    padding: 0;
+    // 四個屬性寫在同一條：分成多條 transition 的話後者會整條覆蓋前者
+    transition: width .4s var(--ease), background .4s var(--ease),
+      border-color .4s var(--ease), transform .4s var(--ease);
+
+    &:hover {
+      border-color: var(--green);
+      background: rgba($green, .18);
+    }
+
+    &.active {
+      width: 150px;
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    span {
+      display: none;
+    }
+  }
+}
+
+// 兩個輪播都不出血：作品比內容欄寬一些（設計稿量到 1640），賀卡再寬一點讓兩側呼吸，
+// 但都收在版面內、卡片完整，不從畫面邊緣切出去
+.owl-works {
+  --w: min(var(--wide), 100vw - 2 * var(--gut));
+  width: var(--w);
+  margin-inline: calc((100% - var(--w)) / 2);
+  max-width: none;
+}
+
+.owl-deck {
+  --w: min(1840px, 100vw - 2 * var(--gut));
+  width: var(--w);
+  margin-inline: calc((100% - var(--w)) / 2);
+  max-width: none;
+}
+
+
+// ---------- 導覽 ----------
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  background: rgba(252, 252, 250, .96);
+  border-bottom: 1px solid transparent;
+  transition: border-color .4s;
+
+  &.is-stuck {
+    border-bottom-color: var(--ink-line);
+  }
+
+  // 設計稿的導覽列高 69：logo 40 + 上下 14
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(14px, 3vw, 48px);
+    padding: 14px clamp(0px, 1.9vw, 48px);
+  }
+
+  &__brand img {
+    height: clamp(30px, 1.6vw, 40px);
+    width: auto;
+  }
+
+  // 手機版選單開關：三條線。桌機隱藏
+  &__toggle {
+    display: none;
+    order: 2;
+    margin-inline-start: auto;
+    width: 44px; // 觸控目標最小 44×44
+    height: 44px;
+    place-content: center;
+    gap: 5px;
+    padding: 0;
+
+    span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--ink);
+      transition: transform .35s var(--ease), opacity .25s var(--ease);
+    }
+
+    @media (max-width: 899px) {
+      display: grid;
+    }
+  }
+
+  // 開啟時三條線變成叉：上下兩條旋轉交錯、中間淡出
+  &.is-open &__toggle span {
+    &:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+
+    &:nth-child(2) {
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+  }
+
+  // 手機：連結收進選單，點開關才展開
+  &__links {
+    display: flex;
+    order: 3;
+    width: 100%;
+    gap: clamp(14px, .8vw, 21px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    a {
+      width: 80px;
+      text-align: center;
+      white-space: nowrap;
+      font-size: clamp(.86rem, .64vw, 1rem);
+      text-decoration: none;
+      color: rgba($ink, .72);
+      padding-bottom: 3px;
+      border-bottom: 1px solid transparent;
+      transition: color .35s, border-color .35s;
+
+      &:hover {
+        color: var(--ink);
+      }
+
+      &.is-active {
+        color: var(--green);
+        border-bottom-color: var(--green);
+      }
+    }
+
+    // ⚠️ 這段必須留在 &__links 的最後。Sass 會把巢狀 @media 就地輸出，
+    //    後面的 a { width: 80px; text-align: center } 權重相同又排在後面，
+    //    會把手機版的整列連結蓋回桌機的 80px 窄欄（踩過一次：選單展開後
+    //    每一項只有 80px 寬、分隔線也只有 80px 長，看起來像沒套到樣式）
+    @media (max-width: 899px) {
+      display: none;
+      flex-direction: column;
+      overflow: visible;
+      gap: 0;
+      padding-block: 6px 12px;
+
+      a {
+        width: 100%;
+        text-align: left;
+        padding: 13px 0; // 觸控目標高度：13＋行高≈45
+        border-bottom: 1px solid var(--ink-line);
+      }
+
+      // 選到的那一項改用左側短線標示：整列都是連結，
+      // 底線在這裡是分隔線，再拿它當「目前位置」會讀不出來
+      a.is-active {
+        border-bottom-color: var(--ink-line);
+        box-shadow: inset 3px 0 0 var(--green);
+        padding-left: 12px;
+      }
+
+      a:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  // 開啟時才展開連結
+  &.is-open &__links {
+    @media (max-width: 899px) {
+      display: flex;
+    }
+  }
+
+  &__cta {
+    margin-inline-start: auto;
+    font-size: clamp(.8rem, .55vw, .88rem);
+    letter-spacing: .08em;
+    text-decoration: none;
+    color: var(--green);
+    border: 1px solid rgba($green, .38);
+    padding: .45em 1.1em;
+    white-space: nowrap;
+    transition: background .4s var(--ease), color .4s var(--ease),
+      border-color .4s var(--ease), transform .4s var(--ease);
+
+    &:hover {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (min-width: 900px) {
+    &__inner {
+      flex-wrap: nowrap;
+    }
+
+    &__links {
+      order: 0;
+      width: auto;
+      overflow: visible;
+      margin-inline-start: auto;
+      padding-bottom: 0;
+    }
+
+    &__cta {
+      margin-inline-start: 0;
+    }
+  }
+
+  // 手機：logo、詢價鈕、選單開關必須留在同一列。
+  // 三者原本要 156＋92＋44＋兩個間距 ＝ 320px，但 390 螢幕可用只有 297px，
+  // 開關就被擠到第二列 —— 展開時那顆 ✕ 孤零零掛在中間，看起來像壞掉。
+  //
+  // ⚠️ 不能靠 flex-shrink 解決：flex-wrap: wrap 的演算法是「先換行，換不了才縮」，
+  //    logo 給了 min-width: 0 也不會讓位。改用 grid：
+  //    第一欄 minmax(0, 1fr) 會真的壓縮，logo 的 img 用 max-width 跟著縮，
+  //    詢價鈕與開關兩欄維持 auto（照內容寬，不縮），連結整列橫跨到第二行。
+  @media (max-width: 899px) {
+    &__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      column-gap: 12px;
+      padding-inline: 0;
+    }
+
+    // grid 的自動排列會照 order 走：brand(0) cta(0) toggle(2) 佔滿第一列，
+    // links(3) 因為要橫跨整列，被推到第二行
+    &__links {
+      grid-column: 1 / -1;
+      width: auto;
+    }
+
+    &__brand {
+      min-width: 0;
+      // 不加這行的話，這個 <a> 會被拉滿整個 1fr 欄——在 900 附近是 559px 寬，
+      // logo 右邊一大片空白全都可以點，點了會跳回頁首。
+      // justify-self: start 讓它縮回內容寬，max-width 再把窄螢幕的上限收回欄寬
+      justify-self: start;
+      max-width: 100%;
+
+      img {
+        // 高度改由 max-height 管，寬度才有讓位的空間（height 定值會鎖死寬度）
+        height: auto;
+        width: auto;
+        max-width: 100%;
+        max-height: 30px;
+      }
+    }
+  }
+}
+
+// ---------- 主視覺 ----------
+// 設計稿：文字、影片、直排字三者都收在中間欄（1440）之內，兩側都留距離
+.hero {
+  position: relative;
+  padding: clamp(40px, 4.8vw, 99px) 0 clamp(48px, 4.9vw, 102px);
+
+  // 與其他區塊同一條中軸，不另加左右內距
+  // 置中收在 1440 內容欄的規則由 .sec > .sec__body 提供（section 已帶 sec class），
+  // 這裡只負責主視覺自己的欄位配置
+  &__body {
+    display: grid;
+    gap: clamp(28px, 4vw, 48px);
+
+    @media (min-width: 900px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 35.3%);
+      align-items: center;
+      column-gap: clamp(24px, 1.5vw, 30px);
+    }
+
+    // 直排字也進中間欄，成為第三欄
+    @media (min-width: 1240px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 35.3%) auto;
+    }
+  }
+
+  // 設計稿的文字組比影片略高一些，不是正中
+  &__type {
+    padding-bottom: clamp(0px, 2.9vw, 74px);
+  }
+
+  &__kicker {
+    font-size: .86rem;
+    color: var(--olive-ink);
+    letter-spacing: .06em;
+    margin-bottom: clamp(16px, 2.6vw, 26px);
+
+    i {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.05rem;
+    }
+  }
+
+  &__title {
+    font-size: clamp(1.95rem, 3.6vw, 3.3rem);
+    font-weight: 400;
+    line-height: 1.34;
+    letter-spacing: .01em;
+
+    span {
+      display: block;
+    }
+
+    .indent {
+      padding-inline-start: clamp(0px, 4vw, 76px);
+    }
+
+    .accent {
+      color: var(--green);
+      padding-inline-start: clamp(0px, 2vw, 38px);
+      margin-top: .2em;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: clamp(26px, 3.6vw, 42px);
+  }
+
+  &__figure {
+    max-width: none;
+
+    // 印章要壓在框的右緣，所以框與印章包在同一個定位層
+    .hero__stage {
+      position: relative;
+      display: block;
+    }
+
+    // 影片外框：白底細框，設計稿留白 15
+    .hero__frame {
+      display: block;
+      overflow: hidden;
+      border: 1px solid var(--ink-line);
+      padding: clamp(8px, .6vw, 15px);
+      background: #fff;
+    }
+
+    .hero__video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 11 / 15;
+      object-fit: cover;
+    }
+
+    figcaption {
+      font-size: .78rem;
+      color: var(--olive-ink);
+      letter-spacing: .06em;
+      margin-top: 12px;
+    }
+  }
+
+  // 切邊金色印章：跨出框右緣，離框底一段距離
+  &__seal {
+    position: absolute;
+    right: clamp(-21px, -.85vw, -14px);
+    bottom: clamp(20px, 1.25vw, 31px);
+    // 印章維持固定尺寸，不隨視窗縮放（原本寫成 clamp 但上下界顛倒，等同這兩個定值）
+    width: 60px;
+    aspect-ratio: 1;
+    display: grid;
+    background: var(--seal);
+    color: #edc681;
+    font-family: "Noto Serif TC", serif;
+    font-weight: 600;
+    font-size: 45px;
+    line-height: 45px;
+  }
+
+  &__vertical {
+    display: none;
+    font-size: .76rem;
+    letter-spacing: .5em;
+    color: rgba($ink, .42);
+    writing-mode: vertical-rl;
+
+    @media (min-width: 1240px) {
+      display: block;
+      align-self: center;
+      justify-self: end;
+      // 直排時 inline 軸是垂直的，這裡要用實體方向才會往左推
+      margin-right: clamp(0px, .8vw, 20px);
+    }
+  }
+}
+
+// ---------- 品牌理念 ----------
+.about {
+  position: relative;
+  padding: clamp(46px, 7.9vw, 162px) 0 clamp(50px, 9vw, 186px);
+  border-top: 1px solid var(--ink-line);
+
+  // 年輪水印：從左上角延伸進營業項目區的中段。
+  // grayscale 去掉原檔的褐調 → 在米白底上讀起來是極淡的灰綠，融進背景而不是貼上去的圖
+  &__ring {
+    display: none;
+    pointer-events: none;
+
+    @media (min-width: 1100px) {
+      display: block;
+      position: absolute;
+      left: -3%;
+      top: 108%;
+      transform: translateY(-50%);
+      width: clamp(300px, 34vw, 660px);
+      opacity: .075;
+      filter: grayscale(1) brightness(.85);
+      z-index: var(--z-deco);
+    }
+  }
+
+  // 水彩樹：品牌「木木」意象，淡淡襯在後方
+  &__tree {
+    display: none;
+    pointer-events: none;
+
+    @media (min-width: 1240px) {
+      display: block;
+      position: absolute;
+      right: clamp(0px, 10vw, 254px);
+      bottom: clamp(0px, 4.4vw, 111px);
+      width: clamp(220px, 14.8vw, 375px);
+      opacity: .3;
+      z-index: var(--z-deco);
+      mix-blend-mode: multiply;
+    }
+  }
+
+  // 設計稿：左欄（導引＋大標）約 3 成，右欄文字約 7 成，兩欄同高起頭
+  // z-index 讓文字浮在年輪與水彩樹之上
+  &__grid {
+    position: relative;
+    z-index: var(--z-content);
+    display: grid;
+    gap: clamp(20px, 3.4vw, 52px);
+
+    @media (min-width: 900px) {
+      grid-template-columns: minmax(0, .3fr) minmax(0, .7fr);
+    }
+  }
+
+  &__lead {
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    font-weight: 400;
+    margin-top: clamp(8px, 1.2vw, 30px);
+  }
+
+  &__body {
+    max-width: 32em;
+
+    p+p {
+      margin-top: 1.05em;
+    }
+  }
+
+  &__quote {
+    font-family: "Noto Serif TC", serif;
+    font-size: clamp(1rem, 1.3vw, 1.12rem);
+    line-height: 2.1;
+    padding-bottom: 1.1em;
+    border-bottom: 1px solid var(--ink-line);
+  }
+
+  &__sign {
+    font-family: "Noto Serif TC", serif;
+    font-size: 1.06rem;
+    color: var(--green);
+  }
+}
+
+// ---------- 營業項目：年輪軌道 ----------
+.services {
+  padding: clamp(40px, 2.5vw, 51px) 0 clamp(44px, 3.6vw, 92px);
+  background: var(--cream);
+  // 年輪的 .orbit__item 是「整個方框旋轉」，轉到 45 度時外接矩形會脹到 1.41 倍，
+  // 在 985～1394 這段寬度會把頁面撐出 100～170px 的橫向捲軸。
+  // 空方框本身看不見，直接在區塊裁掉；泡泡永遠在方框內，不會被切到。
+  // 註：body 的 overflow-x 會上拋給 viewport、body 自己變回 visible，所以擋不住這件事，一定要修在這一層
+  overflow-x: clip;
+
+  position: relative;
+
+  // 和紙肌理：SVG 的 fractalNoise 直接當底紋，不用外部圖檔。
+  // 只有 4.5% 濃度——目的是讓米白底不再是一片死平的色塊，近看才看得出顆粒
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  // 內容要壓在肌理之上
+  >.sec {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__lead {
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    font-weight: 400;
+    margin-bottom: clamp(20px, 2.3vw, 57px);
+  }
+
+  // 右側留白的直排引句。1200 以下就藏起來——再窄會撞到年輪，
+  // 而且年輪在 900 以下已經改成條列，右側不再是留白
+  &__vertical {
+    display: none;
+
+    @media (min-width: 1200px) {
+      display: block;
+      position: absolute;
+      // 貼齊版面右緣再往內收，不要黏在螢幕極右側，也不要跑到 1920 的冊頁界線外
+      right: max(60px, calc(50% - var(--wrap) / 2 + 96px));
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      writing-mode: vertical-rl;
+      font-family: "Noto Serif TC", Georgia, serif;
+      font-size: 13px;
+      letter-spacing: .3em;
+      line-height: 1;
+      color: rgba(80, 90, 70, .5);
+      pointer-events: none;
+    }
+  }
+
+  // 右下角的典藏標記
+  &__mark {
+    display: none;
+
+    @media (min-width: 900px) {
+      display: block;
+      position: absolute;
+      // 同樣收進版面界線內，與直排引句對齊同一條右緣
+      right: max(24px, calc(50% - var(--wrap) / 2 + 40px));
+      bottom: clamp(16px, 1.4vw, 30px);
+      z-index: 1;
+      font-size: 12px;   // 全站字級下限 12px
+      letter-spacing: 2px;
+      color: rgba(80, 90, 70, .4);
+      pointer-events: none;
+    }
+  }
+}
+
+// 容器 640 見方。軌道半徑是容器的 42%，所以容器縮放＝節點往內收／往外舒展。
+// 640 → 外軌半徑 269、內軌 166，兩軌差 102。
+// ⚠️ 兩軌差必須大於泡泡直徑，所以泡泡同步收到 88（102 > 88 才不會內外疊在一起）
+.rings {
+  position: relative;
+  width: min(100%, 640px);
+  margin-inline: auto;
+
+  &__lines {
+    display: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-deco);
+
+    // 軌道線：.22 太淡（等於沒有）、.42 又太搶。落在 70% 透明（alpha .30）
+    circle {
+      fill: none;
+      stroke: rgba(80, 90, 70, .3);
+      stroke-width: 1.4;
+      stroke-dasharray: 6 6;
+    }
+  }
+
+  // 中心：深綠圓，明體字。
+  // 尺寸依設計稿的比例回推：設計稿量到中心圓直徑 223、外軌半徑 378 → 比值 0.59。
+  // 現在外軌半徑 315，所以中心圓 = 315 × 0.59 ≈ 186。
+  // （先前是 140，比值只有 0.44，中間會空一塊——squint test 一眼就看得出來）
+  // 上限仍要小於「內軌半徑 195 − 泡泡半徑 52 = 143」的兩倍，才不會頂到內軌泡泡
+  &__hub {
+    position: relative;
+    z-index: var(--z-content);
+    display: grid;
+    place-content: center;
+    gap: 5px;
+    width: clamp(124px, 6.25vw, 159px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--green-deep);
+    color: #fff;
+    text-align: center;
+    margin-inline: auto;
+    box-shadow: 0 14px 34px rgba(63, 90, 42, .24);
+
+    span {
+      font-family: "Noto Serif TC", Georgia, serif;
+      font-weight: 500;
+      font-size: 20px;
+      letter-spacing: .12em;
+      text-indent: .12em;
+      line-height: 1.35;
+    }
+
+    small {
+      font-size: 12px;   // 全站字級下限 12px
+      letter-spacing: .2em;
+      text-indent: .2em;
+      color: rgba(255, 255, 255, .78);
+    }
+  }
+
+  // 窄螢幕：改條列（整列都是連結）
+  &__list {
+    display: grid;
+    gap: 16px;
+    margin-top: 30px;
+
+    a {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 2px 16px;
+      text-decoration: none;
+      color: inherit;
+
+      &:hover .orbit__bubble,
+      &:focus-visible .orbit__bubble {
+        background: var(--green-deep);
+      }
+
+      &:hover .ic,
+      &:focus-visible .ic {
+        filter: invert(1);
+      }
+    }
+
+    .orbit__bubble {
+      transition: background .45s var(--ease);
+    }
+
+    .orbit__name {
+      align-self: end;
+    }
+
+    .orbit__note {
+      grid-column: 2;
+      align-self: start;
+    }
+  }
+}
+
+.orbit {
+  display: none;
+
+  // 六個圓統一同一個薄荷底：靜態畫面只有一種綠，顏色變化留給 hover
+  // （原本六個各一色，藍綠黃摻在一起，跟全站的克制用色打架）
+  &__bubble {
+    grid-row: 1 / span 2;
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--mint-soft);
+    box-shadow: inset 0 0 0 1px rgba(100, 112, 63, .18);
+  }
+
+  &__name {
+    font-family: "Noto Serif TC", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(.95rem, .88vw, 1.08rem);
+    letter-spacing: .08em;
+    color: var(--green-deep);
+  }
+
+  &__note {
+    font-size: clamp(.78rem, .62vw, .88rem);
+    color: var(--olive-ink);
+  }
+}
+
+// 桌機：兩條環上緩緩繞行
+@media (min-width: 900px) {
+  .rings {
+    aspect-ratio: 1;
+    // 六項平時分佈在左右兩側，方形容器上下會空一截；
+    // 但兩環會轉，泡泡有機會轉到正上／正下，收太多會撞到大標，-60 左右是安全值
+    margin-block: clamp(-60px, -2.4vw, -24px);
+
+    &__lines {
+      display: block;
+    }
+
+    &__list {
+      display: none;
+    }
+
+    &__hub {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+    }
+  }
+
+  .orbit {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-content);
+    will-change: transform;
+    // 每個 .orbit__item 都是 inset: 0 的全尺寸透明框，六個疊在一起。
+    // 透明不代表不擋滑鼠 —— DOM 最後那個會蓋住其他五個，變成只有它 hover 得到。
+    // 這裡整層關掉指標事件，再單獨把連結打開
+    pointer-events: none;
+
+    // 半徑改用 top 百分比表示（calc 無法對百分比做乘法）。
+    // 泡泡圓心的半徑＝(50% - top)，SVG 的 r 必須等於同一個比例乘上 viewBox 720：
+    //   外軌 50-8  = 42% → r = 0.42 × 720 = 302  → 容器 750 下實際半徑 315
+    //   內軌 50-24 = 26% → r = 0.26 × 720 = 187  → 實際半徑 195
+    // 改任何一邊都要同步改 index.html 裡的 <circle r>，否則泡泡會浮在線外。
+    //
+    // ⚠️ 兩軌半徑差必須 > 泡泡直徑（104px），否則內外節點轉到同一角度時會疊在一起。
+    //    現在是 315 − 195 = 120，留 16px 餘裕
+    &--outer {
+      --top: 8%;
+    }
+
+    &--inner {
+      --top: 24%;
+    }
+
+    &__item {
+      position: absolute;
+      inset: 0;
+      transform: rotate(var(--a));
+    }
+
+    // face 的框就是泡泡本身（文字絕對定位在下方不影響中心），
+    // 所以 translate(-50%,-50%) 會讓泡泡圓心正好落在環上
+    &__face {
+      position: absolute;
+      left: 50%;
+      top: var(--top);
+      transform: translate(-50%, -50%);
+    }
+
+    // 內層反向轉回來，文字永遠保持水平。整個圓是連結，指向對應的段落
+    // 容器固定 640，泡泡直接給定值即可，不用再跟著 vw 飄
+    &__inner {
+      position: relative;
+      display: block;
+      width: 88px;
+      pointer-events: auto; // 只有這個圓圈本身可以互動（見上面 .orbit 的說明）
+      text-decoration: none;
+      color: inherit;
+      transform: rotate(calc(-1 * var(--a)));
+      will-change: transform;
+
+      &:focus-visible {
+        outline: 2px solid var(--green-deep);
+        outline-offset: 6px;
+        border-radius: 50%;
+      }
+    }
+
+    // 圓內只放圖示與名稱，說明留到滑過才浮現：靜態時六個圓乾淨一致
+    &__bubble {
+      grid-row: auto;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: clamp(3px, .28vw, 7px);
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+      transition: background .55s var(--ease), box-shadow .55s var(--ease), transform .55s var(--ease);
+    }
+
+    .ic {
+      width: 23px;
+      opacity: .66;
+      transition: opacity .5s var(--ease), filter .5s var(--ease);
+    }
+
+    // 名稱 15 對說明 12 ＝ 1.25 的比值（原本 13 對 12.5 只有 1.04，兩行看起來一樣重）
+    &__name {
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-indent: .08em;
+      line-height: 1.4;
+      white-space: nowrap;
+      transition: color .5s var(--ease);
+    }
+
+    // 說明收在圓下方，滑過或鍵盤聚焦才淡入
+    &__note {
+      position: absolute;
+      font-size: 12px;
+      top: calc(100% + 11px);
+      left: 50%;
+      width: max-content;
+      max-width: 14em;
+      text-align: center;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translate(-50%, -5px);
+      transition: opacity .45s var(--ease), transform .45s var(--ease);
+      pointer-events: none;
+    }
+
+    // 滑過：圓底轉深綠、外圈浮出一層柔和光暈（用 box-shadow 的擴散半徑做，不另加元素）
+    &__inner:hover &__bubble,
+    &__inner:focus-within &__bubble {
+      background: var(--green-deep);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, .16),
+        0 0 0 7px rgba($green, .10),
+        0 0 0 14px rgba($green, .05),
+        0 14px 30px rgba(63, 90, 42, .28);
+      transform: scale(1.05);
+    }
+
+    // 圖示是黑色線稿，深綠底上用 invert 反白
+    &__inner:hover .ic,
+    &__inner:focus-within .ic {
+      opacity: 1;
+      filter: invert(1);
+    }
+
+    &__inner:hover &__name,
+    &__inner:focus-within &__name {
+      color: #fff;
+    }
+
+    &__inner:hover &__note,
+    &__inner:focus-within &__note {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+}
+
+// ---------- 設計作品：多圖輪播（比內容欄寬） ----------
+.works {
+  padding: var(--pad-l) 0 clamp(46px, 4.2vw, 107px);
+
+  &__head {
+    display: grid;
+    gap: 14px;
+    margin-bottom: clamp(22px, 2.4vw, 60px);
+
+    // 設計稿這裡是 39px、其他段落 34px，看起來像 PS 手誤而非刻意強調，
+    // 2026-08-02 用戶確認拉回統一
+    h2 {
+      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+      font-weight: 400;
+    }
+
+    @media (min-width: 720px) {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+  }
+
+}
+
+// 分類切換：範本／客製（設計稿兩顆都有綠底線，選到的字轉綠）
+.tabs {
+  display: flex;
+  gap: clamp(14px, 2.9vw, 74px);
+
+  &__btn {
+    font-size: clamp(.88rem, .79vw, 1.25rem);
+    letter-spacing: .1em;
+    color: rgba($ink, .55);
+    padding-bottom: 5px;
+    border-bottom: 1.5px solid rgba($green, .38);
+    transition: color .4s var(--ease), border-color .4s var(--ease);
+
+    &:hover {
+      color: var(--ink);
+    }
+
+    &.is-on {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+  }
+}
+
+.wk img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--ink-line);
+  transition: transform .6s var(--ease);
+}
+
+.wk:hover img {
+  transform: translateY(-4px);
+}
+
+// ---------- 賀卡檔期：微 3D 展開卡架 ----------
+.promo {
+  padding: clamp(40px, 2.5vw, 52px) 0 clamp(36px, 3.2vw, 66px);
+  border-top: 1px solid var(--ink-line);
+
+  // 設計稿：分類切換靠右，與說明文字齊底，不是排在下一列
+  &__head {
+    display: grid;
+    gap: 14px;
+    margin-bottom: clamp(22px, 1.7vw, 35px);
+
+    h2 {
+      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+      font-weight: 400;
+    }
+
+    @media (min-width: 720px) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+  }
+
+  &__lead {
+    max-width: 34em;
+  }
+
+  &__intro {
+    margin-top: 10px;
+    color: rgba($ink, .74);
+  }
+
+  &__ask {
+    margin-top: clamp(24px, 2.6vw, 34px);
+    padding-top: clamp(16px, 1.8vw, 22px);
+    border-top: 1px solid var(--ink-line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 18px;
+    font-family: "Noto Serif TC", serif;
+    font-size: .98rem;
+  }
+}
+
+.deck {
+
+  // 每頁上排直式、下排橫式，由 Owl 換批
+  &__page {
+    display: grid;
+    gap: clamp(16px, 1.9vw, 48px);
+  }
+
+  // 設計稿兩排各自置中：直式較窄所以間距大、橫式較寬所以間距小
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    &--v {
+      gap: clamp(16px, 4.3vw, 110px);
+    }
+
+    &--h {
+      gap: clamp(16px, 1.4vw, 36px);
+    }
+  }
+
+  &__item>a {
+    display: grid;
+    gap: 14px;
+    text-decoration: none;
+    position: relative;
+    justify-items: center;
+  }
+
+  &__media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: #fff;
+    padding: 8px;
+    border: 1px solid var(--ink-line);
+    box-shadow: 0 10px 24px rgba($ink, .1);
+    transition: transform .55s var(--ease), box-shadow .55s var(--ease);
+
+    img {
+      display: block;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      background: rgba(74, 90, 52, .88);
+      opacity: 0;
+      transition: opacity .45s var(--ease);
+    }
+  }
+
+  // 直式以高為準、橫式以寬為準。設計稿是 503，但兩排疊起來一個螢幕裝不下，
+  // 收到約 76%：1536 寬的筆電上，兩排卡片加起來約 510px，不用來回捲就看得到全貌
+  &__item--v .deck__media img {
+    height: clamp(190px, 15.7vw, 400px);
+    width: auto;
+    max-width: none;
+  }
+
+  &__item--h .deck__media img {
+    width: clamp(190px, 15.4vw, 393px);
+    height: auto;
+  }
+
+  &__info {
+    display: grid;
+    gap: 3px;
+    text-align: center;
+
+    strong {
+      font-family: "Noto Serif TC", Georgia, serif;
+      font-weight: 500;
+      font-size: clamp(1rem, .9vw, 1.44rem);
+    }
+  }
+
+  &__enter {
+    position: absolute;
+    left: 50%;
+    top: 34%;
+    transform: translate(-50%, -46%);
+    z-index: var(--z-content);
+    font-size: .92rem;
+    letter-spacing: .16em;
+    color: #fff;
+    opacity: 0;
+    transition: opacity .45s var(--ease), transform .5s var(--ease);
+    pointer-events: none;
+    white-space: nowrap;
+
+    &::after {
+      content: " \2192";
+    }
+
+    // 觸控裝置沒有 hover，這行字永遠不會出現 —— 卡片看起來就只是一張圖，不像能點。
+    // 改成常駐排在名稱下方：壓在圖上的版本要靠 hover 才出現的暗色遮罩才讀得到，
+    // 沒有遮罩就是白字疊亮圖，所以位置也要一起換，不能只把 opacity 打開
+    @media (hover: none) {
+      position: static;
+      transform: none;
+      opacity: 1;
+      color: var(--green);
+      font-size: .84rem;
+      letter-spacing: .12em;
+    }
+  }
+
+  &__item:hover .deck__media,
+  &__item:focus-within .deck__media {
+    transform: translateY(-6px);
+    box-shadow: 0 26px 50px rgba($ink, .22);
+  }
+
+  &__item:hover .deck__media::after,
+  &__item:focus-within .deck__media::after {
+    opacity: 1;
+  }
+
+  &__item:hover .deck__enter,
+  &__item:focus-within .deck__enter {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
+
+// ---------- 訂購流程 ----------
+.flow {
+  position: relative;
+  // 設計稿在四步之後留了一大片空白才接山坡
+  padding: clamp(40px, 2.12vw, 54px) 0 clamp(52px, 11.2vw, 285px);
+
+  &__lead {
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    font-weight: 400;
+    margin-bottom: clamp(24px, 3.3vw, 83px);
+  }
+
+  &__list {
+    display: grid;
+    gap: clamp(24px, 3vw, 34px);
+    position: relative;
+
+    @media (min-width: 720px) {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0;
+      padding: clamp(20px, 1.6vw, 40px) 0;
+      width: min(100%, 1268px);
+      margin-inline: auto;
+    }
+  }
+
+  // 底圖原尺寸 1548×260，比四步的欄寬（1268）還寬。
+  // 當成 .flow__list 的 background 會被左右各切掉 140，所以改成獨立圖層置中撐出去；
+  // 窄螢幕用 contain 讓整張縮進來，任何寬度都看得到完整的圖。
+  &__list::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -130px 0 0 -774px;
+    width: 1548px;
+    height: 260px;
+    background: url("../images/sop_bg.png") center / contain no-repeat;
+    pointer-events: none;
+    z-index: 0;
+
+    @media (max-width: 1547px) {
+      // 放不下就整張等比縮，仍然完整
+      left: 0;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1548 / 260;
+      margin: 0;
+      translate: 0 -50%;
+    }
+
+    @media (max-width: 719px) {
+      display: none; // 手機是直列，底圖的橫向動線沒有意義
+    }
+  }
+
+  // 步驟之間的手繪虛線箭頭：設計稿是原尺寸
+  &__arrow {
+    display: none;
+
+    @media (min-width: 720px) {
+      display: block;
+      align-self: center;
+      position: relative;
+      z-index: 1; // 疊在底圖之上
+      margin-top: clamp(-76px, -2.95vw, -14px);
+
+      img {
+        width: auto;
+        opacity: .85;
+      }
+    }
+
+    // 窄螢幕改直列，橫向的手繪箭頭沒有意義（上面 719 以下把底圖也關掉了）。
+    // 但整段少了連接物之後，四個步驟就只是四塊各自獨立的內容，
+    // 讀不出「一步接一步」——這一段的標題就叫訂購「流程」。
+    // 同樣那三個節點改成一小段縱向虛線，沿用年輪環線的虛線語彙（6/6）。
+    // 用現成的 <li> 而不是加 ::after：連接物本來就該在步驟之間，語意也對
+    @media (max-width: 719px) {
+      display: block;
+      justify-self: center;
+      width: 1px;
+      height: 42px;
+      // 密一點（4 亮 5 暗）才讀得成一條線；6/6 只排得下三段，看起來像三顆散落的點
+      background: repeating-linear-gradient(180deg,
+          rgba($olive, .95) 0 4px,
+          transparent 4px 9px);
+
+      img {
+        display: none;
+      }
+    }
+  }
+}
+
+.step {
+  display: grid;
+  // 欄寬鎖在容器內，說明文字才能比步驟框寬而不把欄撐開
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  text-align: center;
+  gap: clamp(8px, .55vw, 14px);
+  position: relative;
+  z-index: 1; // 疊在底圖之上
+
+  @media (min-width: 720px) {
+    width: clamp(120px, 7.7vw, 195px);
+  }
+
+  // 圖示區：不要給框固定高度再叫圖片去配合。
+  // ⚠️ 先前是「框 height: clamp(74px…)＋圖 max-height:100%」，實測圖片照樣用原生高度
+  //    （框 74、圖 98/90/118），標題被壓在圖上；改成 height:100% 也只有部分生效——
+  //    百分比高度在這個 grid 情境下解析不穩。
+  // 現在反過來：直接給圖示定值高度，框由圖撐出來，結構上就不可能溢出，
+  // 四個圖示共用同一個高度也自然對齊。
+  &__bubble {
+    display: grid;
+    place-items: end center;
+    width: 100%;
+    margin-bottom: clamp(6px, .8vw, 20px);
+    position: relative;
+    z-index: var(--z-content);
+
+    .ic {
+      width: auto;
+      height: clamp(64px, 4.4vw, 110px);
+      max-width: 100%;
+      object-fit: contain;
+      transition: transform .45s var(--ease);
+    }
+  }
+
+  // 字級階層：原本 18.2px 對內文 16.3px 只有 1.12 的比值，步驟標題幾乎讀不出是標題。
+  // 拉到 20.8 讓比值回到 1.28（模組化級距的最低要求是 1.2）
+  h3 {
+    font-size: clamp(1.05rem, .82vw, 1.3rem);
+    font-weight: 500;
+    letter-spacing: .06em;
+  }
+
+  // 說明可以比步驟框寬一點，設計稿是兩行
+  p {
+    font-size: .88rem;
+    color: rgba($ink, .72);
+    width: clamp(150px, 9.7vw, 245px);
+    max-width: none;
+  }
+
+  &:hover &__bubble .ic {
+    transform: scale(1.06);
+  }
+}
+
+// ---------- 三層山坡：設計師輸出的圖層，寬度各異、捲動時視差 ----------
+// 設計稿的山坡是滿版大面積，標題直接落在草地上
+// 設計稿的山坡是滿版、約等於素材原始高度（foot_bg1 為 2529x519）
+// 山丘錨在頁尾內部並撐滿整個頁尾（inset: 0）→ **永遠貼齊頁面最底**，
+// 下方不會多出深色帶。原本是獨立區塊＋固定高度，只有超寬螢幕剛好貼齊，
+// 窄一點頁尾就長到山丘之外，底下露出一條深色。
+// 高度改由 .contact 決定（它的 min-height 守住設計稿的 517）。
+// z-index 2：疊在頁尾之上、文字（z-index 3）之下。
+//
+// overflow 必須 hidden：圖層本身填滿容器不會溢出，但 drop-shadow 會往下暈開約 19px，
+// 那是頁面的最後一個元素，溢出去就會在頁尾底下多出十幾列淺色（踩過一次）
+.grass {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+
+  // 單張山坡圖 foot_bg_all.png（2540x580）。
+  // ⚠️ 不要給 background-color：這張圖山頭以上是透明的，底色會從那片「天空」透出來，
+  // 在頁尾上緣變成一條莫名的深綠帶。透明處要讓紙白透過來才對。
+  background-image: url("../images/foot_bg_all.png");
+  background-repeat: no-repeat;
+  background-position: bottom center;
+
+  // 桌機：原尺寸呈現，絕不放大（auto 就是圖的原生 2540x580）。
+  // 畫面比圖窄時，兩側自然被裁掉沒入 —— 這是要的效果，不是 bug。
+  background-size: auto;
+
+  // 手機：改成「山丘帶錨在頁尾上緣，底下接實色地面」。
+  //
+  // ⚠️ 不要用 cover。cover 是「等比放大到蓋滿容器」，而手機的頁尾又窄又高
+  //    （390 寬、600+ 高），圖的比例是 4.379，cover 會把它放大到約 2600px 寬，
+  //    畫面上只剩中間一小塊被拉爛的綠 —— 山形整個不見了。
+  //
+  // 改成以「帶高」為準、寬度由比例推出來再從中央裁切，跟桌機同一套邏輯
+  //（畫面比圖窄就自然裁掉兩側）。第二層是實色地面，接在圖的下緣，
+  // 位置往上重疊 1px，避開縮放時可能出現的次像素縫。
+  //
+  // ⚠️ 地面色是 #253603，不是圖最底一列的 #384B05。
+  //    帶子裡還疊了 .contact::after 的對比漸層，帶底那一列實際畫出來的是
+  //    「原圖底色 × .48 ＋ rgba(20,34,2) × .52」＝ rgb(37,54,3)。
+  //    照抄原圖色的話交界處會亮回去，量到 G 差 21，眼睛看得到一條橫線。
+  //    改漸層的收尾 alpha 就要跟著改這裡。
+  @media (max-width: 899px) {
+    background-image:
+      url("../images/foot_bg_all.png"),
+      linear-gradient(#253603, #253603);
+    background-size:
+      auto var(--grass-h),
+      100% 100%;
+    background-position:
+      top center,
+      0 calc(var(--grass-h) - 1px);
+    background-repeat: no-repeat, no-repeat;
+  }
+}
+
+// ---------- 聯絡＋頁尾 ----------
+// 疊上山坡底部：標題落在草地上，再漸層收進深綠頁尾
+// 頁尾＝一塊實色，顏色直接取自草皮最底列（#122200），所以草皮壓下來時看不出接縫。
+//
+// 原本是「半透明綠漸層疊在白底上」：草皮只蓋住漸層的上段，
+// 下段那片半透明綠疊在宣紙白上就變成一大塊灰綠，又大又髒。
+// 現在改成 grass（z-index 2）壓在 contact 的實色底之上，文字再壓在 grass 之上，
+// 全程沒有任何半透明色疊白底的區段。
+.contact {
+  position: relative; // 注意：不要給 z-index，否則會關住裡面的 .wrap，文字會被草皮蓋掉
+  // 重疊量＝草皮高度的 74%，讓標題落在半山腰的中綠帶，而不是沉到最底的深色區。
+  // 用 vw 跟草皮的 26vw 綁在一起，縮放時兩者的相對位置不變（RWD 不用另外寫斷點）。
+  // 這裡可以放心加大重疊：草皮 z-index 2 疊在頁尾實色之上，文字 z-index 3 再疊在草皮上，
+  // 所以往上壓不會蓋掉任何一座山丘，只有文字位置在動
+  // 桌機的 band 高度 = 山丘圖的原生高度 580，這是「原尺寸不壓縮」的必要條件：
+  // 圖是 2540x580（比例 4.379）。band 若低於 580，圖的上緣就會被裁掉、山頭變成一條直線；
+  // band 若高於 580，圖就填不滿。所以這裡是定值不是 vw —— 圖不縮放，高度就不能跟著視窗變。
+  // 畫面比 2540 窄時，兩側自然被裁掉沒入，那正是要的效果。
+  // 手機另有斷點（見這條規則最後的手機版區塊），不受這個定值限制。
+  min-height: 580px;
+
+  // 往上壓進訂購流程的底部留白，讓山丘自然接住上一段，不是硬生生另起一塊
+  margin-top: clamp(-80px, -3.1vw, -40px);
+  // padding-top 決定標題落在山丘的高度百分比（設計稿是 24～30%）
+  // 內容靠底部對齊：band 高度固定 580（圖的原生高），但內容只有約 490，
+  // 用一般流排版時多出來的 90px 會全部留在下方變成一塊空綠。
+  // 改成 flex 靠下，多出來的空間就移到上方（那裡本來就是山頭以上的天空）
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(40px, 2.4vw, 60px) 0 clamp(26px, 1.6vw, 40px);
+  // 不能給實色底：山丘素材的稜線以上是透明的，底色會從那裡透出來變成
+  // 一條浮在山丘上方的深色帶——正是先前被指出「又大又醜」的那個問題
+  background: none;
+  color: #f0f4e6;
+
+  // 版面上限是 1920，但頁尾內容要跟其他區塊貼齊同一條 1440 內容欄，
+  // 否則文字會孤零零地貼在版面最外緣。收在容器本身，裡面的區塊維持靠左
+  >.wrap {
+    position: relative;
+    z-index: 3; // 3 > grass 的 2，文字才會浮在草地上
+    width: min(var(--inner), 100% - 2 * var(--gut));
+  }
+
+  h2 {
+    // 手機下界 1.6rem = 25.6px，跨過 WCAG 大字門檻（24px），對比要求從 4.5:1 降到 3:1
+    font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+    font-weight: 400;
+    color: #fff;
+    // 兩層陰影：緊的那層拉出字緣、鬆的那層壓暗背景，白字落在中綠帶才讀得清楚
+    text-shadow: 0 2px 4px rgba(20, 40, 4, .45), 0 1px 16px rgba(20, 40, 4, .38);
+  }
+
+  &__top {
+    max-width: 34em;
+
+    // 說明文字也在山坡上，比照標題加陰影；純白會太搶，用接近白的米色
+    p {
+      margin-top: 10px;
+      color: #f4f8ec;
+      text-shadow: 0 1px 3px rgba(20, 40, 4, .5), 0 1px 12px rgba(20, 40, 4, .35);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: clamp(18px, 2.2vw, 28px);
+
+    .btn--solid {
+      background: var(--mint);
+      color: #26331a;
+
+      &:hover {
+        background: #eaf5e8;
+      }
+    }
+
+    .btn--ghost {
+      border-color: rgba(240, 244, 230, .4);
+      color: #f0f4e6;
+
+      &:hover {
+        background: rgba(240, 244, 230, .12);
+        border-color: #f0f4e6;
+      }
+    }
+  }
+
+  // 左：社群入口／右：權利宣告
+  &__foot {
+    display: grid;
+    gap: clamp(20px, 2.6vw, 32px);
+    margin-top: clamp(24px, 2.6vw, 40px);
+    padding-top: clamp(16px, 1.4vw, 22px);
+    border-top: 1px solid rgba(240, 244, 230, .18);
+
+    @media (min-width: 900px) {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      column-gap: clamp(40px, 6vw, 110px);
+    }
+  }
+
+  // ── 手機版頁尾 ──────────────────────────────────────────────
+  // ⚠️ 這一段必須留在 .contact 規則的最後。Sass 會把巢狀的 @media 就地輸出，
+  //    然後把它後面的宣告另外收成第二條 .contact ——
+  //    權重一樣但排在後面，會把媒體查詢裡的 padding／justify-content 蓋回去。
+  //    （踩過一次：padding-top 明明寫了 46%，實際量到的是桌機的 40px。）
+  //
+  // 桌機是「580 高的山丘帶，內容整組坐在山丘上」。手機沒有這個條件：
+  // 內容疊起來就要 500px 以上，山丘帶若跟著長高，圖也要跟著放大，
+  // 最後畫面上只剩一片被放大的綠。
+  //
+  // 所以手機改成：山丘帶錨在上緣當「地平線」，標題壓在草地上（設計稿的意圖保留），
+  // 帶子以下接實色地面，其餘內容坐在地面上。
+  @media (max-width: 899px) {
+    // 山丘帶高度。圖 2540×580（比例 4.379），寬度由高度推出來再從中央裁切。
+    // .grass 與下面的 ::after 遮罩共用這個值，三者的幾何必須完全一致
+    --grass-h: clamp(150px, 41vw, 330px);
+    // 稜線：y=113/580 = 19.5%，是「整列完全不透明」的第一列（掃 alpha 量的）。
+    // 這條線以上是透明的天空，任何顏色蓋上去都會變成漏餡的那條灰綠帶
+    --ridge: 19.5%;
+
+    min-height: 0; // 高度改由內容決定，不再撐 580
+    margin-top: clamp(-40px, -6vw, -16px);
+    // 標題落在山丘帶的 46%：那裡的底色實測對白字 3.50:1，
+    // 疊上下面的漸層後是 4.52:1（標題 25.6px 屬大字，門檻 3:1，留了餘裕）
+    padding: calc(var(--grass-h) * .46) 0 clamp(28px, 7vw, 44px);
+    justify-content: flex-start;
+
+    // 對比補償層：只在山丘帶內、而且只在山的實體上生效。
+    //
+    // 兩道保險，缺一不可：
+    // 1. 漸層的第一個停點就放在稜線（19.5%）而且 alpha 是 0
+    //    → 稜線以上一滴顏色都不上，就算遮罩失效也不會漏餡
+    // 2. 再用山丘圖自己的 alpha 當遮罩
+    //    → 連稜線之間的凹口（那些位置雖然過了 19.5% 但仍是透明的）也不會被染到
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: var(--grass-h);
+      z-index: 2; // 疊在草皮（同為 2，靠 DOM 順序在後）之上、文字（3）之下
+      pointer-events: none;
+
+      background: linear-gradient(180deg,
+          rgba(20, 34, 2, 0) var(--ridge),
+          rgba(20, 34, 2, .28) 62%,
+          rgba(20, 34, 2, .52) 100%);
+
+      // 遮罩的 size／position 必須和 .grass 第一層一字不差，否則漸層會跟山形錯開。
+      // 寫長寫法不寫 mask 簡寫：CLAUDE.md 記過簡寫在部分環境不繪製
+      -webkit-mask-image: url("../images/foot_bg_all.png");
+      mask-image: url("../images/foot_bg_all.png");
+      -webkit-mask-size: auto var(--grass-h);
+      mask-size: auto var(--grass-h);
+      -webkit-mask-position: top center;
+      mask-position: top center;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+    }
+  }
+}
+
+// 社群：只放平台入口，不外露帳號
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  a {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    padding: .5em .95em .5em .6em;
+    border: 1px solid rgba(240, 244, 230, .22);
+    border-radius: 0;
+    transition: background .4s var(--ease), border-color .4s var(--ease), transform .4s var(--ease);
+
+    &:hover {
+      background: rgba(240, 244, 230, .12);
+      border-color: rgba(240, 244, 230, .45);
+      transform: translateY(-2px);
+    }
+
+    &:hover .ic {
+      transform: scale(1.08);
+    }
+  }
+
+  .ic {
+    width: 22px;
+  }
+
+  span {
+    font-size: .82rem;
+    letter-spacing: .08em;
+    color: rgba(240, 244, 230, .92);
+  }
+}
+
+// 版權區落在山丘最底那段（實測底色 #384B05，不是舊三層素材的 #122200）。
+// 原本的 .58／.42 在這個底色上只有 4.08:1 與 2.89:1，都沒到本文 4.5:1 的門檻——
+// 底色比想像中亮，透明度不能照「深綠底」的直覺給。
+// 現在是 6.22:1 與 5.09:1，兩者仍差 .10 的透明度，版權那行讀起來還是比上面兩行輕
+.rights {
+  font-size: .78rem;
+  line-height: 1.95;
+  color: rgba(240, 244, 230, .8);
+  max-width: 44em;
+
+  p+p {
+    margin-top: 4px;
+  }
+
+  // 地址與統編各自包成 inline-block：一段放不下時「整段」掉到下一行，
+  // 而不是斷在「…溪南路三段／55 巷 47 弄 8 號」或「統一／編號」。
+  // 用 inline-block 而不是 <br> 或斷點：桌機一行放得下就自己維持一行，
+  // 中間的斷點由瀏覽器依實際寬度決定，不必為每個螢幕寬度寫一組
+  p>span {
+    display: inline-block;
+  }
+
+  // 間隔掛在前一段的尾巴。掛在後一段的頭上的話，
+  // 它換行時那個 margin 會變成行首縮排
+  p>span:not(:last-child) {
+    margin-inline-end: .7em;
+  }
+
+  &__copy {
+    color: rgba(240, 244, 230, .7);
+  }
+
+  @media (min-width: 900px) {
+    text-align: right;
+    justify-self: end;
+  }
+}
+
+// ---------- 減少動態 ----------
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .deck__media {
+    transform: none !important;
+  }
+
+
+  // 關閉動態時「進入瀏覽」也要看得到，但不能就地打開 opacity ——
+  // 圖上那層暗色遮罩同樣是 hover 才出現的，白字疊在亮圖上等於看不到。
+  // 跟觸控裝置同一個處理：排進名稱下方，改用綠字
+  .deck__enter {
+    position: static !important;
+    transform: none !important;
+    opacity: 1 !important;
+    color: var(--green) !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+// ============================================
+// 手機版（<900px）總則
+// ============================================
+@media (max-width: 899px) {
+
+  // 左右各留 10%，內容佔中間 80%。--gut 同時餵給 .wrap 與兩個輪播的寬度算式，
+  // 用 vw 而不是 %，兩邊算出來的基準才會一致
+  :root {
+    --gut: 10vw;
+  }
+
+  // 手機字級下限 14px：手持距離比桌機遠、環境光也差，12px 在手機上太吃力。
+  // 這些元件在桌機是 12～13px，手機一律拉到 14
+  .orbit__name,
+  .orbit__note,
+  .rings__hub small,
+  .rights,
+  .social span,
+  .hero figcaption,
+  .services__mark {
+    font-size: 14px;
+  }
+
+  // ---------- 輪播圓點 ----------
+  // 桌機的圓點（30px、選中 150px）在手機的內容欄裡放不下：
+  // 作品有 8 張 → 8×30 ＋ 7×10 間距 ＋ 選中多出的 120 ≈ 430px，而內容欄只有約 312px。
+  // 溢出的部分會被 body 的 overflow-x: clip 切掉，整排看起來還會偏掉。
+  // 手機縮短長度、允許換行；高度不動，太細會更難點
+  .owl-carousel {
+    .owl-dots {
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    button.owl-dot {
+      position: relative;
+      width: 18px;
+
+      &.active {
+        width: 54px;
+      }
+
+      // 視覺上是 8px 高的短條，但觸控目標要有 32px ——
+      // 用透明的偽元素把可點範圍撐開，不動到看得見的形狀
+      &::before {
+        content: "";
+        position: absolute;
+        inset: -12px -4px;
+      }
+    }
+  }
+
+  // ---------- 賀卡：一張一張輪播（統一走 Owl） ----------
+  // DOM 由 main.js 的 deckFlatten 打平成六張卡直接掛在 .owl-deck 底下，
+  // 桌機的巢狀結構完全沒動。這裡只處理打平之後的卡片尺寸。
+  .owl-deck {
+    width: 100%;
+    margin-inline: 0;
+  }
+
+  .deck__item {
+    // 卡高的上限用 vw 與 vh 取小值：
+    // 只用 vw，橫躺時 88vw 會高過整個螢幕；只用 vh，手機網址列收合時 vh 會變、卡片跟著抽動。
+    // svh 是「網址列展開時」的高度，不隨捲動改變，支援的瀏覽器會用第二行覆蓋掉第一行
+    --card-h: min(48vh, 88vw);
+    --card-h: min(48svh, 88vw);
+
+    display: grid;
+    align-content: center;
+    justify-items: center;
+  }
+
+  .deck__item > a {
+    width: 100%;
+  }
+
+  // 直式以高為準、橫式以寬為準（跟桌機同一個原則）。
+  // 兩者高度本來就不同，Owl 的 autoHeight 已在 index.html 關掉，
+  // 整排取最高的那張當格高，滑動時不會上下跳
+  .deck__item--v .deck__media img {
+    height: var(--card-h);
+    width: auto;
+    max-width: 100%;
+  }
+
+  .deck__item--h .deck__media img {
+    width: 100%;
+    height: auto;
+    max-height: var(--card-h);
+  }
+
+  // ---------- 訂購流程 ----------
+  // 桌機是 clamp(150px, 9.7vw, 245px)，但 9.7vw 在手機只有 38px，
+  // 會直接解算成下界 150px —— 四步說明被擠成一條細長條，每行只放得下五六個字。
+  // 手機是直列，說明可以用滿整個內容欄
+  .step p {
+    width: 100%;
+    max-width: 22em;
+  }
+
+  // ---------- 頁尾社群 ----------
+  // 四個入口用 flex 換行會變成「三個一排＋一個落單」，最後那顆孤零零掛在下面。
+  // 改成 2×2，四顆等寬對齊，也順便讓每顆的觸控寬度變大
+  .social {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}

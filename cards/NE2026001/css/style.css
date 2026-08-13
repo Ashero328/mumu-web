@@ -2,7 +2,8 @@
   position: absolute;
   top: 12%;
   left: 50%;
-  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
   font-family: "Cormorant Garamond", Georgia, serif;
   font-weight: 300;
   font-size: clamp(5rem, 22vw, 8rem);
@@ -10,14 +11,18 @@
   letter-spacing: 0.08em;
   color: rgba(53, 48, 42, 0.06);
   pointer-events: none;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .horizon {
   position: absolute;
   top: 34%;
   left: 50%;
-  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
   width: min(52vw, 320px);
   height: 1px;
   background: rgba(168, 134, 46, 0.45);
@@ -33,7 +38,8 @@
   margin: -27px 0 0 -9px;
   border-radius: 50%;
   background: #a8862e;
-  box-shadow: 0 0 22px rgba(168, 134, 46, 0.35);
+  -webkit-box-shadow: 0 0 22px rgba(168, 134, 46, 0.35);
+          box-shadow: 0 0 22px rgba(168, 134, 46, 0.35);
   pointer-events: none;
 }
 
@@ -53,4 +59,4 @@
 }
 .layout-landscape .card-scene {
   padding-top: 14vh;
-}
+}/*# sourceMappingURL=style.css.map */

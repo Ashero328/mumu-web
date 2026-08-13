@@ -1,0 +1,381 @@
+// ============================================
+// 木木文化 賀卡引擎 樣式源頭 —— 白金・文青優雅
+// 鐵律：樣式一律改這個 .scss；card.css 是編譯產物，不要手改
+// 編譯：npx sass --update cards:cards --no-source-map（本卡自帶一份，改這支只影響這張卡）
+//
+// 版式基準（定案）：
+//   手機 9:16 —— 素材以 1080×1920 設計，舞台滿版呈現（cover，超出安全裁切）
+//   電腦 16:9 —— 素材以 1920×1080 設計，舞台置中＋下方資訊區
+//   斷點：900px（scripts/card.js 的 layout 切換同步此值）
+//
+// 配色（白金）：紙白 paper／墨 ink／金 gold（大字與線飾）／深金 gold-deep（小字）
+// 字體：Cormorant Garamond（西文襯線）＋ Noto Serif TC（中文襯線），各卡 head 載入
+// ============================================
+
+$paper: #fdfcfa;
+$ink: #35302a;
+$gold: #a8862e;      // 僅用於大字（標題）與線飾——小字對比不足
+$gold-deep: #8a6d1f; // 小字用金（對比 ≥4.5:1）
+$seal: #a63a2e;      // 朱紅：只用於「木」印，與總站同一顆印
+
+:root {
+  --card-paper: #{$paper};
+  --card-ink: #{$ink};
+  --card-gold: #{$gold};
+  --card-gold-deep: #{$gold-deep};
+  --card-seal: #{$seal};
+  --card-ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html,
+body {
+  background: var(--card-paper);
+  color: var(--card-ink);
+  font-family: "Noto Serif TC", Georgia, serif;
+}
+
+.is-hidden { display: none !important; }
+
+// ---------- 舞台（動畫區） ----------
+
+.card-stage {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  // 內縮燙金細框：信紙感
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    border: 1px solid rgba($gold, .38);
+    pointer-events: none;
+  }
+}
+
+.card-scene {
+  position: relative;
+  z-index: 1;
+  padding: 40px 28px;
+  max-width: 34em;
+}
+
+.card-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2.6rem, 9vw, 4.4rem);
+  line-height: 1.12;
+  color: var(--card-gold);
+  text-wrap: balance;
+  margin-bottom: .35em;
+}
+
+.card-subtitle {
+  font-size: clamp(.95rem, 3.2vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: .45em;
+  text-indent: .45em;
+  color: var(--card-ink);
+  margin-bottom: 2em;
+
+  &:empty { display: none; }
+}
+
+.card-greeting {
+  font-size: clamp(1rem, 3.6vw, 1.15rem);
+  font-weight: 400;
+  line-height: 2.15;
+  max-width: 26em;
+  margin: 0 auto .9em;
+  text-wrap: pretty;
+}
+
+.card-signoff {
+  font-family: "Cormorant Garamond", "Noto Serif TC", Georgia, serif;
+  font-size: clamp(.95rem, 3.2vw, 1.05rem);
+  letter-spacing: .12em;
+  color: var(--card-gold-deep);
+  margin-bottom: 2.4em;
+}
+
+.card-reply {
+  display: inline-block;
+  padding: .62em 1.9em;
+  border: 1px solid rgba($gold, .55);
+  border-radius: 0;
+  color: var(--card-gold-deep);
+  text-decoration: none;
+  font-size: .85rem;
+  letter-spacing: .22em;
+  text-indent: .22em;
+  transition: background .35s, color .35s, border-color .35s;
+
+  &:hover {
+    background: var(--card-gold-deep);
+    border-color: var(--card-gold-deep);
+    color: var(--card-paper);
+  }
+}
+
+// ---------- 資訊區（往下滑） ----------
+
+.card-info {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 28px 80px;
+  text-align: center;
+}
+
+.card-note {
+  line-height: 2.2;
+  font-size: .95rem;
+  color: rgba($ink, .78);
+  margin-bottom: 36px;
+  text-wrap: pretty;
+
+  &:empty { display: none; }
+}
+
+// 客戶曝光區：一張 banner ＋ 一個連結。沒放東西（或只有註解）就自己收起來
+.card-promo {
+  margin-bottom: 36px;
+
+  &:empty { display: none; }
+
+  a {
+    display: block;
+    line-height: 0; // 吃掉 inline 圖片底下的空隙
+    border: 1px solid rgba($ink, .12);
+    transition: border-color .35s, box-shadow .35s;
+
+    &:hover {
+      border-color: rgba($gold, .55);
+      box-shadow: 0 10px 26px rgba(53, 48, 42, .12);
+    }
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.card-share {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  a {
+    color: rgba($ink, .72);
+    text-decoration: none;
+    font-size: .85rem;
+    letter-spacing: .06em;
+    padding: .5em 1.3em;
+    border: 1px solid rgba($ink, .22);
+    border-radius: 0;
+    transition: border-color .35s, color .35s;
+
+    &:hover {
+      border-color: var(--card-gold-deep);
+      color: var(--card-gold-deep);
+    }
+  }
+}
+
+// ---------- 檔期結束公告頁 ----------
+// 平常整段隱藏；card.js 判定過期後在 <html> 掛 .is-expired 才出現。
+// 重點是「網址依然活著」——客戶轉發出去的舊連結不會變成 404 錯誤頁，
+// 而是一頁還帶著木木名字的公告。這是這個機制存在的唯一理由。
+
+.expired {
+  display: none;
+}
+
+.expired__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 30em;
+  // 沒有 fill-mode：動畫不跑（或被關掉）時，內容本來就是可見的
+  animation: expired-in 1s var(--card-ease);
+}
+
+// 朱紅切邊印，與總站主視覺右下那顆同一款
+.expired__seal {
+  display: grid;
+  place-content: center;
+  width: clamp(52px, 12vw, 64px);
+  aspect-ratio: 1;
+  margin: 0 auto clamp(26px, 5vw, 40px);
+  background: var(--card-seal);
+  color: #edc681;
+  font-family: "Noto Serif TC", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(30px, 7vw, 38px);
+  line-height: 1;
+}
+
+.expired__title {
+  font-family: "Noto Serif TC", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 5.4vw, 2.15rem);
+  line-height: 1.6;
+  letter-spacing: .04em;
+  color: var(--card-ink);
+  text-wrap: balance;
+}
+
+.expired__text {
+  margin-top: clamp(18px, 3.4vw, 26px);
+  font-size: clamp(.9rem, 3.2vw, 1rem);
+  line-height: 2.15;
+  color: rgba($ink, .68);
+  text-wrap: pretty;
+}
+
+.expired__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: clamp(30px, 5.6vw, 44px);
+}
+
+.expired__btn {
+  display: inline-block;
+  padding: .62em 1.7em;
+  border: 1px solid rgba($ink, .22);
+  border-radius: 0;
+  color: rgba($ink, .72);
+  text-decoration: none;
+  font-size: .85rem;
+  letter-spacing: .16em;
+  text-indent: .16em;
+  transition: background .35s, color .35s, border-color .35s;
+
+  &:hover {
+    border-color: var(--card-gold-deep);
+    color: var(--card-gold-deep);
+  }
+
+  &--solid {
+    background: var(--card-gold-deep);
+    border-color: var(--card-gold-deep);
+    color: var(--card-paper);
+
+    &:hover {
+      background: #745b16;
+      border-color: #745b16;
+      color: var(--card-paper);
+    }
+  }
+}
+
+// 右緣直排小字，呼應總站主視覺；空間不夠就不出現
+.expired__vertical {
+  display: none;
+
+  @media (min-width: 720px) and (min-height: 520px) {
+    display: block;
+    position: absolute;
+    right: clamp(34px, 5vw, 68px);
+    top: 50%;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    font-size: 12px;   // 全站字級下限 12px
+    letter-spacing: .5em;
+    color: rgba($ink, .3);
+  }
+}
+
+@keyframes expired-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+// ---------- 電腦版：橫式 16:9 置中＋下滑資訊區 ----------
+
+.layout-landscape {
+  .card-stage {
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-width: 1000px;
+    margin: 6vh auto 0;
+    border: 1px solid rgba($gold, .28);
+    box-shadow: 0 30px 80px rgba(53, 48, 42, .14);
+
+    &::after { inset: 14px; }
+  }
+
+  .card-scene { padding: 40px 64px; }
+
+  .card-info { padding-top: 56px; }
+}
+
+// ---------- 檔期結束：整卡收起，只留公告頁 ----------
+
+.is-expired {
+  .card-stage,
+  .card-info { display: none !important; }
+
+  .expired {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    padding: clamp(32px, 6vw, 80px) clamp(24px, 5vw, 64px);
+    text-align: center;
+
+    // 與賀卡舞台同一家族的內縮細框
+    &::after {
+      content: "";
+      position: absolute;
+      inset: clamp(12px, 1.6vw, 22px);
+      border: 1px solid rgba($gold, .3);
+      pointer-events: none;
+    }
+  }
+}
+
+// ---------- 純淨模式（網址加 ?min=1）：交付客戶版，只留動態畫面 ----------
+
+.is-minimal {
+  .card-reply,
+  .card-info { display: none !important; }
+}
+
+.layout-landscape.is-minimal {
+  body {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+  }
+
+  .card-stage {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+// ---------- 減少動態 ----------
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
