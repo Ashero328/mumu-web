@@ -1,0 +1,273 @@
+// ============================================
+// NE2026002 客戶版賀卡「示意」——松川珈琲焙煎所（虛構品牌）
+// 鐵律：只改 .scss；.css 是編譯產物
+// 編譯（在 mumu-web 根目錄執行）：
+//   npx sass cards/NE2026002/css/style.scss cards/NE2026002/css/style.css --no-source-map
+//
+// 這支示範「同一套引擎怎麼換成客戶的樣子」。版式（card.scss）一行都沒動，
+// 只在這裡做兩件事：
+//   1. 覆寫配色 —— 白金 → 深焙底＋焙煎橙
+//   2. 換掉裝飾 —— 花圈＋雪點 → 焙煎鼓的圓＋熱氣＋火光
+//
+// ⚠️ card.scss 裡有一部分顏色是用 SCSS 變數直接算成 rgba() 寫死的
+//    （框線、小字、按鈕邊…），那些**不會**跟著 CSS 變數走，
+//    所以下面「跟著變數走不到的地方」那一段要逐條補。
+//    改配色時兩段都要看。
+// ============================================
+
+$bg:        #17120f; // 深焙底
+$bg-2:      #241a13; // 舞台中央的暖區
+$ink:       #f2e9dd; // 米白字
+$amber:     #e0913f; // 焙煎橙（大字與線飾）
+$amber-soft:#edab63; // 暗底上的小字用色（比 amber 亮，對比才夠）
+
+// ---------- 1. 配色覆寫 ----------
+// 引擎的元件大多吃這四個變數，改這裡就換掉大半個卡
+:root {
+  --card-paper: #{$bg};
+  --card-ink: #{$ink};
+  --card-gold: #{$amber};
+  --card-gold-deep: #{$amber-soft};
+}
+
+// 舞台底：中央偏上一團暖光，像鼓門透出來的火。
+// 用 radial-gradient 疊在底色上，不另外放圖（賀卡要輕，一條連結就要能開）
+.card-stage {
+  background:
+    radial-gradient(120% 85% at 50% 38%,
+      rgba(224, 145, 63, .20) 0%,
+      rgba(224, 145, 63, .07) 42%,
+      rgba(224, 145, 63, 0) 72%),
+    linear-gradient(180deg, #{$bg-2} 0%, #{$bg} 68%);
+}
+
+// ---------- 2. 跟著變數走不到的地方 ----------
+// card.scss 把這些顏色寫成 rgba($gold, .38) 這種形式，編譯後就是定值了
+.card-stage::after,
+.layout-landscape .card-stage {
+  border-color: rgba(224, 145, 63, .34);
+}
+
+.layout-landscape .card-stage {
+  // 白底的淺灰投影在暗底上等於看不見，換成帶橙的暖影
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .55);
+}
+
+.card-note {
+  color: rgba(242, 233, 221, .82);
+}
+
+.card-reply {
+  border-color: rgba(224, 145, 63, .5);
+
+  &:hover {
+    background: var(--card-gold);
+    border-color: var(--card-gold);
+    color: #1a1209;
+  }
+}
+
+.card-share a {
+  color: rgba(242, 233, 221, .8);
+  border-color: rgba(242, 233, 221, .26);
+
+  &:hover {
+    border-color: var(--card-gold);
+    color: var(--card-gold);
+  }
+}
+
+// 檔期結束的公告頁也要跟著暗底走，否則過期那天會突然變成白底
+.expired__title {
+  color: var(--card-ink);
+}
+
+.expired__text {
+  color: rgba(242, 233, 221, .74);
+}
+
+.expired__btn {
+  color: rgba(242, 233, 221, .82);
+  border-color: rgba(242, 233, 221, .26);
+
+  &:hover {
+    border-color: var(--card-gold);
+    color: var(--card-gold);
+  }
+
+  &--solid {
+    background: var(--card-gold);
+    border-color: var(--card-gold);
+    color: #1a1209;
+
+    &:hover {
+      background: #f0a24d;
+      border-color: #f0a24d;
+      color: #1a1209;
+    }
+  }
+}
+
+.expired__vertical {
+  color: rgba(242, 233, 221, .38);
+}
+
+.is-expired .expired::after {
+  border-color: rgba(224, 145, 63, .3);
+}
+
+// ---------- 3. 背景裝飾 ----------
+// 結構跟聖誕卡一樣：一個大圓＋幾顆點。換的是語彙——
+// 圓從「花圈」變成「焙煎鼓／杯口」，雪點變成火光，另外多三道熱氣
+
+// 焙煎鼓：環抱標題的細線圓環，頂端一點亮橙如爐火
+.drum {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(78vw, 480px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -54%);
+  border: 1px solid rgba(224, 145, 63, .28);
+  border-radius: 50%;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    border-radius: 50%;
+    background: $amber;
+  }
+
+  // 內圈：兩道環才有「鼓」的厚度，一道只是個圓
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 8.5%;
+    border: 1px solid rgba(224, 145, 63, .13);
+    border-radius: 50%;
+  }
+}
+
+// 熱氣：三道細長的垂直線，從鼓的上緣升起。
+// 這三條是 .drum 的子元素（見 index.html），所以 bottom: 100% 就是「圓的正上方」——
+// 直式與橫式的圓落在完全不同的高度，用這個寫法兩邊都自動對位
+.steam {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 8px;
+  width: 1px;
+  height: clamp(40px, 7.5vw, 74px);
+  background: linear-gradient(180deg,
+      rgba(224, 145, 63, 0) 0%,
+      rgba(224, 145, 63, .42) 45%,
+      rgba(224, 145, 63, 0) 100%);
+  pointer-events: none;
+}
+
+.steam:nth-of-type(1) { left: 38%; }
+.steam:nth-of-type(2) { left: 50%; height: clamp(52px, 9.5vw, 92px); }
+.steam:nth-of-type(3) { left: 62%; }
+
+// 火光：飄浮的暖點
+.spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(224, 145, 63, .6);
+}
+
+.spark:nth-of-type(1) { top: 17%; left: 17%; }
+.spark:nth-of-type(2) { top: 26%; right: 15%; }
+.spark:nth-of-type(3) { top: 60%; left: 11%; width: 2px; height: 2px; }
+.spark:nth-of-type(4) { bottom: 21%; right: 13%; }
+.spark:nth-of-type(5) { bottom: 15%; left: 25%; width: 2px; height: 2px; }
+
+// 電腦版：圓略縮，讓橫式構圖留出兩側呼吸
+.layout-landscape .drum {
+  width: min(46vh, 400px);
+}
+
+// 橫式的舞台是 16:9，鼓到舞台上緣只剩約 65px（直式有 250px 以上）。
+// 直式那組長度在這裡會被 .card-stage 的 overflow: hidden 從上緣切掉，所以要另外收短。
+//
+// ⚠️ 算可用空間時**四項都要算**，少算一項就會差幾 px：
+//      margin-bottom ＋ height ＋ anim.js 的 y 位移 ＋ scaleY 撐高
+//    最後一項最容易漏：scaleY 1.15 的 transformOrigin 是 50% 100%（底部），
+//    所以它是往上長，等於再多吃 height × 0.15。
+//    可用空間 = 舞台高 × 0.5 − 鼓直徑 × 0.54
+//    最擠的是第三道（y 位移 −22）：6 ＋ 30 ＋ 22 ＋ 4.5 ＝ 62.5 ≤ 65
+.layout-landscape {
+  .steam {
+    height: clamp(22px, 3.4vh, 30px);
+    margin-bottom: 6px;
+  }
+
+  .steam:nth-of-type(2) {
+    height: clamp(26px, 3.8vh, 34px);
+  }
+}
+
+// ---------- 4. 底部的客戶落款 ----------
+// 原本的曝光區是「一張 banner 圖」，這裡改成「標記＋名稱」的品牌落款。
+// card.scss 給 .card-promo a 的是 line-height: 0（為了吃掉圖片底下的空隙），
+// 放文字就要收回來，否則整行會塌掉
+.card-promo--brand a {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  line-height: 1.4;
+  padding: 16px 26px;
+  border-color: rgba(242, 233, 221, .18);
+  text-decoration: none;
+  color: var(--card-ink);
+
+  &:hover {
+    border-color: rgba(224, 145, 63, .5);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .4);
+  }
+}
+
+// ⚠️ 選擇器要帶上 img：card.scss 有 `.card-promo img { width: 100% }`
+//    （曝光區原本是掛整張 banner，所以圖預設撐滿），
+//    那條是「class ＋ 元素」，權重比單一個 class 高。
+//    只寫 .card-promo__mark 的話標記會被撐成整個欄寬（實測 280px）
+.card-promo--brand img.card-promo__mark {
+  width: 42px;
+  height: auto;
+  flex: none;
+}
+
+// 名稱用網頁字體排，不做進 SVG —— SVG 裡的字會被使用者的系統字體影響
+.card-promo__text {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+
+  strong {
+    font-weight: 500;
+    font-size: 1.02rem;
+    letter-spacing: .04em;
+  }
+
+  small {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 12px;   // 全站字級下限 12px
+    letter-spacing: .16em;
+    color: var(--card-gold-deep);
+  }
+}
+
+// ⚠️ 示意用的標註，接真客戶時連同 index.html 裡那行一起刪掉
+.card-demo {
+  margin-top: 28px;
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: rgba(224, 145, 63, .8);
+}

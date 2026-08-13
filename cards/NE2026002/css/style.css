@@ -1,0 +1,223 @@
+:root {
+  --card-paper: #17120f;
+  --card-ink: #f2e9dd;
+  --card-gold: #e0913f;
+  --card-gold-deep: #edab63;
+}
+
+.card-stage {
+  background: radial-gradient(120% 85% at 50% 38%, rgba(224, 145, 63, 0.2) 0%, rgba(224, 145, 63, 0.07) 42%, rgba(224, 145, 63, 0) 72%), linear-gradient(180deg, #241a13 0%, #17120f 68%);
+}
+
+.card-stage::after,
+.layout-landscape .card-stage {
+  border-color: rgba(224, 145, 63, 0.34);
+}
+
+.layout-landscape .card-stage {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.card-note {
+  color: rgba(242, 233, 221, 0.82);
+}
+
+.card-reply {
+  border-color: rgba(224, 145, 63, 0.5);
+}
+.card-reply:hover {
+  background: var(--card-gold);
+  border-color: var(--card-gold);
+  color: #1a1209;
+}
+
+.card-share a {
+  color: rgba(242, 233, 221, 0.8);
+  border-color: rgba(242, 233, 221, 0.26);
+}
+.card-share a:hover {
+  border-color: var(--card-gold);
+  color: var(--card-gold);
+}
+
+.expired__title {
+  color: var(--card-ink);
+}
+
+.expired__text {
+  color: rgba(242, 233, 221, 0.74);
+}
+
+.expired__btn {
+  color: rgba(242, 233, 221, 0.82);
+  border-color: rgba(242, 233, 221, 0.26);
+}
+.expired__btn:hover {
+  border-color: var(--card-gold);
+  color: var(--card-gold);
+}
+.expired__btn--solid {
+  background: var(--card-gold);
+  border-color: var(--card-gold);
+  color: #1a1209;
+}
+.expired__btn--solid:hover {
+  background: #f0a24d;
+  border-color: #f0a24d;
+  color: #1a1209;
+}
+
+.expired__vertical {
+  color: rgba(242, 233, 221, 0.38);
+}
+
+.is-expired .expired::after {
+  border-color: rgba(224, 145, 63, 0.3);
+}
+
+.drum {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(78vw, 480px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -54%);
+  border: 1px solid rgba(224, 145, 63, 0.28);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.drum::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #e0913f;
+}
+.drum::after {
+  content: "";
+  position: absolute;
+  inset: 8.5%;
+  border: 1px solid rgba(224, 145, 63, 0.13);
+  border-radius: 50%;
+}
+
+.steam {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 8px;
+  width: 1px;
+  height: clamp(40px, 7.5vw, 74px);
+  background: linear-gradient(180deg, rgba(224, 145, 63, 0) 0%, rgba(224, 145, 63, 0.42) 45%, rgba(224, 145, 63, 0) 100%);
+  pointer-events: none;
+}
+
+.steam:nth-of-type(1) {
+  left: 38%;
+}
+
+.steam:nth-of-type(2) {
+  left: 50%;
+  height: clamp(52px, 9.5vw, 92px);
+}
+
+.steam:nth-of-type(3) {
+  left: 62%;
+}
+
+.spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(224, 145, 63, 0.6);
+}
+
+.spark:nth-of-type(1) {
+  top: 17%;
+  left: 17%;
+}
+
+.spark:nth-of-type(2) {
+  top: 26%;
+  right: 15%;
+}
+
+.spark:nth-of-type(3) {
+  top: 60%;
+  left: 11%;
+  width: 2px;
+  height: 2px;
+}
+
+.spark:nth-of-type(4) {
+  bottom: 21%;
+  right: 13%;
+}
+
+.spark:nth-of-type(5) {
+  bottom: 15%;
+  left: 25%;
+  width: 2px;
+  height: 2px;
+}
+
+.layout-landscape .drum {
+  width: min(46vh, 400px);
+}
+
+.layout-landscape .steam {
+  height: clamp(22px, 3.4vh, 30px);
+  margin-bottom: 6px;
+}
+.layout-landscape .steam:nth-of-type(2) {
+  height: clamp(26px, 3.8vh, 34px);
+}
+
+.card-promo--brand a {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  line-height: 1.4;
+  padding: 16px 26px;
+  border-color: rgba(242, 233, 221, 0.18);
+  text-decoration: none;
+  color: var(--card-ink);
+}
+.card-promo--brand a:hover {
+  border-color: rgba(224, 145, 63, 0.5);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+}
+
+.card-promo--brand img.card-promo__mark {
+  width: 42px;
+  height: auto;
+  flex: none;
+}
+
+.card-promo__text {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+.card-promo__text strong {
+  font-weight: 500;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+}
+.card-promo__text small {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--card-gold-deep);
+}
+
+.card-demo {
+  margin-top: 28px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(224, 145, 63, 0.8);
+}
