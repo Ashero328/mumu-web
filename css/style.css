@@ -35,6 +35,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html.lenis {
+  scroll-behavior: auto;
+}
+
 body {
   background: var(--paper);
   color: var(--ink);
@@ -179,13 +183,20 @@ button {
 }
 
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  min-height: 44px;
   font-size: 0.88rem;
   letter-spacing: 0.14em;
   text-indent: 0.14em;
-  padding: 0.85em 1.8em;
+  line-height: 1.35;
+  padding: 0.78em 1.7em;
   text-decoration: none;
   border: 1px solid transparent;
+  background: transparent;
+  white-space: nowrap;
   transition: background 0.45s var(--ease), color 0.45s var(--ease), border-color 0.45s var(--ease), transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
 }
 .btn:hover {
@@ -193,32 +204,50 @@ button {
   box-shadow: 0 10px 24px rgba(51, 41, 31, 0.07);
 }
 .btn--solid {
-  background: var(--green);
+  background: var(--green-deep);
   color: #fff;
 }
 .btn--solid:hover {
-  background: #4a5a34;
+  background: #33291f;
 }
 .btn--ghost {
-  border-color: rgba(111, 133, 68, 0.4);
-  color: var(--green);
+  border-color: rgba(74, 90, 52, 0.42);
+  color: var(--green-deep);
+  background: var(--paper);
 }
 .btn--ghost:hover {
-  border-color: var(--green);
-  background: rgba(111, 133, 68, 0.08);
+  border-color: var(--green-deep);
+  background: var(--mint-soft);
+}
+.btn--compact {
+  min-height: 38px;
+  padding: 0.56em 1.2em;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-indent: 0.1em;
+}
+.btn--icon {
+  width: 44px;
+  min-width: 44px;
+  padding: 0;
+  text-indent: 0;
+}
+.btn[disabled], .btn[aria-disabled=true] {
+  opacity: 0.42;
+  pointer-events: none;
 }
 
 .link-more {
   font-size: 0.88rem;
-  color: var(--green);
+  color: var(--green-deep);
   text-decoration: none;
-  border-bottom: 1px solid rgba(111, 133, 68, 0.32);
+  border-bottom: 1px solid rgba(74, 90, 52, 0.32);
   padding-bottom: 2px;
   white-space: nowrap;
   transition: border-color 0.4s;
 }
 .link-more:hover {
-  border-color: var(--green);
+  border-color: var(--green-deep);
 }
 
 .ic {
@@ -363,9 +392,9 @@ button {
 .nav__links a:hover {
   color: var(--ink);
 }
-.nav__links a.is-active {
-  color: var(--green);
-  border-bottom-color: var(--green);
+.nav__links a.is-active, .nav__links a[aria-current] {
+  color: var(--green-deep);
+  border-bottom-color: var(--green-deep);
 }
 @media (max-width: 899px) {
   .nav__links {
@@ -381,9 +410,10 @@ button {
     padding: 13px 0;
     border-bottom: 1px solid var(--ink-line);
   }
-  .nav__links a.is-active {
+  .nav__links a.is-active,
+  .nav__links a[aria-current] {
     border-bottom-color: var(--ink-line);
-    box-shadow: inset 3px 0 0 var(--green);
+    box-shadow: inset 3px 0 0 var(--green-deep);
     padding-left: 12px;
   }
   .nav__links a:last-child {
@@ -397,20 +427,6 @@ button {
 }
 .nav__cta {
   margin-inline-start: auto;
-  font-size: clamp(0.8rem, 0.55vw, 0.88rem);
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  color: var(--green);
-  border: 1px solid rgba(111, 133, 68, 0.38);
-  padding: 0.45em 1.1em;
-  white-space: nowrap;
-  transition: background 0.4s var(--ease), color 0.4s var(--ease), border-color 0.4s var(--ease), transform 0.4s var(--ease);
-}
-.nav__cta:hover {
-  background: var(--green);
-  color: #fff;
-  border-color: var(--green);
-  transform: translateY(-2px);
 }
 @media (min-width: 900px) {
   .nav__inner {
@@ -498,7 +514,7 @@ button {
   padding-inline-start: clamp(0px, 4vw, 76px);
 }
 .hero__title .accent {
-  color: var(--green);
+  color: var(--green-deep);
   padding-inline-start: clamp(0px, 2vw, 38px);
   margin-top: 0.2em;
 }
@@ -634,7 +650,7 @@ button {
 .about__sign {
   font-family: "Noto Serif TC", serif;
   font-size: 1.06rem;
-  color: var(--green);
+  color: var(--green-deep);
 }
 
 .services {
@@ -932,24 +948,163 @@ button {
   }
 }
 
-.tabs {
+.promo__go {
   display: flex;
-  gap: clamp(14px, 2.9vw, 74px);
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-family: "Noto Sans TC", sans-serif;
 }
-.tabs__btn {
-  font-size: clamp(0.88rem, 0.79vw, 1.25rem);
+.promo__go > a {
+  font-size: 0.8rem;
   letter-spacing: 0.1em;
-  color: rgba(51, 41, 31, 0.55);
-  padding-bottom: 5px;
-  border-bottom: 1.5px solid rgba(111, 133, 68, 0.38);
-  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
+  text-indent: 0.1em;
+  white-space: nowrap;
+  text-decoration: none;
+  color: rgba(51, 41, 31, 0.72);
+  background: none;
+  border: 0;
+  padding: 7px clamp(11px, 1.1vw, 20px);
+  cursor: pointer;
+  transition: color 0.35s var(--ease);
 }
-.tabs__btn:hover {
+.promo__go > a:hover {
   color: var(--ink);
 }
-.tabs__btn.is-on {
-  color: var(--green);
-  border-bottom-color: var(--green);
+.promo__go > a:first-child {
+  padding-left: 0;
+}
+.promo__go > a:last-child {
+  padding-right: 0;
+}
+.promo__go > a.is-on, .promo__go > a[aria-current] {
+  color: var(--green-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+@media (max-width: 899px) {
+  .promo__go > a {
+    padding-block: 13px;
+  }
+}
+.promo__go > a + a {
+  position: relative;
+}
+.promo__go > a + a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 13px;
+  margin-top: -7px;
+  background: var(--ink-line);
+}
+
+.pagenav {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-family: "Noto Sans TC", sans-serif;
+}
+.pagenav > a {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-indent: 0.1em;
+  white-space: nowrap;
+  text-decoration: none;
+  color: rgba(51, 41, 31, 0.72);
+  background: none;
+  border: 0;
+  padding: 7px clamp(11px, 1.1vw, 20px);
+  cursor: pointer;
+  transition: color 0.35s var(--ease);
+}
+.pagenav > a:hover {
+  color: var(--ink);
+}
+.pagenav > a:first-child {
+  padding-left: 0;
+}
+.pagenav > a:last-child {
+  padding-right: 0;
+}
+.pagenav > a.is-on, .pagenav > a[aria-current] {
+  color: var(--green-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+@media (max-width: 899px) {
+  .pagenav > a {
+    padding-block: 13px;
+  }
+}
+.pagenav > a + a {
+  position: relative;
+}
+.pagenav > a + a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 13px;
+  margin-top: -7px;
+  background: var(--ink-line);
+}
+
+.tabs {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-family: "Noto Sans TC", sans-serif;
+}
+.tabs > .tabs__btn {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-indent: 0.1em;
+  white-space: nowrap;
+  text-decoration: none;
+  color: rgba(51, 41, 31, 0.72);
+  background: none;
+  border: 0;
+  padding: 7px clamp(11px, 1.1vw, 20px);
+  cursor: pointer;
+  transition: color 0.35s var(--ease);
+}
+.tabs > .tabs__btn:hover {
+  color: var(--ink);
+}
+.tabs > .tabs__btn:first-child {
+  padding-left: 0;
+}
+.tabs > .tabs__btn:last-child {
+  padding-right: 0;
+}
+.tabs > .tabs__btn.is-on, .tabs > .tabs__btn[aria-current] {
+  color: var(--green-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+@media (max-width: 899px) {
+  .tabs > .tabs__btn {
+    padding-block: 13px;
+  }
+}
+.tabs > .tabs__btn + .tabs__btn {
+  position: relative;
+}
+.tabs > .tabs__btn + .tabs__btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 13px;
+  margin-top: -7px;
+  background: var(--ink-line);
 }
 
 .wk img {
@@ -1086,7 +1241,7 @@ button {
     position: static;
     transform: none;
     opacity: 1;
-    color: var(--green);
+    color: var(--green-deep);
     font-size: 0.84rem;
     letter-spacing: 0.12em;
   }
@@ -1410,7 +1565,7 @@ button {
     position: static !important;
     transform: none !important;
     opacity: 1 !important;
-    color: var(--green) !important;
+    color: var(--green-deep) !important;
   }
   *,
   *::before,

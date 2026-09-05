@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>電子賀卡公版款式｜木木文化工作室</title>
+<meta name="description" content="木木文化歷年電子賀卡公版款式，西元新年、羊年、農曆年共 93 款，直式與橫式雙版本。看中哪幾款勾起來，把款號給我們，賀詞與品牌落款都能客製。">
+<meta name="theme-color" content="#fcfcfa">
+
+<!-- OG 一律用絕對網址：LINE 與 FB 的爬蟲只讀原始碼、不執行網頁，
+     相對路徑它找不到基準，抓不到預覽圖 -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ashero328.github.io/mumu-web/e-cards.html">
+<meta property="og:title" content="電子賀卡公版款式｜木木文化工作室">
+<meta property="og:description" content="93 款公版電子賀卡，直式與橫式雙版本。挑好款號給我們，賀詞與品牌落款都能換成您的。">
+<meta property="og:image" content="https://ashero328.github.io/mumu-web/images/e-cards/poster.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="scripts/lenis/lenis.css">
+<link rel="stylesheet" href="scripts/fancybox/fancybox.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/e-cards.css">
+</head>
+<body>
+
+<a class="skip" href="#main">跳至主要內容</a>
+
+<div class="frame" aria-hidden="true"></div>
+
+<!-- #nav -->
+<!-- 這一段是全站共用的，來源是 _partials/nav.html。
+     不要直接改頁面裡的 nav —— 下次跑 build_pages.py 會被覆蓋回去。
+     {{...}} 由 build_pages.py 依頁面代換，對應表寫在那支腳本裡 -->
+<header class="nav" id="nav">
+  <div class="nav__inner wrap">
+    <a class="nav__brand" href="index.html"><img src="images/logo.png" alt="木木文化 設計印刷" width="650" height="125"></a>
+
+    <!-- 手機版選單開關：桌機隱藏。aria-expanded 由 main.js 同步，讀螢幕才知道展開與否 -->
+    <button class="nav__toggle" type="button" id="navToggle"
+            aria-expanded="false" aria-controls="navLinks" aria-label="開啟選單">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav__links" id="navLinks" aria-label="主要導覽">
+      <a href="index.html#about">關於木木</a>
+      <a href="index.html#services">營業項目</a>
+      <a href="index.html#works">設計作品</a>
+      <!-- 電子賀卡：2026-08-25 用戶指定把下拉子選單整個拿掉，回到一般連結。
+           要切換公版／客製走內頁標題區那條第二層導覽（.pagenav），
+           首頁則是「賀卡最新消息」那兩個入口。
+           首頁指向本頁的 #promo，內頁指向 e-cards.html。
+           aria-current="page" ＝ 就是這一頁；"true" ＝ 目前所在的單元 -->
+      <a href="e-cards.html" aria-current="page">電子賀卡</a>
+      <a href="index.html#flow">訂購流程</a>
+      <a href="#contact">與我聯絡</a>
+    </nav>
+    <a class="nav__cta btn btn--ghost btn--compact" href="#contact">LINE 詢價</a>
+  </div>
+</header>
+<!-- /#nav -->
+
+
+<main id="main">
+
+  <!-- ── 頁面標題：文字全部寫死在 HTML，這些才是搜尋引擎要的 ── -->
+  <section class="cat-lead sec wrap" id="top">
+    <img class="deco deco--mono" src="images/deco/leaf-mono.webp" alt="" width="333" height="520" loading="lazy" decoding="async" aria-hidden="true">
+    <!-- 導引小字與第二層導覽同一行：左邊是單元名，右邊是公版／客製的索引 -->
+    <div class="cat-lead__row">
+      <p class="section-label">電子賀卡</p>
+    </div>
+    <div class="sec__body">
+      <div class="cat-lead__heading">
+        <h1 class="cat-lead__title">公版款式一覽</h1>
+        <!-- #pagenav -->
+<!-- 第二層導覽：只有內頁有，與頁面標題排在一起，避免浮在裝飾葉片旁。 -->
+<nav class="pagenav" aria-label="電子賀卡分頁">
+  <a href="e-cards.html" aria-current="page">公版款式</a>
+  <a href="custom-cards.html">客製案例</a>
+</nav>
+        <!-- /#pagenav -->
+      </div>
+      <!-- 這段刻意不換行：HTML 會把換行併成一個空格，
+           中文的「。」後面多一個半形空格，在畫面上是看得出來的缺口 -->
+      <p class="cat-lead__intro">歷年做過的公版賀卡都在這裡，直式與橫式都有。<br>看中哪幾款就勾起來，把款號給我們，賀詞與品牌落款都能換成您的。</p>
+      <p class="cat-lead__note">年末年初是旺季，建議提前四週。</p>
+    </div>
+  </section>
+
+  <!-- ── 款式格線 ── -->
+  <!-- 這一段刻意做成滿版區塊（裡面再包 .sec.wrap），與首頁的 .services 同一個結構：
+       直排引句與典藏標記要貼在版面右緣的留白處，段落本身是 .wrap 的話就沒有那塊留白 -->
+  <section class="cat" id="catalog">
+    <!-- 右側留白處的直排引句：平衡構圖，也把這一頁在講的事說出來 -->
+    <p class="cat__vertical" aria-hidden="true">一年幾次的問候，值得一張好看的卡。</p>
+
+    <div class="sec wrap">
+    <div class="sec__body">
+
+      <div class="cat__bar">
+        <!-- 容器刻意不叫 .tabs：main.js 的 tabs() 會抓 .tabs 並改 aria-selected，
+             而這裡是篩選不是分頁，語意要用 aria-pressed。
+             按鈕是 .filter__btn（2026-08-26 從借用的 .tabs__btn 改名獨立）——
+             那兩組已經是不同東西：首頁的分頁是索引小字，這裡是選了會填色的方塊 -->
+        <div class="filter" data-filter="cat">
+          <span class="filter__label" id="fl-cat">節日</span>
+          <div class="filter__set" role="group" aria-labelledby="fl-cat">
+            <button class="filter__btn is-on" type="button" data-value="" aria-pressed="true">全部</button>
+            <button class="filter__btn" type="button" data-value="ENY" aria-pressed="false">西元新年</button>
+            <button class="filter__btn" type="button" data-value="EY8" aria-pressed="false">羊年</button>
+            <button class="filter__btn" type="button" data-value="EY0" aria-pressed="false">農曆年</button>
+          </div>
+        </div>
+
+        <div class="filter" data-filter="fmt">
+          <span class="filter__label" id="fl-fmt">版式</span>
+          <div class="filter__set" role="group" aria-labelledby="fl-fmt">
+            <button class="filter__btn is-on" type="button" data-value="" aria-pressed="true">全部</button>
+            <button class="filter__btn" type="button" data-value="直式" aria-pressed="false">直式</button>
+            <button class="filter__btn" type="button" data-value="橫式" aria-pressed="false">橫式</button>
+          </div>
+        </div>
+
+        <label class="catalog-search" for="catSearch">
+          <span>款號</span>
+          <span class="catalog-search__field">
+            <input id="catSearch" type="search" inputmode="search" autocomplete="off"
+                   placeholder="例如 EY8001" aria-describedby="catCount">
+            <button class="catalog-search__clear" id="catSearchClear" type="button" hidden>清除</button>
+          </span>
+        </label>
+      </div>
+
+      <p class="cat__count" id="catCount" role="status" aria-atomic="true"></p>
+
+      <ul class="cat__grid" id="catGrid"></ul>
+
+      <noscript>
+        <p class="cat__noscript">這一頁的款式清單需要 JavaScript 才顯示得出來。
+          方便的話請開啟 JavaScript，或直接
+          <a class="link-more" href="https://line.me/R/ti/p/@yme1248q">加 LINE</a> 跟我們要款式圖。</p>
+      </noscript>
+
+      <div class="cat__foot">
+        <button class="btn btn--ghost cat__more" type="button" id="catMore" hidden></button>
+        <p class="cat__empty" id="catEmpty" hidden>這個組合目前沒有款式，換一個節日或版式看看。</p>
+      </div>
+    </div>
+    </div>
+
+    <!-- 右下角典藏標記：雜誌版面的收尾細節 -->
+    <p class="cat__mark" aria-hidden="true">— MUMU CULTURE / E-CARD COLLECTION</p>
+  </section>
+
+  <!-- #foot -->
+<!-- 這一段是全站共用的，來源是 _partials/foot.html。
+     不要直接改頁面裡的頁尾 —— 下次跑 build_pages.py 會被覆蓋回去 -->
+<section class="contact" id="contact">
+    <div class="grass" id="grass" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="contact__top">
+        <h2>想聊聊您的新想法嗎？</h2>
+        <p>歡迎私訊木木，讓我們一起開創全新的篇章。</p>
+        <div class="contact__actions">
+          <a class="btn btn--solid" href="https://line.me/R/ti/p/@yme1248q">加 LINE 詢價</a>
+        </div>
+      </div>
+
+      <div class="contact__foot">
+        <ul class="social">
+          <li><a href="https://line.me/R/ti/p/@yme1248q" target="_blank" rel="noopener" aria-label="LINE 官方帳號"><img class="ic" src="images/icons/line.png" alt="" width="512" height="512" loading="lazy"><span>LINE</span></a></li>
+          <li><a href="tel:0919084796" aria-label="撥打電話"><img class="ic" src="images/icons/phone.png" alt="" width="512" height="512" loading="lazy"><span>電話</span></a></li>
+          <li><a href="mailto:meisitw@gmail.com" aria-label="寄送 Email"><img class="ic" src="images/icons/gmail.png" alt="" width="512" height="512" loading="lazy"><span>Email</span></a></li>
+          <li><a href="https://instagram.com/mumuyang.2026" target="_blank" rel="noopener" aria-label="Instagram"><img class="ic" src="images/icons/instagram.png" alt="" width="512" height="512" loading="lazy"><span>Instagram</span></a></li>
+        </ul>
+
+        <div class="rights">
+          <p>
+            <span>木木文化工作室</span>
+            <span>414 台中市烏日區溪南路三段 55 巷 47 弄 8 號</span>
+          </p>
+          <p>本站作品圖片與文字版權均屬木木文化工作室所有，未經同意請勿轉載或作為商業使用。</p>
+          <p class="rights__copy">
+            <span>© 2026 木木文化工作室 Mumu Culture</span>
+            <span>統一編號 60890306</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- /#foot -->
+
+</main>
+
+<!-- ── 目前篩選浮條：捲過篩選列之後浮在導覽下方，按下去回到篩選列 ── -->
+<!-- ⚠️ 這一段刻意放在 <main> 外面、跟挑款清單同一層：
+     它是 position: fixed，而 .cat 有 overflow-x: clip，
+     fixed 的子孫在祖先有 overflow 時有被裁掉的風險，離開那個容器最保險。
+     內容由 e-cards.js 的 套用() 一併更新 —— 不要給 role="status"，
+     會跟 .cat__count 搶播報（一個頁面兩個即時區域會互相蓋掉） -->
+<button class="cat__now" type="button" id="catNow">
+  <span class="cat__now__pair"><i>節日</i><b id="catNowCat">全部</b></span>
+  <span class="cat__now__pair"><i>版式</i><b id="catNowFmt">全部</b></span>
+  <span class="cat__now__count" id="catNowCount"></span>
+  <span class="cat__now__back">回到篩選</span>
+</button>
+
+<!-- ── 挑款清單：固定在畫面底部，一款都沒挑時整條收起來 ── -->
+<div class="pick" id="pickBar" hidden>
+  <!-- data-lenis-prevent：這塊自己會捲（overflow-y: auto），
+       沒有它的話滾輪會被 Lenis 接走去捲整頁 -->
+  <div class="pick__panel" id="pickPanel" hidden data-lenis-prevent>
+    <ul class="pick__list" id="pickList"></ul>
+  </div>
+
+  <div class="pick__bar">
+    <div class="pick__inner wrap">
+      <!-- 這一區同時擔任「已挑幾款」與「款號已複製」的播報。
+           刻意只留一個 role=status：兩個以上的即時區域會互相搶播 -->
+      <p class="pick__count" id="pickCount" role="status" aria-atomic="true"></p>
+
+      <button class="pick__toggle" type="button" id="pickToggle"
+              aria-expanded="false" aria-controls="pickPanel">看清單</button>
+
+      <div class="pick__acts">
+        <button class="btn btn--ghost" type="button" id="pickCopy">複製款號</button>
+        <a class="btn btn--solid" id="pickLine" href="https://line.me/R/ti/p/@yme1248q"
+           target="_blank" rel="noopener">用 LINE 詢問</a>
+        <button class="pick__clear" type="button" id="pickClear">清空</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="scripts/gsap/gsap.min.js"></script>
+<script src="scripts/gsap/ScrollTrigger.min.js"></script>
+<script src="scripts/lenis/lenis.min.js"></script>
+<script src="scripts/main.js"></script>
+<script src="scripts/e-cards-data.js"></script>
+<script src="scripts/e-cards.js"></script>
+<script src="scripts/fancybox/fancybox.umd.js"></script>
+<script src="scripts/card-modal.js"></script>
+</body>
+</html>

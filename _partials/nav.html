@@ -1,0 +1,29 @@
+<!-- 這一段是全站共用的，來源是 _partials/nav.html。
+     不要直接改頁面裡的 nav —— 下次跑 build_pages.py 會被覆蓋回去。
+     {{...}} 由 build_pages.py 依頁面代換，對應表寫在那支腳本裡 -->
+<header class="nav" id="nav">
+  <div class="nav__inner wrap">
+    <a class="nav__brand" href="{{brand}}"><img src="images/logo.png" alt="木木文化 設計印刷" width="650" height="125"></a>
+
+    <!-- 手機版選單開關：桌機隱藏。aria-expanded 由 main.js 同步，讀螢幕才知道展開與否 -->
+    <button class="nav__toggle" type="button" id="navToggle"
+            aria-expanded="false" aria-controls="navLinks" aria-label="開啟選單">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav__links" id="navLinks" aria-label="主要導覽">
+      <a href="{{base}}#about">關於木木</a>
+      <a href="{{base}}#services">營業項目</a>
+      <a href="{{base}}#works">設計作品</a>
+      <!-- 電子賀卡：2026-08-25 用戶指定把下拉子選單整個拿掉，回到一般連結。
+           要切換公版／客製走內頁標題區那條第二層導覽（.pagenav），
+           首頁則是「賀卡最新消息」那兩個入口。
+           首頁指向本頁的 #promo，內頁指向 e-cards.html。
+           aria-current="page" ＝ 就是這一頁；"true" ＝ 目前所在的單元 -->
+      <a href="{{ecards}}"{{cur_ecards}}>電子賀卡</a>
+      <a href="{{base}}#flow">訂購流程</a>
+      <a href="#contact">與我聯絡</a>
+    </nav>
+    <a class="nav__cta btn btn--ghost btn--compact" href="#contact">LINE 詢價</a>
+  </div>
+</header>

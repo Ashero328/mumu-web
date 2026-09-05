@@ -1,0 +1,1917 @@
+// ============================================
+// 木木文化 電子賀卡公版目錄：e-cards.html 專用
+// 鐵律：只改 .scss；e-cards.css 是編譯產物
+// 編譯：npx sass css/e-cards.scss css/e-cards.css --no-source-map
+//
+// 這一頁與首頁共用 style.css（tokens、導覽、按鈕、頁尾），
+// 下面只寫首頁沒有的東西。配色一律走 tokens，不要在這裡自己調新的顏色
+// ============================================
+
+@use "tokens" as *;
+
+// ============================================
+// 2026-08-25：綠色文字的覆寫整段移除了。
+// 「綠字一律 --green-deep、綠色填色與線條維持 --green」已經升級成全站規則，
+// 寫在 css\_tokens.scss 的檔頭，.btn--ghost / .btn--solid / .link-more /
+// .tabs__btn 在 style.scss 裡就已經是深綠，這裡不需要再改一次。
+// 下面只留這一頁真正需要、而全站規則涵蓋不到的東西
+// ============================================
+
+// ---------- 篩選鈕 ----------
+// 2026-08-26 用戶回饋：「用點選的，看不清楚，是否有更好的選擇方式，讓人一目了然」。
+//
+// 原本是借用首頁的 .tabs__btn（一排底線文字，選到的字轉綠、底線轉深）——
+// **每一顆都有底線**，選到與沒選到只差在綠的深淺，掃過去分不出來。
+// 改成方塊：沒選 = 宣紙白底＋髮絲框，選到 = 薄荷底＋深綠框＋深綠字。
+// 差別是「有沒有上色」，不是「綠得深不深」，一眼就看得出來。
+//
+// 為什麼是方塊不是連在一起的分段控制：手機一定要能換行
+// （4 個節日在 390 螢幕排不進一列），分段控制一換行外框就斷開，看起來像壞掉。
+//
+// 也順手跟 .tabs__btn 脫鉤了：首頁那組現在是索引小字，兩邊已經是不同的東西，
+// 繼續共用一個 class 只會讓改一邊就動到另一邊
+.filter__btn {
+  font-size: .86rem;
+  letter-spacing: .1em;
+  text-indent: .1em;
+  line-height: 1.5;
+  color: rgba($ink, .72); // 7.06:1
+  background: var(--paper);
+  border: 1px solid var(--ink-line);
+  padding: .5em 1.1em;
+  transition: color .3s var(--ease), background .3s var(--ease), border-color .3s var(--ease);
+
+  &:hover {
+    color: var(--ink);
+    background: var(--mint-soft);
+    border-color: rgba($green-deep, .4);
+  }
+
+  // 選到的那一顆：整顆填深綠、字轉白。白字壓在 --green-deep 上是 7.49:1，
+  // 是三種試過的做法裡對比最高的（薄荷底＋深綠字只有 5.91）。
+  // 七顆方塊裡有一顆實心深色，掃過去一眼就定位得到
+  //
+  // ⚠️ `:hover` 寫在這條前面，兩者權重相同（都是兩個 class）→ 這條贏，
+  //    所以滑過已選中的那顆不會變回淺色。順序不要對調
+  &.is-on {
+    color: #fff;
+    background: var(--green-deep);
+    border-color: var(--green-deep);
+  }
+
+  // ⚠️ 巢狀 @media 放最後一行，後面再有宣告會被 Sass 收成第二條同名規則蓋回來
+  @media (max-width: 899px) {
+    padding: .62em 1em; // 觸控目標高度 ≈ 21 ＋ 26 = 47
+  }
+}
+
+// 只給螢幕閱讀器的文字：把款號補進按鈕的可及名稱，
+// 畫面上不顯示（畫面上已經有款號了，再印一次是雜訊）
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// 錨點：sticky 導覽會蓋住目標段落的上緣，讓出導覽高度（與首頁同一組數值）
+#top,
+#main,
+#catalog,
+#custom,
+#contact {
+  scroll-margin-top: clamp(70px, 6vw, 92px);
+}
+
+// ---------- 頁面標題 ----------
+// ⚠️ 這裡刻意**不給** position: relative。
+//    右上角的裝飾要貼齊「視窗」右緣，不是版面右緣 ——
+//    .cat-lead 是 .wrap（上限 1920），畫面比 1920＋左右留白更寬時它就不再貼著視窗，
+//    裝飾若以它為定位基準，只給 -gut 會停在版面邊緣（2560 實測差 248px）。
+//    把定位基準交給滿版的 <main>，right: 0 在任何寬度都剛好是視窗右緣。
+//    （不用 100vw 算：那個值含捲軸寬，會多推出去約 8px 變成橫向捲軸。）
+//    裡面的內容各自有 position: relative ＋ z-index，疊放順序不受影響
+.cat-lead {
+  padding: clamp(34px, 3.6vw, 76px) 0 clamp(24px, 2.2vw, 46px);
+
+  // 導引小字（電子賀卡）在左、第二層導覽（公版／客製）在右，同一行。
+  // 這一行自己扛 .sec 的內容欄寬度 —— 因為 .sec 用的是 > 子選擇器，
+  // 包一層 div 之後 .section-label 就不再是 .sec 的直接子項，收不到那條寬度
+  //
+  // align-items: baseline 是關鍵：兩邊字級不同（14.7 / 12.8），
+  // 用 center 對齊會看得出來差半個字，對基線才是印刷上正確的做法。
+  // 窄畫面自然換行，索引落到第二行靠左，不需要另外寫斷點
+  &__row {
+    width: min(100%, var(--inner));
+    margin-inline: auto;
+    position: relative;
+    z-index: var(--z-content);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px clamp(20px, 3vw, 60px);
+    margin-bottom: var(--label-gap);
+
+    >.section-label {
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    font-size: clamp(1.7rem, 2.9vw, 2.55rem);
+    font-weight: 400;
+    margin-bottom: clamp(14px, 1.1vw, 24px);
+  }
+
+  // 分頁就是這個標題的內容分類：留在標題列維持語意關係，
+  // 桌機推到內容欄最右緣，避免像一組黏在標題後面的臨時按鈕。
+  &__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px clamp(24px, 3vw, 52px);
+    margin-bottom: clamp(14px, 1.1vw, 24px);
+
+    .cat-lead__title {
+      margin-bottom: 0;
+    }
+
+    .pagenav {
+      flex: none;
+      margin-left: auto;
+
+      // 手機換行後回到閱讀起點，不讓短短兩個索引孤立在右側。
+      @media (max-width: 719px) {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+
+  &__intro {
+    max-width: 34em; // 中文行寬用 em，ch 是數字寬會只剩一半字數
+    color: rgba($ink, .82);
+  }
+
+  &__note {
+    margin-top: .7em;
+    font-size: .88rem;
+    color: var(--olive-ink);
+  }
+
+  // 內容要壓在水印之上
+  >.section-label,
+  >.sec__body {
+    position: relative;
+    z-index: var(--z-content);
+  }
+}
+
+// 客製頁右上植物以標題區為定位基準，讓枝葉根部精準貼住下一區的分隔線。
+.cat-lead--custom {
+  position: relative;
+
+  .deco--fern {
+    top: auto;
+    right: calc(-1 * var(--gut));
+    bottom: 0;
+  }
+}
+
+// ---------- 篩選列 ----------
+.cat {
+  position: relative;
+  // 直排引句與典藏標記是絕對定位的，寧可被裁掉也不要撐出橫向捲軸。
+  // ⚠️ 一定要修在會溢出的這一層：body 的 overflow 會上拋給 viewport、
+  //    body 自己變回 visible，擋不住這件事
+  overflow-x: clip;
+  padding-bottom: clamp(40px, 4vw, 88px);
+
+  // 內容壓在裝飾之上
+  >.sec {
+    position: relative;
+    z-index: var(--z-content);
+  }
+
+  // 右側留白處的直排引句（與首頁 .services__vertical 同一組數值）
+  &__vertical {
+    display: none;
+
+    @media (min-width: 1200px) {
+      display: block;
+      position: absolute;
+      // 貼齊版面右緣再往內收，不要黏在螢幕極右側，也不要跑到冊頁界線外
+      right: max(60px, calc(50% - var(--wrap) / 2 + 96px));
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: var(--z-deco);
+      writing-mode: vertical-rl;
+      font-family: "Noto Serif TC", Georgia, serif;
+      font-size: 13px;
+      letter-spacing: .3em;
+      line-height: 1;
+      color: rgba(80, 90, 70, .5);
+      pointer-events: none;
+    }
+  }
+
+  // 右下角典藏標記（與首頁 .services__mark 同一組數值）
+  &__mark {
+    display: none;
+
+    @media (min-width: 900px) {
+      display: block;
+      position: absolute;
+      right: max(24px, calc(50% - var(--wrap) / 2 + 40px));
+      bottom: clamp(16px, 1.4vw, 30px);
+      z-index: var(--z-deco);
+      font-size: 12px; // 全站字級下限 12px
+      letter-spacing: 2px;
+      color: rgba(80, 90, 70, .4);
+      pointer-events: none;
+    }
+  }
+}
+
+// 兩組之間的間距要明顯大於組內的，否則「節日 全部 西元新年 … 版式 全部 直式 …」
+// 會讀成一整排九個選項，兩個「全部」也就分不清楚是哪一組的
+.cat__bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3.6vw, 78px);
+  padding-bottom: clamp(16px, 1.4vw, 26px);
+  border-bottom: 1px solid var(--ink-line);
+}
+
+.filter {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(12px, 1.1vw, 22px);
+  min-width: 0;
+
+  &__label {
+    font-family: "Noto Serif TC", serif;
+    font-size: .86rem;
+    letter-spacing: .16em;
+    color: var(--olive-ink);
+    flex: none;
+  }
+
+  // 選項一律換行，不要壓成一列再裁掉——被裁掉的節日等於不存在。
+  // 間距比舊的底線版小很多：方塊自己就有邊界，再拉開會散成一顆一顆不成一組
+  &__set {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(7px, .65vw, 11px);
+    min-width: 0;
+  }
+}
+
+.catalog-search {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(12px, 1.1vw, 22px);
+  margin-left: auto;
+
+  >span:first-child {
+    font-family: "Noto Serif TC", serif;
+    font-size: .86rem;
+    letter-spacing: .16em;
+    color: var(--olive-ink);
+  }
+
+  &__field {
+    display: flex;
+    align-items: center;
+    min-width: min(250px, 56vw);
+    border-bottom: 1px solid rgba($green-deep, .42);
+  }
+
+  input {
+    min-width: 0;
+    width: 100%;
+    padding: .55em 0;
+    border: 0;
+    color: var(--ink);
+    background: transparent;
+    font: inherit;
+    font-size: .86rem;
+    text-transform: uppercase;
+
+    &::placeholder {
+      color: rgba($ink, .46);
+    }
+  }
+
+  &__clear {
+    min-height: 44px;
+    padding-left: 12px;
+    font-size: .78rem;
+    color: var(--green-deep);
+  }
+}
+
+// ---------- 目前篩選浮條 ----------
+// 捲過篩選列之後浮在導覽下方，回答「我現在在看哪一批」（2026-08-26 用戶指定）。
+// position: fixed 不用 sticky —— sticky 要靠祖先的高度撐，而 .cat 有 overflow-x: clip，
+// 兩者湊在一起的行為在各家瀏覽器不一致。HTML 上它也刻意放在 <main> 外面
+.cat__now {
+  position: fixed;
+  // --nav-h 由 main.js 量出來（導覽高度是 logo 的 clamp 算的，CSS 反推不了）。
+  // 量不到就退回 68，不會壞掉
+  top: calc(var(--nav-h, 68px) + 10px);
+  left: 50%;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px clamp(11px, 1.1vw, 20px);
+  max-width: calc(100vw - 2 * var(--gut));
+  padding: 8px clamp(14px, 1.2vw, 20px);
+  background: var(--paper);
+  border: 1px solid var(--ink-line);
+  box-shadow: 0 14px 30px rgba($ink, .1);
+  opacity: 0;
+  visibility: hidden; // 收起來時要真的離開 Tab 順序，不能只有 opacity: 0
+  transform: translate(-50%, -12px);
+  transition: opacity .32s var(--ease), transform .32s var(--ease), visibility .32s;
+
+  &.is-on {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+  }
+
+  // 「節日 西元新年」這種一組。i 是標籤、b 是值，跟篩選列的 label／按鈕對得起來
+  &__pair {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 7px;
+
+    i {
+      font-family: "Noto Serif TC", serif;
+      font-style: normal;
+      font-size: 12px; // 全站字級下限
+      letter-spacing: .16em;
+      color: var(--olive-ink);
+    }
+
+    // 值用朱紅不用綠：整條浮條與底下的頁面都是綠系，綠字在這裡讀不出「這是重點」。
+    // 朱紅是站上既有的色（印章），6.28:1 過門檻。
+    // 試過 #d17717 那種橘 —— 在宣紙白上只有 3.23:1，沒到本文的 4.5，沒有採用
+    b {
+      font-weight: 400;
+      font-size: .86rem;
+      color: var(--seal); // 6.28:1
+    }
+  }
+
+  // 兩項都是「全部」＝其實沒在篩，值就不要是綠的，免得看起來像正在篩什麼
+  &.is-plain &__pair b {
+    color: rgba($ink, .72);
+  }
+
+  &__count {
+    font-size: 12px;
+    color: var(--olive-ink);
+
+    // 窄畫面先犧牲計數：款數在下面的 .cat__count 也有，浮條要維持一列
+    @media (max-width: 599px) {
+      display: none;
+    }
+  }
+
+  &__back {
+    font-size: 12px;
+    letter-spacing: .1em;
+    color: var(--green-deep);
+    border-bottom: 1px solid rgba($green-deep, .32);
+    transition: border-color .3s var(--ease);
+
+    &::before {
+      content: "↑ ";
+    }
+  }
+
+  &:hover &__back {
+    border-bottom-color: var(--green-deep);
+  }
+}
+
+.cat__count {
+  margin-top: clamp(14px, 1.2vw, 24px);
+  font-size: .86rem;
+  color: var(--olive-ink);
+}
+
+// ---------- 款式格線 ----------
+.cat__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: clamp(20px, 2vw, 42px) clamp(22px, 1.7vw, 34px);
+  margin-top: clamp(20px, 1.9vw, 40px);
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  // 「載入更多」是把 hidden 拿掉而已。下面給了 display 的規則權重比 UA 的
+  // [hidden]{display:none} 高，不補這一條的話 93 張會一次全部畫出來
+  >li[hidden] {
+    display: none;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+// 每張卡固定佔一欄；桌機四張一列。圖片本身仍維持橫式 4:3、直式 3:4，
+// 不用跨欄或外框去強迫兩種比例看起來一樣大。
+
+// 外面是正方形的格位，卡片擺進去。
+// 直式與橫式混排時，用 4:3 的格位會讓直式只用到一半面積；
+// 正方形對兩種版式一樣公平。格位本身不畫線——留白才是主角。
+//
+// 對齊用 end 不用 center：橫式卡在正方形裡置中的話，
+// 卡片下緣與款號之間會空出 40px，款號看起來不像在講上面那張卡。
+// 靠下對齊之後所有卡片站在同一條線上，款號永遠貼著卡片
+.card__media {
+  position: relative;
+}
+
+// 連結本身縮到「剛好等於卡片」——遮罩與「進入瀏覽」才貼得住卡片邊緣，
+// 不會在橫式卡上方多出一塊浮空的綠方塊。
+//
+// ⚠️ 尺寸一律由「寬度」推出來，不要用 height: 100%。
+//    外框的高度是 aspect-ratio 算出來的，對它取百分比高度會形成循環，
+//    Chrome 會退回內容尺寸，連 max-width 都一起失效
+//    —— 症狀是卡片撐爆欄寬、四張連在一起沒有間隙。
+//    橫式：寬度吃滿格位，高度自然是 75%，塞得進正方形。
+//    直式：寬度收到 75%，高度剛好等於格位（75% × 4/3 = 100%）。
+.card__open,
+.card__visual {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 0;
+  box-shadow: 0 4px 16px rgba($ink, .06);
+  transition: transform .55s var(--ease), box-shadow .55s var(--ease);
+  // 防盜第一層：關掉長按選單與文字選取。只擋在圖上，
+  // 整頁擋掉的話客戶連款號都複製不了
+  -webkit-touch-callout: none;
+  user-select: none;
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    // 素材裡有兩張比例不是 4:3（ENY0007 是 1.25、EY0009 是 1.44）。
+    // contain 讓它們留一點宣紙白的邊，不要被拉變形——
+    // 這是挑款目錄，設計本身不能被裁掉也不能走樣
+    object-fit: contain;
+    background: var(--paper);
+    transition: transform .65s var(--ease), filter .65s var(--ease);
+  }
+
+  // 綠帶是實心的，字不會疊在圖上，所以不再需要整片遮罩。
+  // overflow 要關起來：綠帶收起時是往下平移出去的，不關就會露在卡片外面
+  overflow: hidden;
+  padding: 0;
+}
+
+.card__open {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+// 「進入瀏覽」壓在卡片中央（與首頁賀卡架 .deck__enter 同一個做法）
+.card[data-fmt="直式"] {
+  .card__open,
+  .card__visual {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+  }
+
+  // ⚠️ 文字列一定要跟圖片同寬。
+  //    直式的圖只佔欄寬 75% 且置中，文字列若是滿欄寬，款號會落在圖片左緣**再往左 41px**、
+  //    挑款鈕落在右緣再往右 41px（1536 實測）——
+  //    圖與圖之間空 108px、但文字與文字之間只剩 26px，
+  //    看起來就像文字列跟隔壁那張卡是一組的。
+  //
+  //    手機兩欄時 75% 只剩 125px，「款號 ＋ 挑這款」放不進一列會換成兩行 ——
+  //    這是可以接受的：兩行都貼齊圖片左緣，讀起來仍然是同一張卡的說明，
+  //    而且**每一張直式卡都一樣**，不會只有幾張特別高。
+  //    試過改成滿欄寬換取一行，那會把 ±21px 的錯開帶回來，得不償失
+  --meta-w: 100%;
+}
+
+// 「進入瀏覽」：貼在卡片下緣的 50px 實心綠帶，滑過整張卡就升起來。
+//
+// 底色用 --green-deep 不用 --green：白字壓在 --green 上只有 4.11:1，
+// 沒到 PRODUCT.md 訂的本文 4.5（--green-deep 是 7.49）。
+// 要維持 --green 的話字得放大到 24px 才算「大字」、門檻才降到 3，
+// 但 50px 高的帶子塞 24px 的字太重。
+//
+// 用 flex 不用 grid：grid 會把 ::after 的箭頭當成另一個格子，掉到文字下面變兩行
+.card__enter,
+.portfolio-card__enter {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .2em;   // ::after 的箭頭是另一個 flex 項目，前面的空白會被吃掉
+  z-index: var(--z-content);
+  font-size: .84rem;
+  letter-spacing: .16em;
+  color: #fff;
+  background: var(--green-deep);
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity .35s var(--ease), transform .45s var(--ease);
+  pointer-events: none;
+
+  &::after {
+    content: " →";
+  }
+
+  // 觸控裝置沒有 hover，綠帶常駐
+  @media (hover: none) {
+    opacity: 1;
+    transform: none;
+  }
+
+  // 手機兩欄的橫式卡只有約 125px 高，50px 的帶子會吃掉 40%，收一點
+  @media (max-width: 899px) {
+    height: 34px;
+    font-size: .74rem;
+    letter-spacing: .1em;
+  }
+}
+
+// 感應區＝整張卡：滑鼠在卡片任何位置（或鍵盤焦點進到卡片）綠帶就升起來，
+// 不是只有滑到那條帶子上才算
+.card:hover .card__open,
+.card:focus-within .card__open {
+  // 卡片不再上浮；只讓畫面本身緩慢放大，和客製作品使用同一套回饋。
+  transform: none;
+  box-shadow: 0 4px 16px rgba($ink, .06);
+
+  img {
+    transform: scale(1.025);
+    filter: saturate(1.04);
+  }
+
+  .card__enter {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// 卡片下面那一行（款號 ＋ 挑款鈕）。
+//
+// ⚠️ **不要用 `justify-content: space-between`**（2026-08-26 改掉的）。
+//    它把款號推到最左、挑款鈕推到最右，於是：
+//      卡內  款號 → 挑款鈕     1536 實測 198px
+//      卡間  挑款鈕 → 下一款號 1536 實測  26px
+//    **鄰近性整個反過來** —— 眼睛會把「上一張的挑這款」和「下一張的款號」
+//    讀成同一組，掃過去分不出哪一行屬於哪一張卡。
+//    靠左收成一團之後，卡內 14px、卡間 190px 以上，關係才是對的
+.card__meta {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1vw, 18px);
+  flex-wrap: wrap;
+  width: var(--meta-w, 100%);
+  margin-inline: auto;
+}
+
+.card__code {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.02rem;
+  letter-spacing: .1em;
+  color: rgba($ink, .78);
+  transition: color .4s var(--ease);
+}
+
+.card__motion {
+  padding: 1px 6px;
+  border: 1px solid rgba($seal, .38);
+  font-size: .75rem;
+  letter-spacing: .08em;
+  color: var(--seal);
+}
+
+.card:hover .card__code {
+  color: var(--green);
+}
+
+// 原檔還沒補的那幾張：講清楚就好，不要做成警告色。
+// 這是素材狀態，不是錯誤，用醒目的顏色反而在自己的作品頁上大聲承認瑕疵
+.card__soft {
+  flex-basis: 100%;
+  font-size: .76rem;
+  color: var(--olive-ink);
+}
+
+// ---------- 挑款按鈕 ----------
+.card__pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .8rem;
+  letter-spacing: .04em;
+  color: var(--olive-ink);
+  padding: 4px 0;
+  position: relative;
+  transition: color .35s var(--ease);
+
+  // 觸控目標撐到 44px，但不撐開版面（視覺上還是那一小行字）
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 50% 0 auto auto;
+    transform: translateY(-50%);
+    width: 100%;
+    min-width: 88px;
+    height: 44px;
+  }
+
+  &:hover,
+  &[aria-pressed="true"] {
+    color: var(--green-deep); // --green 在宣紙白上只有 4.00:1，見檔頭那段
+  }
+}
+
+.card__box {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  // 核取方塊的邊是「元件邊界」，門檻 3:1。
+  // --olive #97a675 在宣紙白上只有 2.06，看起來會像壞掉的淡框
+  border: 1px solid var(--olive-ink);
+  background: var(--paper);
+  position: relative;
+  transition: background .3s var(--ease), border-color .3s var(--ease);
+}
+
+.card__pick:hover .card__box {
+  border-color: var(--green);
+}
+
+.card__pick[aria-pressed="true"] .card__box {
+  background: var(--green);
+  border-color: var(--green);
+
+  // 勾：兩條邊框轉 45 度。方正無圓角，跟全站一致
+  &::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+  }
+}
+
+// 兩段文字擇一顯示：display:none 會一併從可及性樹移除，
+// 所以讀螢幕拿到的名稱不會兩段都念
+.card__pick[aria-pressed="false"] .card__on,
+.card__pick[aria-pressed="true"] .card__off {
+  display: none;
+}
+
+// ---------- 載入更多 ----------
+.cat__foot {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(26px, 2.6vw, 56px);
+}
+
+.cat__more span {
+  color: var(--olive-ink);
+  font-size: .82rem;
+  letter-spacing: normal;
+}
+
+.cat__more:hover span {
+  color: inherit;
+}
+
+.cat__empty,
+.cat__noscript {
+  color: var(--olive-ink);
+  text-align: center;
+  max-width: 30em;
+  margin-inline: auto;
+}
+
+.cat__noscript {
+  margin-top: clamp(20px, 1.9vw, 40px);
+}
+
+// ---------- 客製案例 ----------
+// 米白底 ＋ 和紙肌理，跟首頁的營業項目區同一套。
+// 整頁都是宣紙白的話，段落之間讀不出節奏；換一塊底色就把「這是另一件事」講清楚了
+.custom {
+  position: relative;
+  overflow-x: clip;
+  // 2026-08-26：下留白從 clamp(52px, 11vw, 210px) 收回來。
+  // 那個值是為了在卡片下方留一條帶子放樹的，樹拿掉之後就只剩一大塊空白
+  padding: clamp(30px, 2.5vw, 52px) 0 clamp(36px, 3vw, 64px);
+  background: var(--cream);
+  border-top: 1px solid var(--ink-line);
+
+  // 和紙肌理：SVG 的 fractalNoise 直接當底紋，不用外部圖檔。
+  // 只有 4.5% 濃度 —— 目的是讓米白底不再是一片死平的色塊，近看才看得出顆粒
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  // 內容要壓在肌理與樹之上
+  >.sec {
+    position: relative;
+    z-index: var(--z-content);
+  }
+
+
+  &__ask {
+    margin-top: clamp(20px, 1.8vw, 38px);
+    font-size: .92rem;
+    color: var(--olive-ink);
+    // 盒子收成文字寬：預設整條 1640 寬的話，右邊那棵樹雖然沒有壓到字，
+    // 但盒子仍然相交，會讓「有沒有疊到」的檢查一直誤報
+    width: fit-content;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+  }
+}
+
+.live a {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 10px;
+  text-decoration: none;
+  position: relative;
+}
+
+// 格位是正方形，卡片**靠下對齊** —— 直式與橫式因此站在同一條底線上，
+// 掃過去看起來大小一致（跟公版格線的 .card__media 同一套做法）。
+//
+// ⚠️ 圖、遮罩、「進入瀏覽」三者都是同一格的 grid 項目，而且**寬度與比例要寫成同一組**。
+//    遮罩若用 position: absolute + inset: 0，它會蓋滿整個正方形 ——
+//    橫式卡上方那塊空白也會一起變暗，看起來像多了一個浮空的綠方塊
+.live__media {
+  grid-area: 1 / 1;
+  position: relative;
+  display: grid;
+  place-items: end center;
+  aspect-ratio: 1 / 1;
+
+  img,
+  &::after,
+  .live__enter {
+    grid-area: 1 / 1;
+    align-self: end;
+    justify-self: center;
+    // 橫式：吃滿格寬。直式的覆寫在下面 .live[data-fmt="直式"]
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  img {
+    object-fit: cover;
+    border: 1px solid var(--ink-line);
+    transition: transform .6s var(--ease);
+  }
+
+  // 遮罩：不壓一層暗色的話，白字疊在亮圖上等於看不到
+  &::after {
+    content: "";
+    background: rgba(74, 90, 52, .88);
+    opacity: 0;
+    transition: opacity .45s var(--ease);
+  }
+}
+
+// 直式 9:16：以「高」為準吃滿格位，寬度由比例算出來（9/16 = 56.25%）
+.live[data-fmt="直式"] .live__media {
+
+  img,
+  &::after,
+  .live__enter {
+    width: 56.25%;
+    aspect-ratio: 9 / 16;
+  }
+}
+
+.live__info {
+  grid-area: 2 / 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+
+  strong {
+    font-family: "Noto Serif TC", serif;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+}
+
+// 松川珈琲是虛構品牌的示意卡，不是真的客戶案例。
+// 放在客製案例區但一定要標出來——不標就是在官網上宣稱做過這個案子
+.live__tag {
+  font-style: normal;
+  font-size: .75rem; // 12px：全站字級下限，不要再往下
+  letter-spacing: .06em;
+  color: var(--olive-ink);
+  border: 1px solid rgba($olive-ink, .38);
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+
+// 「進入瀏覽」。它現在是 .live__media 的子項（HTML 上就放在圖片旁邊），
+// 盒子的寬與比例跟圖片寫成同一組，所以剛好疊在圖上、不會蓋到格位上方的空白
+.live__enter {
+  z-index: var(--z-content);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .92rem;
+  letter-spacing: .16em;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .45s var(--ease), transform .5s var(--ease);
+  pointer-events: none;
+  white-space: nowrap;
+
+  &::after {
+    content: " →";
+  }
+
+  // 觸控裝置沒有 hover，這行字永遠不會出現，卡片看起來就只是一張圖。
+  // 改成貼在圖片下緣的常駐綠帶 —— 跟公版格線的 .card__enter 同一種語彙。
+  // ⚠️ 不能只把 opacity 打開：那層暗色遮罩同樣是 hover 才有的，白字疊亮圖還是看不到
+  @media (hover: none) {
+    align-self: end;
+    height: 44px;
+    aspect-ratio: auto; // 蓋掉上面跟圖片同比例的設定，只要一條帶子
+    opacity: 1;
+    transform: none;
+    background: var(--green-deep);
+    font-size: .82rem;
+    letter-spacing: .12em;
+  }
+}
+
+@media (hover: none) {
+
+  .live__media {
+    margin-bottom: 4px;
+  }
+}
+
+.live a:hover,
+.live a:focus-visible {
+  .live__media img {
+    transform: scale(1.03);
+  }
+
+  .live__media::after {
+    opacity: 1;
+  }
+
+  .live__enter {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ---------- 水彩裝飾（reference\material\ 轉出來的，見 _驗證工具uild_deco.py）----------
+// 一律 aria-hidden ＋ pointer-events: none：純裝飾，不進可及性樹、不擋點擊。
+// 位置都錨在「版面界線」上（跟直排引句、典藏標記同一條），
+// 不用 vw 亂放 —— 那樣在寬螢幕會飄到內容上面
+// 裝飾的定位基準：滿版的 <main>（見 .cat-lead 上面那段註解）
+main {
+  position: relative;
+}
+
+.deco {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  right: 0; // ＝ 視窗右緣
+  z-index: var(--z-deco);
+
+  @media (min-width: 1200px) {
+    display: block;
+  }
+}
+
+// 一個區塊放一個素材，不重複疊放。
+// 尺寸刻意放大：原本 60–110px 在 1536 的畫面上小到看不出是什麼
+
+// 兩張都貼齊視窗右緣（right: 0 寫在 .deco，定位基準是 <main>）。
+// top 是相對 <main> 的上緣 —— .cat-lead 是 main 的第一個子項，
+// 兩者的上緣同一條線，所以這裡的數值跟以前一樣讀
+//
+// 透明度壓到 .26 並降一點彩度 —— 這是背景層的東西，
+// 太顯眼會跟內容搶，PRODUCT.md 訂的是「留白是主角」
+.deco--mono {
+  top: -14px;
+  width: clamp(150px, 15vw, 260px);
+  opacity: .26;
+  filter: saturate(.82);
+}
+
+.deco--fern {
+  top: 4px;
+  width: clamp(170px, 17vw, 300px);
+  opacity: .26;
+  filter: saturate(.82);
+}
+
+// 頁尾接縫：.contact 是 background: none（山稜線以上是透明的，
+// 給實色會變成一條浮在山丘上方的深色帶）。首頁上一段本來就是宣紙白所以看不出來，
+// 但這一頁上一段是米白 → 交界處出現一條硬邊，看起來像頁尾被截斷。
+// 解法是讓米白往下延伸到山丘為止：同一個顏色接下去就沒有交界。
+// 只在客製頁生效（.custom 只有那一頁有），首頁的頁尾一個字都沒動
+.custom+.contact {
+  background: var(--cream);
+}
+
+// ---------- 客製案例：一條軌道、直橫混排 ----------
+// 2026-08-26 從「直式一列＋橫式一列」改過來的。用戶回饋：
+//   「目前分上下兩排，一個螢幕高度不夠全面看到，而且大小不一，
+//     需要再思考呈現方式，可直式橫式一起瀏覽，取消五張限制」
+//
+// 做法照抄公版格線那一套：**格位是正方形、卡片靠下對齊**。
+// 直式 9:16 吃滿格高、橫式 16:9 吃滿格寬，兩種版式站在同一條底線上，
+// 所以看起來大小一致，也不必為兩種比例各寫一組尺寸。
+// 一列就看得完（原本兩列疊起來一個螢幕裝不下）。
+//
+// 在這個基礎上再套 3D 旋轉木馬（見下面的 .cases__track .owl-item）。
+// ⚠️ 2026-08-26 我一度把 3D 拿掉，判斷它是「大小不一」的原因 —— **那個判斷是錯的**：
+//    真正的原因是直式一列、橫式一列各用一套尺寸規則（直式定高、橫式定寬）。
+//    格位統一成正方形之後，「有 3D」與「每一格一樣大」可以並存，不必二選一
+//
+// 寬度走 --wide 1640（與首頁的作品輪播同一條）。
+// ⚠️ 超寬元素用 margin-inline: auto 不會置中，要換算成負的邊界值
+.cases {
+  --w: min(var(--wide), 100vw - 2 * var(--gut));
+  width: var(--w);
+  margin-inline: calc((100% - var(--w)) / 2);
+  margin-top: clamp(20px, 1.9vw, 40px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 20px);
+
+  // 左右箭頭。做成自己的按鈕而不是 Owl 的 nav，樣式好控制
+  &__nav {
+    flex: none;
+    width: 44px;    // 觸控目標下限
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba($green-deep, .4);
+    background: var(--paper);
+    transition: background .35s var(--ease), border-color .35s var(--ease);
+
+    // 箭頭用兩條邊框轉 45 度畫，不用字型也不用圖檔
+    &::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border: solid var(--green-deep);
+      border-width: 2px 2px 0 0;
+    }
+
+    &--prev::before {
+      transform: rotate(-135deg);
+      margin-left: 3px;
+    }
+
+    &--next::before {
+      transform: rotate(45deg);
+      margin-right: 3px;
+    }
+
+    &:hover {
+      background: var(--mint-soft);
+      border-color: var(--green-deep);
+    }
+  }
+}
+
+// Owl 的 .owl-carousel 預設 display:none，JS 沒跑就整區空白。
+// 先用 grid 撐著，Owl 起來之後掛上 .owl-loaded 再交還給它
+// 軌道本身。Owl 起來之前是 grid（避免整排疊成一直行閃一下）
+.cases__track {
+  // ⚠️ flex 項目預設 min-width: auto 會被內容撐開。
+  //    少了這一行，Owl 的 .owl-stage-outer 會被整條 stage 撐到一萬多 px 寬，
+  //    卡片全部溢出容器、左右箭頭也被推到畫面外
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  // Owl 起來之前的暫時排法，欄數要跟 inline script 的 items 對齊，
+  // 不然載入的那一瞬間會先看到不同的排列再跳一次
+  @media (min-width: 560px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  &.owl-loaded {
+    display: block;
+  }
+}
+
+// ---------- 3D 旋轉木馬 ----------
+// 正中央那格站正，往兩側依序縮小、往後轉。
+//
+// 透視寫在每一格自己身上（`perspective()` 函式）**不要**寫在 .owl-stage 上 ——
+// Owl 會對 stage 下 translate3d，帶 transform 的父層會把透視原點一起帶著跑，
+// 結果是整排一起歪掉而不是各自往後轉。
+//
+// 這一套建立在「每一格都是同樣大小的正方形」上（見 .live__media）：
+// 格位統一之後，縮放差異讀起來是「深度」，不是「這幾張卡比較小」
+.cases__track {
+  .owl-item {
+    transition: transform .55s var(--ease), opacity .55s var(--ease), filter .55s var(--ease);
+    transform: perspective(1600px) scale(.74);
+    opacity: .42;
+    filter: saturate(.7);
+  }
+
+  .owl-item.center {
+    transform: none;
+    opacity: 1;
+    filter: none;
+    z-index: var(--z-content);
+  }
+
+  // 中央右邊第一、第二格
+  .owl-item.center+.owl-item {
+    transform: perspective(1600px) rotateY(-16deg) scale(.9);
+    transform-origin: left center;
+    opacity: .8;
+  }
+
+  .owl-item.center+.owl-item+.owl-item {
+    transform: perspective(1600px) rotateY(-24deg) scale(.78);
+    transform-origin: left center;
+    opacity: .5;
+  }
+
+  // 中央左邊第一、第二格。:has() 不支援的舊瀏覽器只是少了左側的傾斜，其餘照常
+  .owl-item:has(+ .owl-item.center) {
+    transform: perspective(1600px) rotateY(16deg) scale(.9);
+    transform-origin: right center;
+    opacity: .8;
+  }
+
+  .owl-item:has(+ .owl-item+.owl-item.center) {
+    transform: perspective(1600px) rotateY(24deg) scale(.78);
+    transform-origin: right center;
+    opacity: .5;
+  }
+}
+
+// 關掉動態時位置照樣正確，只是切換不補間
+@media (prefers-reduced-motion: reduce) {
+  .cases__track .owl-item {
+    transition: none;
+  }
+}
+
+// 佔位卡：沒有連結、不吃 hover，一眼看得出是還沒有的東西
+.live--soon {
+  .live__media img {
+    border-style: dashed;
+  }
+
+  .live__info strong {
+    font-weight: 400;
+    color: var(--olive-ink);
+  }
+}
+
+// ---------- 客製案例：精品展廊 ----------
+// 大舞台負責說完整的設計故事，下方縮圖列讓多個品牌同時可見。
+// 縮圖只切換舞台；「觀看動畫」才開 Fancybox iframe，避免誤觸。
+.case-showcase {
+  margin-top: clamp(16px, 1.5vw, 28px);
+}
+
+.case-showcase__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.38fr) minmax(300px, .62fr);
+  min-height: clamp(420px, 48vh, 540px);
+  overflow: hidden;
+  border: 1px solid rgba($green-deep, .18);
+  background: rgba($paper, .82);
+  box-shadow: 0 30px 80px rgba($ink, .11);
+  scroll-margin-top: 92px;
+
+  @media (max-width: 999px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.case-showcase__visual {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  min-height: clamp(420px, 48vh, 540px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(24px, 3vw, 48px);
+  background:
+    radial-gradient(circle at 68% 28%, rgba(214, 234, 212, .24), transparent 34%),
+    linear-gradient(145deg, #334524 0%, #1e2d17 58%, #14220f 100%);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    border: 1px solid rgba(239, 238, 219, .16);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &::before {
+    width: min(44vw, 660px);
+    aspect-ratio: 1;
+    right: -18%;
+    top: -46%;
+  }
+
+  &::after {
+    width: min(30vw, 450px);
+    aspect-ratio: 1;
+    left: -12%;
+    bottom: -38%;
+  }
+
+  figcaption {
+    position: absolute;
+    left: clamp(20px, 2.2vw, 42px);
+    bottom: clamp(18px, 1.8vw, 32px);
+    z-index: 2;
+    font-size: .75rem;
+    letter-spacing: .12em;
+    color: rgba(240, 244, 230, .72);
+  }
+}
+
+.case-showcase__halo {
+  position: absolute;
+  width: min(32vw, 510px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(239, 238, 219, .12);
+  box-shadow:
+    0 0 0 34px rgba(239, 238, 219, .035),
+    0 0 0 72px rgba(239, 238, 219, .02);
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+
+.case-showcase__art {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: min(84%, 650px);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 100%;
+  text-decoration: none;
+  box-shadow: 0 28px 55px rgba(9, 17, 7, .38);
+  transition: opacity .3s ease;
+
+  img {
+    display: block;
+  }
+
+  &[data-crop="side-bars"] {
+    img {
+      position: absolute;
+      top: -2.5%;
+      left: -25%;
+      width: 150%;
+      max-width: none;
+    }
+  }
+
+  &[data-crop="letterbox"] {
+    height: min(470px, 75vw);
+    aspect-ratio: 3 / 4;
+
+    img {
+      position: absolute;
+      top: -16.667%;
+      left: 0;
+      width: 100%;
+      max-width: none;
+    }
+  }
+
+  &[data-crop="portrait"] {
+    height: min(500px, 78vw);
+    aspect-ratio: 9 / 16;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &[data-crop="landscape"] {
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.case-showcase__visual.is-playing {
+  .case-showcase__art,
+  .case-showcase__halo,
+  figcaption,
+  &::before,
+  &::after {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.case-showcase__iframe {
+  position: absolute;
+  inset: 10%;
+  z-index: 5;
+  width: 80%;
+  height: 80%;
+  border: 0;
+  background: transparent;
+  box-shadow: 0 24px 58px rgba(9, 17, 7, .35);
+}
+
+.case-showcase__story {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(28px, 3vw, 50px) clamp(24px, 2.7vw, 44px);
+
+  &::before {
+    content: "MUMU / CUSTOM";
+    position: absolute;
+    right: 22px;
+    top: 20px;
+    writing-mode: vertical-rl;
+    font-family: "Cormorant Garamond", serif;
+    font-size: .72rem;
+    letter-spacing: .2em;
+    color: rgba($olive-ink, .3);
+  }
+
+  h2 {
+    max-width: 10em;
+    margin-top: clamp(8px, .8vw, 14px);
+    font-size: clamp(1.5rem, 2vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.38;
+  }
+}
+
+.case-showcase__eyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  letter-spacing: .08em;
+  color: var(--olive-ink);
+
+  span {
+    font-size: 2.1rem;
+    color: var(--green-deep);
+  }
+}
+
+.case-showcase__client {
+  margin-top: 6px;
+  font-size: .8rem;
+  letter-spacing: .14em;
+  color: var(--olive-ink);
+}
+
+.case-showcase__idea {
+  max-width: 32em;
+  margin-top: clamp(16px, 1.6vw, 26px);
+  padding-left: 20px;
+  border-left: 1px solid rgba($green-deep, .3);
+
+  h3 {
+    margin-bottom: 10px;
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: .78rem;
+    font-weight: 500;
+    letter-spacing: .18em;
+    color: var(--green-deep);
+  }
+
+  p {
+    color: rgba($ink, .8);
+    line-height: 1.75;
+  }
+}
+
+.case-showcase__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+
+  li {
+    padding: 5px 10px;
+    border: 1px solid rgba($olive-ink, .26);
+    font-size: .72rem;
+    letter-spacing: .08em;
+    color: var(--olive-ink);
+  }
+}
+
+.case-showcase__open {
+  align-self: flex-start;
+  margin-top: clamp(18px, 1.8vw, 28px);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.case-showcase__index {
+  margin-top: clamp(14px, 1.3vw, 22px);
+}
+
+.case-showcase__index-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--ink-line);
+
+  p {
+    font-family: "Noto Serif TC", serif;
+    letter-spacing: .14em;
+
+    small {
+      margin-left: .7em;
+      font-family: "Noto Sans TC", sans-serif;
+      font-size: .72rem;
+      font-weight: 300;
+      letter-spacing: .08em;
+      color: var(--olive-ink);
+    }
+  }
+
+  span {
+    font-size: .75rem;
+    color: var(--olive-ink);
+  }
+}
+
+.case-showcase__index-tools,
+.case-showcase__arrows {
+  display: flex;
+  align-items: center;
+}
+
+.case-showcase__index-tools {
+  gap: 14px;
+}
+
+.case-showcase__arrows {
+  gap: 6px;
+
+  button {
+    width: 34px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba($green-deep, .28);
+    background: rgba($paper, .78);
+    color: var(--green-deep);
+    line-height: 1;
+    cursor: pointer;
+    transition: color .25s ease, background .25s ease, opacity .25s ease;
+
+    &:hover:not(:disabled) {
+      color: var(--paper);
+      background: var(--green-deep);
+    }
+
+    &:disabled {
+      opacity: .3;
+      cursor: default;
+    }
+  }
+}
+
+.case-showcase__thumbs {
+  --case-gap: clamp(8px, .8vw, 14px);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 4 * var(--case-gap)) / 5);
+  align-items: stretch;
+  gap: var(--case-gap);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pan-y;
+  cursor: grab;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &.is-dragging {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+    cursor: grabbing;
+  }
+
+  @media (max-width: 1199px) {
+    grid-auto-columns: calc((100% - 2 * var(--case-gap)) / 3);
+  }
+}
+
+.case-thumb {
+  display: grid;
+  grid-template-columns: minmax(74px, 44%) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(12px, 1.2vw, 20px);
+  height: 100%;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid transparent;
+  background: rgba($paper, .34);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  scroll-snap-align: start;
+  user-select: none;
+  transition: transform .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease), box-shadow .4s var(--ease);
+
+  &:focus-visible {
+    outline: 2px solid var(--green-deep);
+    outline-offset: -3px;
+  }
+
+  &:hover,
+  &.is-active {
+    border-color: rgba($green-deep, .38);
+    background: rgba($paper, .88);
+    box-shadow: 0 14px 34px rgba($ink, .09);
+  }
+
+  &.is-active {
+    box-shadow: inset 3px 0 0 var(--green-deep), 0 14px 34px rgba($ink, .09);
+  }
+}
+
+.case-thumb__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #fff;
+
+  img {
+    display: block;
+    max-width: none;
+  }
+
+  &[data-crop="side-bars"] img {
+    position: absolute;
+    top: -2.5%;
+    left: -25%;
+    width: 150%;
+  }
+
+  &[data-crop="letterbox"] img {
+    position: absolute;
+    top: -16.667%;
+    width: auto;
+    height: 133.334%;
+  }
+
+  &[data-crop="portrait"] img {
+    width: auto;
+    height: 100%;
+  }
+
+  &[data-crop="landscape"] img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.case-thumb__meta {
+  min-width: 0;
+
+  small,
+  strong,
+  em {
+    display: block;
+  }
+
+  small {
+    font-family: "Cormorant Garamond", serif;
+    font-size: .76rem;
+    letter-spacing: .08em;
+    color: var(--olive-ink);
+  }
+
+  strong {
+    margin-top: 5px;
+    font-family: "Noto Serif TC", serif;
+    font-weight: 500;
+    font-size: clamp(.86rem, 1vw, 1rem);
+  }
+
+  em {
+    width: fit-content;
+    margin-top: 5px;
+    padding: 1px 5px;
+    border: 1px solid rgba($olive-ink, .3);
+    font-size: .68rem;
+    font-style: normal;
+    color: var(--olive-ink);
+  }
+
+  &::after {
+    content: "點選觀看 →";
+    display: block;
+    margin-top: 7px;
+    font-size: .68rem;
+    letter-spacing: .06em;
+    color: var(--olive-ink);
+  }
+}
+
+.case-thumb.is-active .case-thumb__meta::after {
+  content: "目前顯示";
+  color: var(--green-deep);
+}
+
+@media (max-width: 699px) {
+  .case-showcase__stage {
+    min-height: 0;
+  }
+
+  .case-showcase__visual {
+    min-height: min(112vw, 480px);
+    padding: 28px 20px 52px;
+  }
+
+  .case-showcase__story {
+    padding: 34px 24px 42px;
+  }
+
+  .case-showcase__thumbs {
+    gap: 8px;
+  }
+
+  .case-thumb {
+    display: block;
+    padding: 6px;
+  }
+
+  .case-thumb__meta {
+    padding: 8px 2px 4px;
+
+    small {
+      display: none;
+    }
+
+    strong {
+      margin-top: 0;
+      font-size: .76rem;
+    }
+
+    em {
+      font-size: .62rem;
+    }
+
+    &::after {
+      margin-top: 5px;
+      font-size: .62rem;
+    }
+  }
+}
+
+// Fancybox iframe：維持大量留白，X 是唯一框線型控制，不再加第二組「另開」按鈕。
+.fancybox__container {
+  --fancybox-bg: rgba(28, 35, 22, .9);
+}
+
+.fancybox__slide.has-iframe .f-html {
+  width: min(84vw, 1080px);
+  height: min(78vh, 720px);
+  padding: 0;
+  background: var(--paper);
+  box-shadow: 0 24px 80px rgba(#000, .24);
+}
+
+// Fancybox 預設把 X 放在內容框上方；改收進白色視窗右上角，
+// 並取消為外凸按鈕預留的空間，避免看起來像浮在框外。
+.fancybox__slide.has-iframe.has-close-btn {
+  padding-top: 8px;
+}
+
+.fancybox__container .f-button.is-close-button,
+.fancybox__container [data-fancybox-close] {
+  --f-button-width: 44px;
+  --f-button-height: 44px;
+  --f-button-bg: #fff;
+  --f-button-hover-bg: var(--mint-soft);
+  --f-button-color: var(--green-deep);
+  top: 12px;
+  right: 12px;
+  border: 1px solid rgba($green-deep, .18);
+}
+
+// ---------- 挑款清單：固定在畫面底部 ----------
+.pick {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: var(--z-nav);
+}
+
+// 展開的縮圖清單。列在這裡一律換行不裁切，
+// 被裁掉的款號＝客戶以為沒挑到
+.pick__panel {
+  background: var(--paper);
+  border-top: 1px solid var(--ink-line);
+  max-height: 38vh;
+  overflow-y: auto;
+}
+
+.pick__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: min(var(--wrap), 100% - 2 * var(--gut));
+  margin-inline: auto;
+  padding: 16px 0;
+}
+
+.picked {
+  position: relative;
+  width: 74px;
+
+  img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    background: var(--paper);
+    border: 1px solid var(--ink-line);
+  }
+
+  figcaption {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: .8rem;
+    letter-spacing: .06em;
+    color: var(--olive-ink);
+    text-align: center;
+    margin-top: 3px;
+  }
+}
+
+// 取消鈕壓在縮圖右上角。44px 的觸控目標由 ::before 撐出來
+.picked__off {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  font-size: .8rem;
+  line-height: 1;
+  color: var(--paper);
+  background: var(--green-deep);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+  }
+
+  &:hover {
+    background: var(--ink);
+  }
+}
+
+.pick__bar {
+  background: var(--cream);
+  border-top: 1px solid rgba($ink, .16);
+}
+
+.pick__inner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px clamp(12px, 1.4vw, 26px);
+  padding: 12px 0;
+}
+
+.pick__count {
+  font-family: "Noto Serif TC", serif;
+  font-size: .95rem;
+  color: var(--ink);
+  margin-right: auto;
+}
+
+.pick__toggle {
+  font-size: .84rem;
+  color: var(--green-deep);
+  border-bottom: 1px solid rgba($green, .4);
+  padding: 4px 0;
+  transition: border-color .4s;
+
+  &:hover {
+    border-bottom-color: var(--green-deep);
+  }
+
+  &[aria-expanded="true"]::after {
+    content: "（收起）";
+  }
+}
+
+.pick__acts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px clamp(10px, 1vw, 18px);
+
+  .btn {
+    padding: .62em 1.3em;
+    font-size: .84rem;
+  }
+}
+
+.pick__clear {
+  font-size: .82rem;
+  color: var(--olive-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 4px 2px;
+
+  &:hover {
+    color: var(--ink);
+  }
+}
+
+// 挑款列蓋在頁面底部，不讓出空間的話頁尾最後一段與鍵盤焦點都會被它壓住。
+// scroll-padding 讓錨點與 Tab 捲動時自動避開這條列
+body.has-pick {
+  padding-bottom: 96px;
+}
+
+html:has(.pick:not([hidden])) {
+  scroll-padding-bottom: 110px;
+}
+
+// ---------- 手機 ----------
+@media (max-width: 899px) {
+  .cat__bar {
+    gap: 14px;
+  }
+
+  .filter {
+    width: 100%;
+  }
+
+  .catalog-search {
+    width: 100%;
+    margin-left: 0;
+
+    &__field {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  .pick__inner {
+    padding: 10px 0;
+  }
+
+  .pick__count {
+    width: 100%;
+    margin-right: 0;
+    font-size: .9rem;
+  }
+
+  .pick__acts {
+    width: 100%;
+
+    .btn {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+  }
+
+  body.has-pick {
+    padding-bottom: 148px;
+  }
+
+  html:has(.pick:not([hidden])) {
+    scroll-padding-bottom: 160px;
+  }
+}
+
+// ---------- 關閉動態 ----------
+// 全站鐵律：關掉動態時內容照樣完整，只是不動
+@media (prefers-reduced-motion: reduce) {
+
+  .card__open,
+  .card__enter,
+  .portfolio-card__enter,
+  .portfolio-card__media img,
+  .card__code,
+  .live__media img,
+  .live__media::after,
+  .live__enter,
+  .card__box,
+  .card__pick {
+    transition: none;
+  }
+
+  .card:hover .card__open,
+  .card:focus-within .card__open {
+    transform: none;
+  }
+
+  .card:hover .card__open img,
+  .card:focus-within .card__open img,
+  .portfolio-card > a:hover .portfolio-card__media img,
+  .portfolio-card > a:focus-visible .portfolio-card__media img {
+    transform: none;
+  }
+
+  .live a:hover .live__media img,
+  .live a:focus-visible .live__media img {
+    transform: none;
+  }
+}

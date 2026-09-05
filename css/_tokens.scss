@@ -1,0 +1,62 @@
+// ============================================
+// 木木文化 設計 tokens：全站共用
+// style.scss（首頁）與 e-cards.scss（電子賀卡目錄）都 @use 這一支
+//
+// 兩件事都放在這裡，不要拆開：
+//   1. SCSS 變數 $green …    → 給 rgba($green, .4) 這種需要在編譯期算的地方用
+//   2. :root 的 CSS 變數     → 給一般樣式用，也是日後換色唯一要改的地方
+// 只有 :root 那一段會產出 CSS，SCSS 變數本身不佔任何位元組
+// ============================================
+
+// ---------- Tokens ----------
+$paper: #fcfcfa; // 宣紙白
+$cream: #efeedb; // 品牌米白：區塊底色
+$ink: #33291f; // 品牌深棕（logo「文化」）
+$ink-line: rgba($ink, .13);
+// ⚠️ 綠色分兩支，用途不能混（2026-08-25 全站統一）
+//   --green      填色、線條、圖形。非文字元件的對比門檻是 3:1，4.00 有過
+//   --green-deep 「字」一律用這支，含字底下的那條底線
+//
+// 實測：--green #6f8544 在宣紙白 #fcfcfa 上只有 **4.00:1**，
+// PRODUCT.md 訂的本文門檻是 4.5，差一點點；白字壓在 --green 上是 4.11:1。
+// --green-deep #4a5a34 對宣紙白是 7.49:1，白字壓上去也是 7.49:1。
+// 以前只有 e-cards.scss 在自己那一頁覆寫，首頁沒動 —— 現在統一在這裡定規則
+$green: #6f8544; // 主綠：填色與線條
+$green-deep: #4a5a34; // 深綠：所有綠色的「字」
+$olive: #97a675; // 橄欖綠
+$olive-ink: #64703f; // 深橄欖（小字）
+$mint: #d6ead4; // 淺薄荷
+$mint-soft: #e8f2e6;
+// 朱紅：印章，以及「目前正在篩選」的值（e-cards 的 .cat__now）。
+// 用得很省是刻意的 —— 它是全站唯一的暖色，出現一次就會被看見，
+// 到處用就沒有指向性了。對宣紙白 6.28:1
+$seal: #a63a2e;
+
+:root {
+  --paper: #{$paper};
+  --cream: #{$cream};
+  --ink: #{$ink};
+  --ink-line: #{$ink-line};
+  --green: #{$green};
+  --green-deep: #{$green-deep};
+  --olive: #{$olive};
+  --olive-ink: #{$olive-ink};
+  --mint: #{$mint};
+  --mint-soft: #{$mint-soft};
+  --seal: #{$seal};
+
+  --wrap: 1920px; // 版面上限（設計稿頁寬）
+  --inner: 1440px; // 主內容欄：頁寬 1920 左右各留 240
+  --wide: 1640px; // 作品／賀卡輪播：刻意比內容欄寬（左右各留 140）
+  --gut: clamp(20px, 4.5vw, 72px);
+  // 區塊留白改用 vw：設計稿是固定寬度的畫面，vh 會隨視窗高度飄動而對不上
+  --pad-l: clamp(46px, 4.7vw, 96px); // 一般段落上下留白
+  --label-gap: clamp(18px, .95vw, 24px);
+  --ease: cubic-bezier(.16, 1, .3, 1);
+
+  --z-frame: 1;
+  --z-deco: 2;
+  --z-content: 3;
+  --z-nav: 10;
+  --z-skip: 20;
+}

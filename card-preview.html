@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="木木文化電子賀卡動態預覽">
+  <title>電子賀卡動態預覽｜木木文化</title>
+  <link rel="icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/card-preview.css">
+</head>
+<body class="preview-page">
+  <a class="skip" href="#main">跳到主要內容</a>
+
+  <header class="preview-head">
+    <a class="preview-head__brand" href="index.html"><img src="images/logo.png" alt="木木文化 設計印刷" width="650" height="125"></a>
+    <a class="preview-head__back" href="e-cards.html">← 返回公版款式</a>
+  </header>
+
+  <main class="preview" id="main">
+    <div class="preview__art" id="previewArt">
+      <div class="preview__card" id="previewCard">
+        <img id="previewImage" src="" alt="" draggable="false">
+        <span class="preview__light" aria-hidden="true"></span>
+      </div>
+      <p class="preview__hint">動畫會自動播放</p>
+    </div>
+
+    <div class="preview__info">
+      <p class="section-label">動態賀卡預覽</p>
+      <h1 id="previewTitle">載入款式中</h1>
+      <p class="preview__meta" id="previewMeta"></p>
+      <p class="preview__copy">此頁以所選賀卡本身示範進場效果；完成客製後，可依品牌與賀詞設計專屬動畫。</p>
+      <button class="btn btn--solid preview__pick" id="previewPick" type="button" aria-pressed="false">加入清單</button>
+      <p class="preview__pick-state" id="previewPickState" role="status" aria-live="polite">尚未加入清單</p>
+    </div>
+  </main>
+
+  <p class="preview-error" id="previewError" hidden>找不到這個款式，請返回款式一覽重新選擇。</p>
+
+  <script src="scripts/e-cards-data.js"></script>
+  <script src="scripts/card-preview.js"></script>
+</body>
+</html>

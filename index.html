@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap">
 <link rel="stylesheet" href="scripts/owl-carousel/owl-carousel.min.css">
+<link rel="stylesheet" href="scripts/lenis/lenis.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -20,6 +21,10 @@
 <!-- 版面範圍線：像冊頁的左右界線，提示內容範圍 -->
 <div class="frame" aria-hidden="true"></div>
 
+<!-- #nav -->
+<!-- 這一段是全站共用的，來源是 _partials/nav.html。
+     不要直接改頁面裡的 nav —— 下次跑 build_pages.py 會被覆蓋回去。
+     {{...}} 由 build_pages.py 依頁面代換，對應表寫在那支腳本裡 -->
 <header class="nav" id="nav">
   <div class="nav__inner wrap">
     <a class="nav__brand" href="#top"><img src="images/logo.png" alt="木木文化 設計印刷" width="650" height="125"></a>
@@ -34,13 +39,19 @@
       <a href="#about">關於木木</a>
       <a href="#services">營業項目</a>
       <a href="#works">設計作品</a>
-      <a href="#promo">賀卡檔期</a>
+      <!-- 電子賀卡：2026-08-25 用戶指定把下拉子選單整個拿掉，回到一般連結。
+           要切換公版／客製走內頁標題區那條第二層導覽（.pagenav），
+           首頁則是「賀卡最新消息」那兩個入口。
+           首頁指向本頁的 #promo，內頁指向 e-cards.html。
+           aria-current="page" ＝ 就是這一頁；"true" ＝ 目前所在的單元 -->
+      <a href="#promo">電子賀卡</a>
       <a href="#flow">訂購流程</a>
       <a href="#contact">與我聯絡</a>
     </nav>
-    <a class="nav__cta" href="#contact">LINE 詢價</a>
+    <a class="nav__cta btn btn--ghost btn--compact" href="#contact">LINE 詢價</a>
   </div>
 </header>
+<!-- /#nav -->
 
 <main id="main">
 
@@ -122,7 +133,7 @@
               </a></div>
             </div>
             <div class="orbit__item" style="--a: 120deg">
-              <div class="orbit__face"><a class="orbit__inner" href="#promo" aria-label="電子賀卡">
+              <div class="orbit__face"><a class="orbit__inner" href="e-cards.html" aria-label="電子賀卡">
                 <span class="orbit__bubble"><img class="ic" src="images/icons/thank-you-card.png" alt="" width="512" height="512" loading="lazy"><span class="orbit__name">電子賀卡</span></span>
                 <span class="orbit__note">會動的節慶問候</span>
               </a></div>
@@ -159,7 +170,7 @@
           <!-- 窄螢幕：環形改為條列 -->
           <ul class="rings__list">
             <li><a href="#works"><span class="orbit__bubble"><img class="ic" src="images/icons/art.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">名片設計</span><span class="orbit__note">從聽故事開始</span></a></li>
-            <li><a href="#promo"><span class="orbit__bubble"><img class="ic" src="images/icons/thank-you-card.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">電子賀卡</span><span class="orbit__note">會動的節慶問候</span></a></li>
+            <li><a href="e-cards.html"><span class="orbit__bubble"><img class="ic" src="images/icons/thank-you-card.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">電子賀卡</span><span class="orbit__note">會動的節慶問候</span></a></li>
             <li><a href="#works"><span class="orbit__bubble"><img class="ic" src="images/icons/business-card-design.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">名片印刷</span><span class="orbit__note">紙材親手挑</span></a></li>
             <li><a href="#contact"><span class="orbit__bubble"><img class="ic" src="images/icons/tag.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">吊牌店卡</span><span class="orbit__note">小物講究細節</span></a></li>
             <li><a href="#contact"><span class="orbit__bubble"><img class="ic" src="images/icons/message.png" alt="" width="512" height="512" loading="lazy"></span><span class="orbit__name">信封信紙</span><span class="orbit__note">整套品牌語氣</span></a></li>
@@ -216,16 +227,20 @@
 
   <!-- ── 賀卡檔期：微 3D 展開，點選進入 ── -->
   <section class="promo sec wrap" id="promo">
-    <p class="section-label">最新消息</p>
+    <p class="section-label">賀卡最新消息</p>
     <div class="sec__body">
       <div class="promo__head">
         <div class="promo__lead">
           <h2>年末年初賀卡檔期開放預約</h2>
           <p class="promo__intro">動態電子賀卡，一條連結手機與電腦都好看，每款都含直式與橫式雙版本。點選任一款進入實際瀏覽，旺季建議提前四週預約。</p>
         </div>
-        <div class="tabs" role="tablist" aria-label="賀卡分類">
-          <button class="tabs__btn is-on" type="button" role="tab" aria-selected="true">範本</button>
-          <button class="tabs__btn" type="button" role="tab" aria-selected="false">客製</button>
+        <!-- 這兩個不是分頁切換，是連往內頁的入口，所以用 <a> 不用 role="tab"。
+             樣式走 index-switch（跟內頁第二層導覽同一套），不要再包 .btn。
+             容器刻意不叫 .tabs：main.js 的 tabs() 會抓 .tabs 去做「切換高亮」，
+             那是給同頁切換用的，套在連結上會在跳頁前先閃一下 -->
+        <div class="promo__go">
+          <a href="e-cards.html">公版款式</a>
+          <a href="custom-cards.html">客製案例</a>
         </div>
       </div>
 
@@ -234,7 +249,7 @@
         <div class="deck__page">
           <div class="deck__row deck__row--v">
             <div class="deck__item deck__item--v">
-              <a href="#promo" aria-label="瀏覽 十二生肖・羊年 賀卡">
+              <a href="e-cards.html?f=EY8" aria-label="瀏覽 十二生肖・羊年 賀卡">
                 <span class="deck__media"><img src="images/e-card/羊年-直式.jpg" alt="十二生肖・羊年" width="600" height="800" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>十二生肖・羊年</strong>
@@ -243,7 +258,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--v">
-              <a href="#promo" aria-label="瀏覽 西元新年 賀卡">
+              <a href="e-cards.html?f=ENY" aria-label="瀏覽 西元新年 賀卡">
                 <span class="deck__media"><img src="images/e-card/西元-直式.jpg" alt="西元新年" width="600" height="801" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>西元新年</strong>
@@ -252,7 +267,8 @@
               </a>
             </div>
             <div class="deck__item deck__item--v">
-              <a href="#promo" aria-label="瀏覽 聖誕・年末問候 賀卡">
+              <!-- 公版沒有聖誕這一類，但這張動態卡是真的能看的，直接送過去 -->
+              <a href="cards/CH2026001/" aria-label="瀏覽 聖誕・年末問候 賀卡">
                 <span class="deck__media"><img src="images/e-card/聖誕-直式.jpg" alt="聖誕・年末問候" width="600" height="803" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>聖誕・年末問候</strong>
@@ -263,7 +279,7 @@
           </div>
           <div class="deck__row deck__row--h">
             <div class="deck__item deck__item--h">
-              <a href="#promo" aria-label="瀏覽 十二生肖・羊年・橫式版 賀卡">
+              <a href="e-cards.html?f=EY8" aria-label="瀏覽 十二生肖・羊年・橫式版 賀卡">
                 <span class="deck__media"><img src="images/e-card/羊年-橫式.jpg" alt="十二生肖・羊年・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>十二生肖・羊年・橫式版</strong>
@@ -272,7 +288,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--h">
-              <a href="#promo" aria-label="瀏覽 聖誕・橫式版 賀卡">
+              <a href="cards/CH2026001/" aria-label="瀏覽 聖誕・橫式版 賀卡">
                 <span class="deck__media"><img src="images/e-card/聖誕-橫式.jpg" alt="聖誕・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>聖誕・橫式版</strong>
@@ -281,7 +297,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--h">
-              <a href="#promo" aria-label="瀏覽 農曆年・橫式版 賀卡">
+              <a href="e-cards.html?f=EY0" aria-label="瀏覽 農曆年・橫式版 賀卡">
                 <span class="deck__media"><img src="images/e-card/農曆-橫式.jpg" alt="農曆年・橫式版" width="801" height="600" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>農曆年・橫式版</strong>
@@ -294,7 +310,7 @@
         <div class="deck__page">
           <div class="deck__row deck__row--v">
             <div class="deck__item deck__item--v">
-              <a href="#promo" aria-label="瀏覽 十二生肖・羊年 賀卡">
+              <a href="e-cards.html?f=EY8" aria-label="瀏覽 十二生肖・羊年 賀卡">
                 <span class="deck__media"><img src="images/e-card/羊年-直式.jpg" alt="十二生肖・羊年" width="600" height="800" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>十二生肖・羊年</strong>
@@ -303,7 +319,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--v">
-              <a href="#promo" aria-label="瀏覽 西元新年 賀卡">
+              <a href="e-cards.html?f=ENY" aria-label="瀏覽 西元新年 賀卡">
                 <span class="deck__media"><img src="images/e-card/西元-直式.jpg" alt="西元新年" width="600" height="801" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>西元新年</strong>
@@ -312,7 +328,8 @@
               </a>
             </div>
             <div class="deck__item deck__item--v">
-              <a href="#promo" aria-label="瀏覽 聖誕・年末問候 賀卡">
+              <!-- 公版沒有聖誕這一類，但這張動態卡是真的能看的，直接送過去 -->
+              <a href="cards/CH2026001/" aria-label="瀏覽 聖誕・年末問候 賀卡">
                 <span class="deck__media"><img src="images/e-card/聖誕-直式.jpg" alt="聖誕・年末問候" width="600" height="803" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>聖誕・年末問候</strong>
@@ -323,7 +340,7 @@
           </div>
           <div class="deck__row deck__row--h">
             <div class="deck__item deck__item--h">
-              <a href="#promo" aria-label="瀏覽 十二生肖・羊年・橫式版 賀卡">
+              <a href="e-cards.html?f=EY8" aria-label="瀏覽 十二生肖・羊年・橫式版 賀卡">
                 <span class="deck__media"><img src="images/e-card/羊年-橫式.jpg" alt="十二生肖・羊年・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>十二生肖・羊年・橫式版</strong>
@@ -332,7 +349,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--h">
-              <a href="#promo" aria-label="瀏覽 聖誕・橫式版 賀卡">
+              <a href="cards/CH2026001/" aria-label="瀏覽 聖誕・橫式版 賀卡">
                 <span class="deck__media"><img src="images/e-card/聖誕-橫式.jpg" alt="聖誕・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>聖誕・橫式版</strong>
@@ -341,7 +358,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--h">
-              <a href="#promo" aria-label="瀏覽 農曆年・橫式版 賀卡">
+              <a href="e-cards.html?f=EY0" aria-label="瀏覽 農曆年・橫式版 賀卡">
                 <span class="deck__media"><img src="images/e-card/農曆-橫式.jpg" alt="農曆年・橫式版" width="801" height="600" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>農曆年・橫式版</strong>
@@ -390,10 +407,10 @@
     </div>
   </section>
 
-  <!-- ── 聯絡 ── -->
-  <section class="contact" id="contact">
-    <!-- 山坡：單張 foot_bg_all.png（2540×580），錨在頁尾底部並撐滿整個頁尾，
-         所以永遠貼齊頁面最底。背景圖直接掛在這個容器上，不再分三層 -->
+  <!-- #foot -->
+<!-- 這一段是全站共用的，來源是 _partials/foot.html。
+     不要直接改頁面裡的頁尾 —— 下次跑 build_pages.py 會被覆蓋回去 -->
+<section class="contact" id="contact">
     <div class="grass" id="grass" aria-hidden="true"></div>
 
     <div class="wrap">
@@ -402,11 +419,9 @@
         <p>歡迎私訊木木，讓我們一起開創全新的篇章。</p>
         <div class="contact__actions">
           <a class="btn btn--solid" href="https://line.me/R/ti/p/@yme1248q">加 LINE 詢價</a>
-          <a class="btn btn--ghost" href="tel:0919084796">電話聯絡</a>
         </div>
       </div>
 
-      <!-- 左：社群入口（不外露帳號，直接連過去）／右：權利宣告 -->
       <div class="contact__foot">
         <ul class="social">
           <li><a href="https://line.me/R/ti/p/@yme1248q" target="_blank" rel="noopener" aria-label="LINE 官方帳號"><img class="ic" src="images/icons/line.png" alt="" width="512" height="512" loading="lazy"><span>LINE</span></a></li>
@@ -415,8 +430,6 @@
           <li><a href="https://instagram.com/mumuyang.2026" target="_blank" rel="noopener" aria-label="Instagram"><img class="ic" src="images/icons/instagram.png" alt="" width="512" height="512" loading="lazy"><span>Instagram</span></a></li>
         </ul>
 
-        <!-- 每個 <span> 是一個「不會被拆開」的語意單位：放得下就同一行，
-             放不下就整段換到下一行，不會斷在「三段／55 巷」這種讀不通的地方 -->
         <div class="rights">
           <p>
             <span>木木文化工作室</span>
@@ -431,6 +444,7 @@
       </div>
     </div>
   </section>
+<!-- /#foot -->
 
 </main>
 
@@ -439,6 +453,7 @@
 <script src="scripts/owl-carousel/owl-carousel.min.js"></script>
 <script src="scripts/gsap/gsap.min.js"></script>
 <script src="scripts/gsap/ScrollTrigger.min.js"></script>
+<script src="scripts/lenis/lenis.min.js"></script>
 <script src="scripts/main.js"></script>
 
 <!-- Owl Carousel 初始化：作品為單排多張、賀卡為整批換頁 -->

@@ -8,47 +8,9 @@
 // 中文行寬一律用 em（1em ≈ 一個中文字）；ch 是數字寬，用在中文會過窄
 // ============================================
 
-// ---------- Tokens ----------
-$paper: #fcfcfa; // 宣紙白
-$cream: #efeedb; // 品牌米白：區塊底色
-$ink: #33291f; // 品牌深棕（logo「文化」）
-$ink-line: rgba($ink, .13);
-$green: #6f8544; // 主綠
-$green-deep: #4a5a34; // 深綠
-$olive: #97a675; // 橄欖綠
-$olive-ink: #64703f; // 深橄欖（小字）
-$mint: #d6ead4; // 淺薄荷
-$mint-soft: #e8f2e6;
-$seal: #a63a2e; // 朱紅：只用於印章
-
-:root {
-  --paper: #{$paper};
-  --cream: #{$cream};
-  --ink: #{$ink};
-  --ink-line: #{$ink-line};
-  --green: #{$green};
-  --green-deep: #{$green-deep};
-  --olive: #{$olive};
-  --olive-ink: #{$olive-ink};
-  --mint: #{$mint};
-  --mint-soft: #{$mint-soft};
-  --seal: #{$seal};
-
-  --wrap: 1920px; // 版面上限（設計稿頁寬）
-  --inner: 1440px; // 主內容欄：頁寬 1920 左右各留 240
-  --wide: 1640px; // 作品／賀卡輪播：刻意比內容欄寬（左右各留 140）
-  --gut: clamp(20px, 4.5vw, 72px);
-  // 區塊留白改用 vw：設計稿是固定寬度的畫面，vh 會隨視窗高度飄動而對不上
-  --pad-l: clamp(46px, 4.7vw, 96px); // 一般段落上下留白
-  --label-gap: clamp(18px, .95vw, 24px);
-  --ease: cubic-bezier(.16, 1, .3, 1);
-
-  --z-frame: 1;
-  --z-deco: 2;
-  --z-content: 3;
-  --z-nav: 10;
-  --z-skip: 20;
-}
+// Tokens（$green、:root 那一整組）搬到 _tokens.scss，e-cards.scss 也要用同一份。
+// @use 必須排在所有規則之前，只能放在最上面的註解後
+@use "tokens" as *;
 
 * {
   margin: 0;
@@ -57,7 +19,15 @@ $seal: #a63a2e; // 朱紅：只用於印章
 }
 
 html {
+  // 沒有 Lenis 時（離線、關閉動態）的錨點捲動由瀏覽器自己平滑。
+  // ⚠️ Lenis 啟用時一定要關掉（下面那條 html.lenis）—— Lenis 每一幀直接寫 scrollTop，
+  //    瀏覽器又要對每一次寫入再做一次平滑補間，兩層疊起來會變得拖泥帶水
   scroll-behavior: smooth;
+}
+
+// Lenis 起來之後它會在 <html> 掛上 .lenis
+html.lenis {
+  scroll-behavior: auto;
 }
 
 body {
@@ -233,13 +203,20 @@ button {
 }
 
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55em;
+  min-height: 44px;
   font-size: .88rem;
   letter-spacing: .14em;
   text-indent: .14em;
-  padding: .85em 1.8em;
+  line-height: 1.35;
+  padding: .78em 1.7em;
   text-decoration: none;
   border: 1px solid transparent;
+  background: transparent;
+  white-space: nowrap;
   transition: background .45s var(--ease), color .45s var(--ease),
     border-color .45s var(--ease), transform .45s var(--ease), box-shadow .45s var(--ease);
 
@@ -249,37 +226,150 @@ button {
     box-shadow: 0 10px 24px rgba($ink, .07);
   }
 
+  // 實心綠＝全站唯一的「成交」動作：加 LINE 詢價／用 LINE 詢問。
+  // 底色用 --green-deep 不用 --green —— 白字壓在 --green 上只有 4.11:1，
+  // 沒到 PRODUCT.md 訂的本文 4.5（--green-deep 是 7.49）
   &--solid {
-    background: var(--green);
+    background: var(--green-deep);
     color: #fff;
 
     &:hover {
-      background: #{$green-deep};
+      background: #{$ink};
     }
   }
 
+  // 空心白底綠線＝「去看看」的入口：公版款式、客製案例、載入更多、複製款號…
+  // ⚠️ 2026-08-25 用戶定調：凡是通往公版／客戶範本的按鈕一律用這一款。
+  //    不要拿實心綠去標其中一顆 —— 實心會被讀成「目前就在這一頁」，
+  //    首頁那兩顆入口一實一虛時，客戶以為自己已經在公版款式頁了
   &--ghost {
-    border-color: rgba($green, .4);
-    color: var(--green);
+    border-color: rgba($green-deep, .42);
+    color: var(--green-deep);
+    background: var(--paper);
 
     &:hover {
-      border-color: var(--green);
-      background: rgba($green, .08);
+      border-color: var(--green-deep);
+      background: var(--mint-soft);
+    }
+  }
+
+  // 導覽列與固定操作列仍使用同一套按鈕，只縮小內距。
+  &--compact {
+    min-height: 38px;
+    padding: .56em 1.2em;
+    font-size: .82rem;
+    letter-spacing: .1em;
+    text-indent: .1em;
+  }
+
+  // 方形箭頭、關閉等純圖示動作。仍保留 44px 可觸控面積。
+  &--icon {
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+    text-indent: 0;
+  }
+
+  &[disabled],
+  &[aria-disabled="true"] {
+    opacity: .42;
+    pointer-events: none;
+  }
+}
+
+// ---------- 索引式切換（全站一套） ----------
+// 就是「公版款式 │ 客製案例」那個樣子：黑體小字、髮絲線分隔、
+// 目前那一項深綠加一條細底線。
+//
+// 用在三個地方（2026-08-25 用戶指定統一）：
+//   .pagenav    內頁的第二層導覽（公版款式／客製案例）
+//   .tabs       首頁「名片設計作品」的 範本／客製
+//   .promo__go  首頁「賀卡最新消息」的 公版款式／客製案例
+//
+// ⚠️ `$item` 一定要傳實際的子選擇器，**不要用 `*`**。
+//    `.tabs` 裡的按鈕另外還有一組 `.tabs__btn` 基底樣式（那組是留給
+//    e-cards 的篩選列用的，那裡沒有 `.tabs` 容器）。`.tabs > *` 與
+//    `.tabs__btn` 都是一個 class、**權重相同**，排在後面的會贏；
+//    傳 `".tabs__btn"` 變成 `.tabs > .tabs__btn`（兩個 class）才穩。
+@mixin index-switch($item) {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-family: "Noto Sans TC", sans-serif;
+
+  > #{$item} {
+    font-size: .8rem; // 12.8px（全站字級下限 12px）
+    letter-spacing: .1em;
+    text-indent: .1em;
+    white-space: nowrap;
+    text-decoration: none;
+    color: rgba($ink, .72); // 7.06:1
+    background: none;
+    border: 0;
+    padding: 7px clamp(11px, 1.1vw, 20px);
+    cursor: pointer;
+    transition: color .35s var(--ease);
+
+    &:hover {
+      color: var(--ink);
+    }
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
+
+    // 目前這一項：底線用 text-decoration 不用 border-bottom ——
+    // 分隔線是絕對定位的偽元素，兩種盒模型的線疊在同一個元素上會互相干擾
+    &.is-on,
+    &[aria-current] {
+      color: var(--green-deep); // 7.29:1
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 6px;
+    }
+
+    // ⚠️ 巢狀 @media 一定要放在這條規則的最後一行 ——
+    //    後面再有宣告的話，Sass 會把它們收成第二條同名規則排在媒體查詢之後，
+    //    權重相同又在後面，手機版就被蓋回桌機的值
+    @media (max-width: 899px) {
+      padding-block: 13px; // 觸控目標高度 ≈ 行高 22 ＋ 26 = 48
+    }
+  }
+
+  // 兩項之間一條髮絲線。
+  // 不用 border-left：border 會撐到整個內容盒高，比 12.8px 的字高出一截，
+  // 看起來像欄位分隔而不是字距分隔。改用固定 13px 的偽元素，跟字齊高
+  > #{$item} + #{$item} {
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 1px;
+      height: 13px;
+      margin-top: -7px;
+      background: var(--ink-line);
     }
   }
 }
 
 .link-more {
   font-size: .88rem;
-  color: var(--green);
+  color: var(--green-deep);
   text-decoration: none;
-  border-bottom: 1px solid rgba($green, .32);
+  border-bottom: 1px solid rgba($green-deep, .32);
   padding-bottom: 2px;
   white-space: nowrap;
   transition: border-color .4s;
 
   &:hover {
-    border-color: var(--green);
+    border-color: var(--green-deep);
   }
 }
 
@@ -463,9 +553,13 @@ button {
         color: var(--ink);
       }
 
-      &.is-active {
-        color: var(--green);
-        border-bottom-color: var(--green);
+      // is-active ＝ 首頁捲到哪一段（main.js 即時給的）
+      // aria-current ＝ 內頁「目前這一頁」（寫死在該頁的 HTML）
+      // 兩者長一樣，但來源不同，不要合併成同一個 class
+      &.is-active,
+      &[aria-current] {
+        color: var(--green-deep);
+        border-bottom-color: var(--green-deep);
       }
     }
 
@@ -489,9 +583,10 @@ button {
 
       // 選到的那一項改用左側短線標示：整列都是連結，
       // 底線在這裡是分隔線，再拿它當「目前位置」會讀不出來
-      a.is-active {
+      a.is-active,
+      a[aria-current] {
         border-bottom-color: var(--ink-line);
-        box-shadow: inset 3px 0 0 var(--green);
+        box-shadow: inset 3px 0 0 var(--green-deep);
         padding-left: 12px;
       }
 
@@ -510,22 +605,6 @@ button {
 
   &__cta {
     margin-inline-start: auto;
-    font-size: clamp(.8rem, .55vw, .88rem);
-    letter-spacing: .08em;
-    text-decoration: none;
-    color: var(--green);
-    border: 1px solid rgba($green, .38);
-    padding: .45em 1.1em;
-    white-space: nowrap;
-    transition: background .4s var(--ease), color .4s var(--ease),
-      border-color .4s var(--ease), transform .4s var(--ease);
-
-    &:hover {
-      background: var(--green);
-      color: #fff;
-      border-color: var(--green);
-      transform: translateY(-2px);
-    }
   }
 
   @media (min-width: 900px) {
@@ -646,7 +725,7 @@ button {
     }
 
     .accent {
-      color: var(--green);
+      color: var(--green-deep);
       padding-inline-start: clamp(0px, 2vw, 38px);
       margin-top: .2em;
     }
@@ -806,7 +885,7 @@ button {
   &__sign {
     font-family: "Noto Serif TC", serif;
     font-size: 1.06rem;
-    color: var(--green);
+    color: var(--green-deep);
   }
 }
 
@@ -1206,29 +1285,47 @@ button {
 
 }
 
-// 分類切換：範本／客製（設計稿兩顆都有綠底線，選到的字轉綠）
-.tabs {
-  display: flex;
-  gap: clamp(14px, 2.9vw, 74px);
-
-  &__btn {
-    font-size: clamp(.88rem, .79vw, 1.25rem);
-    letter-spacing: .1em;
-    color: rgba($ink, .55);
-    padding-bottom: 5px;
-    border-bottom: 1.5px solid rgba($green, .38);
-    transition: color .4s var(--ease), border-color .4s var(--ease);
-
-    &:hover {
-      color: var(--ink);
-    }
-
-    &.is-on {
-      color: var(--green);
-      border-bottom-color: var(--green);
-    }
-  }
+// 首頁「賀卡最新消息」的兩個入口（公版款式／客製案例）。
+// 2026-08-25 用戶指定：改成跟內頁第二層導覽同一套索引樣式。
+//
+// 走過的兩版都被推翻了，別再做回去：
+//   一實一虛的按鈕 → 「兩個按鈕要同款，不然會誤以為現在已經到了公版款式」
+//   兩顆空心按鈕   → 再改成索引樣式，跟站上其他切換統一
+//
+// 容器不叫 .tabs：main.js 的 tabs() 會抓 .tabs 做同頁切換高亮，
+// 套在連結上會在跳頁前先閃一下（tabs() 另外也有「裡面有 <a> 就跳過」的守衛）
+.promo__go {
+  @include index-switch("a");
 }
+
+// 內頁的第二層導覽 —— 不是第二條列，是標題區那一行的「頁眉索引」。
+//
+// ⚠️ 2026-08-25 改過位置與量體，改回去之前先看這三個原因（用戶原話：
+//    「按鈕很突兀，子選單比上面選單更大字，請優化要放的位置」「底下的線不要了」）：
+//   1. 它跟主導覽的下拉子選單是**同樣那兩個連結**，上下只差 30px，
+//      讀起來是同一個元件出現兩次
+//   2. 原本 17px 明體，比主導覽的 13.8px 黑體還大一號 —— 階層是反的，
+//      次級導覽不該比主導覽重
+//   3. 底下那條滿版線讓它看起來像第二個 header，整條就浮在頁面上方
+//
+// 現在改成排在 .section-label 那一行的右端（見 .cat-lead__row），
+// 走 baseline 對齊、黑體、12.8px，比主導覽小一階。
+// 位置由內容欄決定，所以 main.js 原本量主導覽位置的 pagenavAlign() 一併移除了
+.pagenav {
+  @include index-switch("a");
+}
+
+// 分類切換：範本／客製（設計稿兩顆都有綠底線，選到的字轉綠）
+// 首頁「名片設計作品」的 範本／客製。
+// 2026-08-25 用戶指定改成跟內頁第二層導覽同一套索引樣式（原本是綠底線的分頁）
+.tabs {
+  @include index-switch(".tabs__btn");
+}
+
+// 2026-08-26：獨立的 `.tabs__btn` 樣式整組刪掉了。
+// 它原本是 e-cards.html 的篩選列借用的，那邊已經改成自己的 `.filter__btn`
+//（選了會填薄荷底的方塊）。現在 `.tabs__btn` 只出現在首頁的作品分頁，
+// 樣式全部由上面的 index-switch 給。
 
 .wk img {
   width: 100%;
@@ -1391,7 +1488,7 @@ button {
       position: static;
       transform: none;
       opacity: 1;
-      color: var(--green);
+      color: var(--green-deep);
       font-size: .84rem;
       letter-spacing: .12em;
     }
@@ -1891,7 +1988,7 @@ button {
     position: static !important;
     transform: none !important;
     opacity: 1 !important;
-    color: var(--green) !important;
+    color: var(--green-deep) !important;
   }
 
   *,

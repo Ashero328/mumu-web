@@ -27,7 +27,8 @@
 
   // ---------- 版式：手機直式滿版 / 電腦橫式 ----------
   function applyLayout() {
-    var landscape = window.matchMedia("(min-width: 900px)").matches;
+    var forceLandscape = /[?&]layout=landscape(?:&|$)/.test(location.search);
+    var landscape = forceLandscape || window.matchMedia("(min-width: 900px)").matches;
     document.documentElement.classList.toggle("layout-landscape", landscape);
     document.documentElement.classList.toggle("layout-portrait", !landscape);
   }

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>客製電子賀卡案例｜木木文化工作室</title>
+<meta name="description" content="木木文化的客製電子賀卡案例：同一個版式換上客戶自己的賀詞、落款與品牌標記，連配色與動畫都能重做，一條連結手機與電腦都好看。">
+<meta name="theme-color" content="#fcfcfa">
+
+<!-- OG 一律用絕對網址：LINE 與 FB 的爬蟲只讀原始碼、不執行網頁，
+     相對路徑它找不到基準，抓不到預覽圖 -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ashero328.github.io/mumu-web/custom-cards.html">
+<meta property="og:title" content="客製電子賀卡案例｜木木文化工作室">
+<meta property="og:description" content="換上你的品牌，就是另一張卡。賀詞、落款、品牌標記全部換成客戶自己的，連配色與動畫都能重做。">
+<meta property="og:image" content="https://ashero328.github.io/mumu-web/images/e-cards/poster-custom.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="scripts/lenis/lenis.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/e-cards.css">
+</head>
+<body>
+
+<a class="skip" href="#main">跳至主要內容</a>
+
+<div class="frame" aria-hidden="true"></div>
+
+<!-- #nav -->
+<!-- 這一段是全站共用的，來源是 _partials/nav.html。
+     不要直接改頁面裡的 nav —— 下次跑 build_pages.py 會被覆蓋回去。
+     {{...}} 由 build_pages.py 依頁面代換，對應表寫在那支腳本裡 -->
+<header class="nav" id="nav">
+  <div class="nav__inner wrap">
+    <a class="nav__brand" href="index.html"><img src="images/logo.png" alt="木木文化 設計印刷" width="650" height="125"></a>
+
+    <!-- 手機版選單開關：桌機隱藏。aria-expanded 由 main.js 同步，讀螢幕才知道展開與否 -->
+    <button class="nav__toggle" type="button" id="navToggle"
+            aria-expanded="false" aria-controls="navLinks" aria-label="開啟選單">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav__links" id="navLinks" aria-label="主要導覽">
+      <a href="index.html#about">關於木木</a>
+      <a href="index.html#services">營業項目</a>
+      <a href="index.html#works">設計作品</a>
+      <!-- 電子賀卡：2026-08-25 用戶指定把下拉子選單整個拿掉，回到一般連結。
+           要切換公版／客製走內頁標題區那條第二層導覽（.pagenav），
+           首頁則是「賀卡最新消息」那兩個入口。
+           首頁指向本頁的 #promo，內頁指向 e-cards.html。
+           aria-current="page" ＝ 就是這一頁；"true" ＝ 目前所在的單元 -->
+      <a href="e-cards.html" aria-current="true">電子賀卡</a>
+      <a href="index.html#flow">訂購流程</a>
+      <a href="#contact">與我聯絡</a>
+    </nav>
+    <a class="nav__cta btn btn--ghost btn--compact" href="#contact">LINE 詢價</a>
+  </div>
+</header>
+<!-- /#nav -->
+
+
+<main id="main">
+
+  <!-- ── 頁面標題：文字全部寫死在 HTML，這些才是搜尋引擎要的 ── -->
+  <section class="cat-lead cat-lead--custom sec wrap" id="top">
+    <img class="deco deco--fern" src="images/deco/leaf-fern.webp" alt="" width="466" height="520" loading="lazy" decoding="async" aria-hidden="true">
+    <!-- 導引小字與第二層導覽同一行：左邊是單元名，右邊是公版／客製的索引 -->
+    <div class="cat-lead__row">
+      <p class="section-label">電子賀卡</p>
+    </div>
+    <div class="sec__body">
+      <div class="cat-lead__heading">
+        <h1 class="cat-lead__title">換上你的品牌，就是另一張卡</h1>
+        <!-- #pagenav -->
+<!-- 第二層導覽：只有內頁有，與頁面標題排在一起，避免浮在裝飾葉片旁。 -->
+<nav class="pagenav" aria-label="電子賀卡分頁">
+  <a href="e-cards.html">公版款式</a>
+  <a href="custom-cards.html" aria-current="page">客製案例</a>
+</nav>
+        <!-- /#pagenav -->
+      </div>
+      <p class="cat-lead__intro">賀詞、落款、品牌標記全部換成客戶自己的，連配色與動畫都能重做。<br>一條連結，手機與電腦都好看，直接發在 LINE 裡送出去。</p>
+      <p class="cat-lead__note">先從<a class="link-more" href="e-cards.html">公版款式</a>挑一款，我們再照你的品牌改。</p>
+    </div>
+  </section>
+
+  <!-- ── 客製案例：同一個版式換上客戶自己的品牌 ── -->
+  <section class="custom" id="custom">
+    <div class="sec wrap">
+      <p class="section-label">做好的樣子</p>
+      <div class="sec__body">
+        <div class="case-showcase" data-case-showcase>
+          <article class="case-showcase__stage" id="casePanel" role="tabpanel" aria-live="polite">
+            <figure class="case-showcase__visual">
+              <span class="case-showcase__halo" aria-hidden="true"></span>
+              <span class="case-showcase__art" data-case-art data-crop="side-bars">
+                <img data-case-image src="cards/NE2026001/images/poster.jpg" alt="木木文化西元新年動態電子賀卡" width="1200" height="630">
+              </span>
+              <figcaption data-case-caption>品牌動態賀卡</figcaption>
+            </figure>
+
+            <div class="case-showcase__story">
+              <p class="case-showcase__eyebrow"><span data-case-number>01</span> Selected work</p>
+              <p class="case-showcase__client" data-case-client>木木文化工作室</p>
+              <h2 data-case-title>西元新年・品牌祝賀</h2>
+              <div class="case-showcase__idea">
+                <h3>設計理念</h3>
+                <p data-case-concept>以品牌桃紅為主調，結合煙火與城市剪影建立跨年氛圍；中央祝賀文字放大，在手機畫面上仍能快速讀到節慶訊息。</p>
+              </div>
+              <ul class="case-showcase__tags" data-case-tags aria-label="設計特色">
+                <li>品牌配色</li><li>節慶動態</li><li>手機優先</li>
+              </ul>
+              <button class="case-showcase__open btn btn--solid" data-case-play type="button">
+                <span data-case-play-label>播放動畫</span><span aria-hidden="true">▶</span>
+              </button>
+            </div>
+          </article>
+
+          <div class="case-showcase__index">
+            <div class="case-showcase__index-head">
+              <p>選擇案例 <small>點選縮圖觀看</small></p>
+              <div class="case-showcase__index-tools">
+                <span>目前展示 6 件</span>
+                <div class="case-showcase__arrows" aria-label="切換案例">
+                  <button type="button" data-case-prev aria-label="查看前一個案例">←</button>
+                  <button type="button" data-case-next aria-label="查看下一個案例">→</button>
+                </div>
+              </div>
+            </div>
+            <div class="case-showcase__thumbs" role="tablist" aria-label="選擇客製電子賀卡案例">
+              <button class="case-thumb is-active" type="button" role="tab" aria-selected="true" aria-controls="casePanel"
+                      data-number="01" data-client="木木文化工作室" data-title="西元新年・品牌祝賀"
+                      data-caption="品牌動態賀卡" data-concept="以品牌桃紅為主調，結合煙火與城市剪影建立跨年氛圍；中央祝賀文字放大，在手機畫面上仍能快速讀到節慶訊息。"
+                      data-tags="品牌配色|節慶動態|手機優先" data-href="cards/NE2026001/?min=1&amp;layout=landscape"
+                      data-image="cards/NE2026001/images/poster.jpg" data-alt="木木文化西元新年動態電子賀卡" data-crop="side-bars">
+                <span class="case-thumb__art" data-crop="side-bars"><img src="cards/NE2026001/images/poster.jpg" alt="" width="1200" height="630"></span>
+                <span class="case-thumb__meta"><small>01</small><strong>木木文化</strong></span>
+              </button>
+
+              <button class="case-thumb" type="button" role="tab" aria-selected="false" aria-controls="casePanel" tabindex="-1"
+                      data-number="02" data-client="木木文化工作室" data-title="聖誕・年末問候"
+                      data-caption="品牌動態賀卡" data-concept="以溫潤紙張肌理承接印刷品牌氣質，單線聖誕樹與大量留白讓祝福安靜地被看見；細緻光點動畫則補上節日的儀式感。"
+                      data-tags="紙感肌理|留白構圖|光點動畫" data-href="cards/CH2026001/?min=1&amp;layout=landscape"
+                      data-image="cards/CH2026001/images/poster.jpg" data-alt="木木文化聖誕年末動態電子賀卡" data-crop="side-bars">
+                <span class="case-thumb__art" data-crop="side-bars"><img src="cards/CH2026001/images/poster.jpg" alt="" width="1200" height="630" loading="lazy"></span>
+                <span class="case-thumb__meta"><small>02</small><strong>聖誕問候</strong></span>
+              </button>
+
+              <button class="case-thumb" type="button" role="tab" aria-selected="false" aria-controls="casePanel" tabindex="-1"
+                      data-number="03" data-client="松川珈琲焙煎所（品牌示意）" data-title="歲末感謝・咖啡品牌"
+                      data-caption="品牌動態賀卡" data-concept="從咖啡烘焙的深褐色出發，以細金線、同心圓與微光建立香氣向外擴散的感受；節制的動畫節奏呼應職人品牌的沉穩與溫度。"
+                      data-tags="品牌敘事|深色質感|節奏動畫" data-href="clients/songchuan/?min=1&amp;layout=landscape"
+                      data-image="clients/songchuan/images/poster.jpg" data-alt="松川珈琲焙煎所品牌動態賀卡示意" data-crop="landscape">
+                <span class="case-thumb__art" data-crop="landscape"><img src="clients/songchuan/images/poster.jpg" alt="" width="1200" height="630" loading="lazy"></span>
+                <span class="case-thumb__meta"><small>03</small><strong>松川珈琲</strong><em>品牌示意</em></span>
+              </button>
+
+              <button class="case-thumb" type="button" role="tab" aria-selected="false" aria-controls="casePanel" tabindex="-1"
+                      data-number="04" data-client="企業品牌（版面示意）" data-title="新年祝賀・企業形象"
+                      data-caption="客製賀卡版面示意" data-concept="延伸企業識別色與年度祝福主題，讓品牌標誌、賀詞與主視覺在同一畫面中保持清楚層次。"
+                      data-tags="企業識別|年度祝福|版面示意" data-href=""
+                      data-image="cards/NE2026001/images/poster.jpg" data-alt="企業新年賀卡版面示意" data-crop="side-bars">
+                <span class="case-thumb__art" data-crop="side-bars"><img src="cards/NE2026001/images/poster.jpg" alt="" width="1200" height="630" loading="lazy"></span>
+                <span class="case-thumb__meta"><small>04</small><strong>企業賀卡</strong><em>版面示意</em></span>
+              </button>
+
+              <button class="case-thumb" type="button" role="tab" aria-selected="false" aria-controls="casePanel" tabindex="-1"
+                      data-number="05" data-client="節慶企劃（版面示意）" data-title="節慶問候・品牌企劃"
+                      data-caption="客製賀卡版面示意" data-concept="以溫暖節慶圖像承接品牌訊息，保留足夠留白，使公司名稱與祝福文字在不同螢幕上都容易閱讀。"
+                      data-tags="節慶企劃|品牌訊息|版面示意" data-href=""
+                      data-image="cards/CH2026001/images/poster.jpg" data-alt="品牌節慶賀卡版面示意" data-crop="side-bars">
+                <span class="case-thumb__art" data-crop="side-bars"><img src="cards/CH2026001/images/poster.jpg" alt="" width="1200" height="630" loading="lazy"></span>
+                <span class="case-thumb__meta"><small>05</small><strong>節慶企劃</strong><em>版面示意</em></span>
+              </button>
+
+              <button class="case-thumb" type="button" role="tab" aria-selected="false" aria-controls="casePanel" tabindex="-1"
+                      data-number="06" data-client="職人品牌（版面示意）" data-title="歲末感謝・職人品牌"
+                      data-caption="客製賀卡版面示意" data-concept="運用深色調、細緻線條與聚焦構圖，模擬適合餐飲、工藝與個人品牌的沉穩賀卡呈現方式。"
+                      data-tags="職人質感|歲末感謝|版面示意" data-href=""
+                      data-image="clients/songchuan/images/poster.jpg" data-alt="職人品牌賀卡版面示意" data-crop="landscape">
+                <span class="case-thumb__art" data-crop="landscape"><img src="clients/songchuan/images/poster.jpg" alt="" width="1200" height="630" loading="lazy"></span>
+                <span class="case-thumb__meta"><small>06</small><strong>職人品牌</strong><em>版面示意</em></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <p class="custom__ask">每一張都是重新設計的，價格看複雜度。<a class="link-more" href="#contact">聊聊客製賀卡</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- #foot -->
+<!-- 這一段是全站共用的，來源是 _partials/foot.html。
+     不要直接改頁面裡的頁尾 —— 下次跑 build_pages.py 會被覆蓋回去 -->
+<section class="contact" id="contact">
+    <div class="grass" id="grass" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="contact__top">
+        <h2>想聊聊您的新想法嗎？</h2>
+        <p>歡迎私訊木木，讓我們一起開創全新的篇章。</p>
+        <div class="contact__actions">
+          <a class="btn btn--solid" href="https://line.me/R/ti/p/@yme1248q">加 LINE 詢價</a>
+        </div>
+      </div>
+
+      <div class="contact__foot">
+        <ul class="social">
+          <li><a href="https://line.me/R/ti/p/@yme1248q" target="_blank" rel="noopener" aria-label="LINE 官方帳號"><img class="ic" src="images/icons/line.png" alt="" width="512" height="512" loading="lazy"><span>LINE</span></a></li>
+          <li><a href="tel:0919084796" aria-label="撥打電話"><img class="ic" src="images/icons/phone.png" alt="" width="512" height="512" loading="lazy"><span>電話</span></a></li>
+          <li><a href="mailto:meisitw@gmail.com" aria-label="寄送 Email"><img class="ic" src="images/icons/gmail.png" alt="" width="512" height="512" loading="lazy"><span>Email</span></a></li>
+          <li><a href="https://instagram.com/mumuyang.2026" target="_blank" rel="noopener" aria-label="Instagram"><img class="ic" src="images/icons/instagram.png" alt="" width="512" height="512" loading="lazy"><span>Instagram</span></a></li>
+        </ul>
+
+        <div class="rights">
+          <p>
+            <span>木木文化工作室</span>
+            <span>414 台中市烏日區溪南路三段 55 巷 47 弄 8 號</span>
+          </p>
+          <p>本站作品圖片與文字版權均屬木木文化工作室所有，未經同意請勿轉載或作為商業使用。</p>
+          <p class="rights__copy">
+            <span>© 2026 木木文化工作室 Mumu Culture</span>
+            <span>統一編號 60890306</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- /#foot -->
+
+</main>
+
+<script src="scripts/gsap/gsap.min.js"></script>
+<script src="scripts/gsap/ScrollTrigger.min.js"></script>
+<script src="scripts/lenis/lenis.min.js"></script>
+<script src="scripts/main.js"></script>
+<script src="scripts/custom-showcase.js"></script>
+</body>
+</html>
