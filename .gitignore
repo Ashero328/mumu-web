@@ -4,3 +4,6 @@ Thumbs.db
 
 # SCSS 一律用 --no-source-map 編譯；這行是漏加參數時的保險
 *.css.map
+
+# Chrome/Playwright 跑驗證時掉出來的 GPU 錯誤紀錄，不是專案檔
+debug.log
