@@ -380,6 +380,10 @@
   &__count {
     font-size: 12px;
     color: var(--olive-ink);
+    // 浮條固定寬度，數字每次篩選都在變，等寬才不會整條左右跳
+    // ⚠️ 這行一定要排在下面的 @media 之前：巢狀 @media 後面若還有宣告，
+    //    會被收成第二條同名規則排在媒體查詢之後，把媒體查詢裡的值蓋掉
+    @include 數字對齊;
 
     // 窄畫面先犧牲計數：款數在下面的 .cat__count 也有，浮條要維持一列
     @media (max-width: 599px) {
@@ -408,6 +412,7 @@
   margin-top: clamp(14px, 1.2vw, 24px);
   font-size: .86rem;
   color: var(--olive-ink);
+  @include 數字對齊; // 數字會隨篩選跳動，等寬才不會整行左右抖
 }
 
 // ---------- 款式格線 ----------
@@ -438,6 +443,53 @@
   flex-direction: column;
   gap: 10px;
   min-width: 0;
+}
+
+// ---------- 載入骨架 ----------
+//
+// 格線是 e-cards.js 建的，在那之前 <ul> 是空的。
+// 慢速連線上那段空白很長（Fast 3G 實測首屏 14 秒才全部到齊），
+// 整塊空白再突然跳出 12 張卡，觀感像壞掉。先擺 12 個骨架佔位。
+//
+// 尺寸刻意對齊真卡（4:3 的圖框 ＋ 一行款號的高度），
+// 換成真卡時版面不會跳。
+//
+// ⚠️ **這裡的動畫刻意用 CSS，不用 GSAP** —— 全站規則是動態一律 GSAP，
+//    但骨架的存在意義就是「JS 還沒到」，用 GSAP 等於永遠不會動。
+//    這是唯一的例外，規則要求的 prefers-reduced-motion 保護照樣有做（見最後）。
+.card--skel {
+  pointer-events: none;
+
+  // 圖框
+  &::before {
+    content: "";
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: rgba($ink, .055);
+  }
+
+  // 款號那一行
+  &::after {
+    content: "";
+    display: block;
+    width: 58%;
+    height: 1.02rem; // 與 .card__code 同字級，換手時高度一致
+    background: rgba($ink, .055);
+  }
+
+  animation: skel-breathe 1.6s var(--ease) infinite;
+
+  // ⚠️ 這個 @media 一定要放在規則的最後一行：巢狀 @media 後面若還有宣告，
+  //    會被收成第二條同名規則排在它之後，把裡面的值蓋掉
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes skel-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
 }
 
 // 每張卡固定佔一欄；桌機四張一列。圖片本身仍維持橫式 4:3、直式 3:4，
@@ -607,6 +659,7 @@
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1.02rem;
   letter-spacing: .1em;
+  @include 數字對齊; // 款號上下排成一欄，等寬才切得齊
   color: rgba($ink, .78);
   transition: color .4s var(--ease);
 }
@@ -1328,6 +1381,7 @@ main {
   align-items: baseline;
   gap: 12px;
   font-family: "Cormorant Garamond", serif;
+  @include 數字對齊; // 序號 01～06 切換時不要左右位移
   font-style: italic;
   letter-spacing: .08em;
   color: var(--olive-ink);
@@ -1577,6 +1631,7 @@ main {
     font-size: .76rem;
     letter-spacing: .08em;
     color: var(--olive-ink);
+    @include 數字對齊; // 這裡的 01 原本會排成「o I」
   }
 
   strong {
@@ -1781,6 +1836,7 @@ main {
   font-size: .95rem;
   color: var(--ink);
   margin-right: auto;
+  @include 數字對齊; // 勾選時數字一直在變，等寬才不會推動後面的東西
 }
 
 .pick__toggle {

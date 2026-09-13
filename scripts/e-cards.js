@@ -85,6 +85,10 @@
   }
 
   (function 初始格線() {
+    // HTML 裡先擺了 12 個 .card--skel 骨架佔位（慢速連線上不要整塊空白），
+    // 真卡建好之前要把它們清掉 —— 下面是 appendChild 不是覆寫，不清會留在最前面
+    grid.querySelectorAll(".card--skel").forEach(function (el) { el.remove(); });
+
     var frag = document.createDocumentFragment();
     全部款式.forEach(function (c) {
       var li = 建卡(c);

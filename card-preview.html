@@ -5,8 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="木木文化電子賀卡動態預覽">
   <title>電子賀卡動態預覽｜木木文化</title>
-  <link rel="icon" href="images/favicon.ico">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;500&display=swap">
+  <!-- 分頁圖示：從 logo 裁「木＋葉」那個標做的，由 _驗證工具/build_favicon.py 產生。
+       沒有宣告的話瀏覽器會自己去要根目錄的 /favicon.ico，要不到就是 404 ＋ 空白圖示 -->
+  <link rel="icon" href="images/favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <!-- 字體樣式表故意不用 <link> 直接掛：那是擋渲染的，而中文字體那份有 757 條
+       @font-face（gzip 後 239 KB），實測會讓首次繪製從 1.1 秒延到 3.5 秒。
+       改由 scripts/fonts.js 在 <head> 掛上去，說明寫在那支檔案裡。
+       沒有 JS 的話走下面的 <noscript>，字體照樣會有，只是回到會擋渲染的行為 -->
+  <script src="scripts/fonts.js" data-fonts="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;500&display=swap" defer></script>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;500&display=swap"></noscript>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/card-preview.css">
 </head>

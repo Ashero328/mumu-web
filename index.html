@@ -7,9 +7,31 @@
 <meta name="description" content="木木文化工作室：名片設計印刷、電子賀卡、吊牌店卡、信封信紙。想幫您留住指尖感知的溫度。">
 <!-- 手機瀏覽器的網址列跟著宣紙白，捲到頁首時上緣不會出現一條系統色的硬邊 -->
 <meta name="theme-color" content="#fcfcfa">
+
+<!-- OG 一律用絕對網址：LINE 與 FB 的爬蟲只讀原始碼、不執行網頁，
+     相對路徑它找不到基準，抓不到預覽圖。
+     換網域時不要手改 —— 跑 _驗證工具\set_domain.py <新網址> 會把全站一起換掉。
+     og-home.jpg 由 build_ecards.py 的 做首頁poster() 產生，不要手工放 -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mumu-web.pages.dev/">
+<meta property="og:title" content="木木文化工作室｜設計印刷">
+<meta property="og:description" content="名片設計印刷、電子賀卡、吊牌店卡、信封信紙。想幫您留住指尖感知的溫度。">
+<meta property="og:image" content="https://mumu-web.pages.dev/images/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- 分頁圖示：從 logo 裁「木＋葉」那個標做的，由 _驗證工具/build_favicon.py 產生。
+     沒有宣告的話瀏覽器會自己去要根目錄的 /favicon.ico，要不到就是 404 ＋ 空白圖示 -->
+<link rel="icon" href="images/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap">
+<!-- 字體樣式表故意不用 <link> 直接掛：那是擋渲染的，而中文字體那份有 757 條
+     @font-face（gzip 後 239 KB），實測會讓首次繪製從 1.1 秒延到 3.5 秒。
+     改由 scripts/fonts.js 在 <head> 掛上去，說明寫在那支檔案裡。
+     沒有 JS 的話走下面的 <noscript>，字體照樣會有，只是回到會擋渲染的行為 -->
+<script src="scripts/fonts.js" data-fonts="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" defer></script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap"></noscript>
 <link rel="stylesheet" href="scripts/owl-carousel/owl-carousel.min.css">
 <link rel="stylesheet" href="scripts/lenis/lenis.css">
 <link rel="stylesheet" href="css/style.css">
@@ -267,8 +289,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--v">
-              <!-- 公版沒有聖誕這一類，但這張動態卡是真的能看的，直接送過去 -->
-              <a href="cards/CH2026001/" aria-label="瀏覽 聖誕・年末問候 賀卡">
+              <a href="e-cards.html?f=EYC" aria-label="瀏覽 聖誕・年末問候 賀卡">
                 <span class="deck__media"><img src="images/e-card/聖誕-直式.jpg" alt="聖誕・年末問候" width="600" height="803" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>聖誕・年末問候</strong>
@@ -288,7 +309,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--h">
-              <a href="cards/CH2026001/" aria-label="瀏覽 聖誕・橫式版 賀卡">
+              <a href="e-cards.html?f=EYC" aria-label="瀏覽 聖誕・橫式版 賀卡">
                 <span class="deck__media"><img src="images/e-card/聖誕-橫式.jpg" alt="聖誕・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>聖誕・橫式版</strong>
@@ -328,8 +349,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--v">
-              <!-- 公版沒有聖誕這一類，但這張動態卡是真的能看的，直接送過去 -->
-              <a href="cards/CH2026001/" aria-label="瀏覽 聖誕・年末問候 賀卡">
+              <a href="e-cards.html?f=EYC" aria-label="瀏覽 聖誕・年末問候 賀卡">
                 <span class="deck__media"><img src="images/e-card/聖誕-直式.jpg" alt="聖誕・年末問候" width="600" height="803" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>聖誕・年末問候</strong>
@@ -349,7 +369,7 @@
               </a>
             </div>
             <div class="deck__item deck__item--h">
-              <a href="cards/CH2026001/" aria-label="瀏覽 聖誕・橫式版 賀卡">
+              <a href="e-cards.html?f=EYC" aria-label="瀏覽 聖誕・橫式版 賀卡">
                 <span class="deck__media"><img src="images/e-card/聖誕-橫式.jpg" alt="聖誕・橫式版" width="800" height="600" loading="lazy" decoding="async"></span>
                 <span class="deck__info">
                   <strong>聖誕・橫式版</strong>

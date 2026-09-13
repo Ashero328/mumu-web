@@ -10,16 +10,25 @@
 <!-- OG 一律用絕對網址：LINE 與 FB 的爬蟲只讀原始碼、不執行網頁，
      相對路徑它找不到基準，抓不到預覽圖 -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://ashero328.github.io/mumu-web/custom-cards.html">
+<meta property="og:url" content="https://mumu-web.pages.dev/custom-cards.html">
 <meta property="og:title" content="客製電子賀卡案例｜木木文化工作室">
 <meta property="og:description" content="換上你的品牌，就是另一張卡。賀詞、落款、品牌標記全部換成客戶自己的，連配色與動畫都能重做。">
-<meta property="og:image" content="https://ashero328.github.io/mumu-web/images/e-cards/poster-custom.jpg">
+<meta property="og:image" content="https://mumu-web.pages.dev/images/e-cards/poster-custom.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 
+<!-- 分頁圖示：從 logo 裁「木＋葉」那個標做的，由 _驗證工具/build_favicon.py 產生。
+     沒有宣告的話瀏覽器會自己去要根目錄的 /favicon.ico，要不到就是 404 ＋ 空白圖示 -->
+<link rel="icon" href="images/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap">
+<!-- 字體樣式表故意不用 <link> 直接掛：那是擋渲染的，而中文字體那份有 757 條
+     @font-face（gzip 後 239 KB），實測會讓首次繪製從 1.1 秒延到 3.5 秒。
+     改由 scripts/fonts.js 在 <head> 掛上去，說明寫在那支檔案裡。
+     沒有 JS 的話走下面的 <noscript>，字體照樣會有，只是回到會擋渲染的行為 -->
+<script src="scripts/fonts.js" data-fonts="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" defer></script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap"></noscript>
 <link rel="stylesheet" href="scripts/lenis/lenis.css">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/e-cards.css">

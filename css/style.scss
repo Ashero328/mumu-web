@@ -39,6 +39,17 @@ body {
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  // 🔢 全站數字一律「等高數字」（lining figures）。
+  //
+  // Cormorant Garamond 預設是舊體數字（old-style／text figures）：
+  // 0 會排成小寫 o 的高度、1 是一根沒有頭的豎線，
+  // 所以款號 EYC001 在畫面上會讀成「EYCoo1」——數字長得像字母，客戶抄錯款號。
+  // 同一個「01」在大標（2.1rem）看起來正常、在縮圖小字（.76rem）卻變成「o I」，
+  // 這也是「數字字體不統一」的來源：不是字體不同，是同一支字體的數字樣式不同。
+  //
+  // 這條只換數字的「樣式」，不換字體，襯線體的調性完全保留。
+  // 需要對齊的地方（款號、序號、數量）另外再加 tabular-nums，見 @mixin 數字對齊。
+  font-variant-numeric: lining-nums;
   // 觸控時瀏覽器預設會蓋一層系統藍的方框，把年輪的圓泡泡與賀卡都框成方的。
   // 換成極淡的品牌綠：形狀還是瀏覽器決定，但顏色不再跟版面打架
   -webkit-tap-highlight-color: rgba($green, .12);

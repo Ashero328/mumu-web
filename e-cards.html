@@ -4,22 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>電子賀卡公版款式｜木木文化工作室</title>
-<meta name="description" content="木木文化歷年電子賀卡公版款式，西元新年、羊年、農曆年共 93 款，直式與橫式雙版本。看中哪幾款勾起來，把款號給我們，賀詞與品牌落款都能客製。">
+<meta name="description" content="木木文化歷年電子賀卡公版款式，聖誕、西元新年、羊年、農曆年共 198 款，直式與橫式雙版本。看中哪幾款勾起來，把款號給我們，賀詞與品牌落款都能客製。">
 <meta name="theme-color" content="#fcfcfa">
 
 <!-- OG 一律用絕對網址：LINE 與 FB 的爬蟲只讀原始碼、不執行網頁，
      相對路徑它找不到基準，抓不到預覽圖 -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://ashero328.github.io/mumu-web/e-cards.html">
+<meta property="og:url" content="https://mumu-web.pages.dev/e-cards.html">
 <meta property="og:title" content="電子賀卡公版款式｜木木文化工作室">
-<meta property="og:description" content="93 款公版電子賀卡，直式與橫式雙版本。挑好款號給我們，賀詞與品牌落款都能換成您的。">
-<meta property="og:image" content="https://ashero328.github.io/mumu-web/images/e-cards/poster.jpg">
+<meta property="og:description" content="198 款公版電子賀卡，直式與橫式雙版本。挑好款號給我們，賀詞與品牌落款都能換成您的。">
+<meta property="og:image" content="https://mumu-web.pages.dev/images/e-cards/poster.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 
+<!-- 分頁圖示：從 logo 裁「木＋葉」那個標做的，由 _驗證工具/build_favicon.py 產生。
+     沒有宣告的話瀏覽器會自己去要根目錄的 /favicon.ico，要不到就是 404 ＋ 空白圖示 -->
+<link rel="icon" href="images/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap">
+<!-- 字體樣式表故意不用 <link> 直接掛：那是擋渲染的，而中文字體那份有 757 條
+     @font-face（gzip 後 239 KB），實測會讓首次繪製從 1.1 秒延到 3.5 秒。
+     改由 scripts/fonts.js 在 <head> 掛上去，說明寫在那支檔案裡。
+     沒有 JS 的話走下面的 <noscript>，字體照樣會有，只是回到會擋渲染的行為 -->
+<script src="scripts/fonts.js" data-fonts="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" defer></script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap"></noscript>
 <link rel="stylesheet" href="scripts/lenis/lenis.css">
 <link rel="stylesheet" href="scripts/fancybox/fancybox.css">
 <link rel="stylesheet" href="css/style.css">
@@ -96,7 +105,7 @@
        直排引句與典藏標記要貼在版面右緣的留白處，段落本身是 .wrap 的話就沒有那塊留白 -->
   <section class="cat" id="catalog">
     <!-- 右側留白處的直排引句：平衡構圖，也把這一頁在講的事說出來 -->
-    <p class="cat__vertical" aria-hidden="true">一年幾次的問候，值得一張好看的卡。</p>
+    <p class="cat__vertical" aria-hidden="true">一年幾次的問候，值得一張好看的賀卡。</p>
 
     <div class="sec wrap">
     <div class="sec__body">
@@ -110,6 +119,10 @@
           <span class="filter__label" id="fl-cat">節日</span>
           <div class="filter__set" role="group" aria-labelledby="fl-cat">
             <button class="filter__btn is-on" type="button" data-value="" aria-pressed="true">全部</button>
+            <!-- ⚠️ 這排按鈕是寫死的，不是從 e-cards-data.js 生出來的。
+                 加新節日時「資料檔」與「這裡」要一起改，順序也要跟資料檔一致，
+                 否則格線有那一類、篩選列卻選不到，首頁的 ?f= 深連結也會失效 -->
+            <button class="filter__btn" type="button" data-value="EYC" aria-pressed="false">聖誕</button>
             <button class="filter__btn" type="button" data-value="ENY" aria-pressed="false">西元新年</button>
             <button class="filter__btn" type="button" data-value="EY8" aria-pressed="false">羊年</button>
             <button class="filter__btn" type="button" data-value="EY0" aria-pressed="false">農曆年</button>
@@ -137,7 +150,26 @@
 
       <p class="cat__count" id="catCount" role="status" aria-atomic="true"></p>
 
-      <ul class="cat__grid" id="catGrid"></ul>
+      <!-- 格線是 e-cards.js 建出來的，在那之前這裡是空的。
+           慢速連線上會空很久（Fast 3G 實測首屏要 14 秒才全部到齊），
+           所以先擺 12 個骨架佔位，讓版面一開始就有形狀、不要整塊空白再突然跳出來。
+           骨架是純 HTML＋CSS，CSS 一到就看得到，不必等 JS。
+           e-cards.js 建好真卡之前會把 .card--skel 整批移掉（見該檔「初始格線」）。
+           aria-hidden：這是純佔位，讀螢幕不該念它 -->
+      <ul class="cat__grid" id="catGrid">
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+        <li class="card card--skel" aria-hidden="true"></li>
+      </ul>
 
       <noscript>
         <p class="cat__noscript">這一頁的款式清單需要 JavaScript 才顯示得出來。
