@@ -1,0 +1,11 @@
+# 由 _驗證工具/build_favicon.py 產生，不要手改。
+# Cloudflare Pages 對 .ico 送出的 Content-Type 是 null，在這裡補正。
+
+/images/favicon.ico
+  Content-Type: image/x-icon
+
+/cards/CH2026001/images/favicon.ico
+  Content-Type: image/x-icon
+
+/cards/NE2026001/images/favicon.ico
+  Content-Type: image/x-icon

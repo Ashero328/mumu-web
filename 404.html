@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>找不到這一頁｜木木文化工作室</title>
+<meta name="description" content="這個網址找不到內容。回到木木文化工作室首頁。">
+<meta name="theme-color" content="#fcfcfa">
+<meta name="robots" content="noindex">
+
+<!-- ⚠️ 這一頁的路徑**一定要用根目錄開頭的絕對路徑**（/css/…、/images/…）。
+     Cloudflare Pages 在任何深度的網址找不到檔案時，都是拿這一頁回應，
+     但瀏覽器解析相對路徑是以「使用者輸入的那個網址」為基準 ——
+     寫成 css/style.css 的話，/cards/亂打/ 這種網址會去要 /cards/亂打/css/style.css，
+     樣式全部掛掉，變成一頁沒有排版的白紙 -->
+<link rel="icon" href="/images/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script src="/scripts/fonts.js" data-fonts="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" defer></script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500;600&display=swap"></noscript>
+<link rel="stylesheet" href="/css/style.css">
+
+<!-- 這一頁只有這裡用得到的樣式，不值得為它多開一支 .scss 與一次請求。
+     全站規則是 CSS 歸 .css，這是唯一的例外，理由寫在這裡 -->
+<style>
+  .nf {
+    display: grid;
+    place-items: center;
+    min-height: 78vh;
+    padding: clamp(48px, 8vw, 120px) var(--gut);
+    text-align: center;
+  }
+  .nf__mark {
+    width: clamp(56px, 7vw, 84px);
+    height: auto;
+    margin-bottom: clamp(20px, 2.4vw, 34px);
+    opacity: .9;
+  }
+  .nf__code {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
+    line-height: 1;
+    letter-spacing: .06em;
+    color: var(--green-deep);
+  }
+  .nf__title {
+    margin-top: clamp(14px, 1.6vw, 22px);
+    font-family: "Noto Serif TC", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+    color: var(--ink);
+  }
+  .nf__note {
+    max-width: 24em;
+    margin: clamp(12px, 1.4vw, 18px) auto 0;
+    color: var(--olive-ink);
+  }
+  .nf__acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(10px, 1.2vw, 16px);
+    justify-content: center;
+    margin-top: clamp(26px, 3vw, 40px);
+  }
+</style>
+</head>
+<body>
+
+<div class="frame" aria-hidden="true"></div>
+
+<main class="nf" id="main">
+  <div>
+    <img class="nf__mark" src="/images/favicon-src.png" alt="" width="256" height="256" aria-hidden="true">
+    <p class="nf__code">404</p>
+    <h1 class="nf__title">這個網址找不到內容</h1>
+    <p class="nf__note">可能是連結打錯了，或這個頁面已經搬走。<br>從下面兩個入口都能找到你要的東西。</p>
+    <div class="nf__acts">
+      <a class="btn btn--ghost" href="/">回首頁</a>
+      <a class="btn btn--ghost" href="/e-cards.html">看電子賀卡</a>
+      <a class="btn btn--solid" href="https://line.me/R/ti/p/@yme1248q">加 LINE 詢價</a>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
